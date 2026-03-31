@@ -52,7 +52,7 @@ Ví dụ hay dùng:
 ### Cài Đặt Nâng Cao (Chi Tiết Job)
 
 - **Múi giờ**: IANA timezone (mặc định UTC)
-- **Giao hàng**: Gửi đến Kênh (switch) — chọn Kênh + Người nhận; Kích hoạt Heartbeat (switch)
+- **Giao nhận**: Gửi đến Kênh (switch) — chọn Kênh + Người nhận; Kích hoạt Heartbeat (switch)
 - **Vòng đời**: Xóa Sau Khi Chạy (switch); Không Trạng Thái (switch)
 
 ---

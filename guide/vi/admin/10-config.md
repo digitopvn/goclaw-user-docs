@@ -10,7 +10,7 @@
 
 Trang cấu hình hệ thống cho phép quản trị viên chỉnh sửa toàn bộ `config.json` trực tiếp qua giao diện web. Cấu hình được phân thành 6 tab chuyên biệt, mỗi tab có nút Lưu riêng.
 
-Hệ thống sử dụng kỹ thuật **optimistic locking** qua hash cấu hình — nếu nhiều người cùng chỉnh sửa, phiên biên sau sẽ báo lỗi conflict.
+Hệ thống sử dụng kỹ thuật **optimistic locking** qua hash cấu hình — nếu nhiều người cùng chỉnh sửa, phiên bản sau sẽ báo lỗi conflict.
 
 > **Cảnh báo:** Thay đổi trên trang này ảnh hưởng trực tiếp đến hoạt động của toàn bộ hệ thống. Đọc kỹ trước khi lưu.
 

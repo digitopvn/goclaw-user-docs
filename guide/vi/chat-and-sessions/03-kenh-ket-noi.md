@@ -105,7 +105,7 @@ GoClaw hỗ trợ 7 kênh nhắn tin để kết nối AI agent với các nền
 
 | Policy | Hành vi |
 |--------|---------|
-| `open` | Chấp nhận tin nhắn từ bất kỳ nhóm |
+| `open` | Chấp nhận tin nhắn từ bất kỳ nhóm nào |
 | `allowlist` | Chỉ chấp nhận nhóm có trong danh sách |
 | `disabled` | Không xử lý tin nhắn nhóm |
 

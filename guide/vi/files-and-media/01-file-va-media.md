@@ -91,7 +91,7 @@ Ví dụ: *"Đọc to đoạn văn này bằng giọng nữ"*
 Agent tạo video ngắn từ text hoặc hình ảnh qua tool `create_video`.
 Provider hỗ trợ: MiniMax Video.
 
-Ví dụ: *"Tạo video 5 giây: một bãi biển lúa hoàng hôn, sóng vào bờ"*
+Ví dụ: *"Tạo video 5 giây: một bãi biển lúc hoàng hôn, sóng vào bờ"*
 
 ---
 

@@ -52,7 +52,7 @@ Sau khi chọn provider, dropdown model tải danh sách từ `GET /v1/providers
 
 ### Trang Danh Sách (`/providers`)
 
-**Hiển thị:** Danh sách phân trang có tìm kiếm. Hiển thị số đồ phân cấp pool cho ChatGPT OAuth và hạn mức OAuth.
+**Hiển thị:** Danh sách phân trang có tìm kiếm. Hiển thị sơ đồ phân cấp pool cho ChatGPT OAuth và hạn mức OAuth.
 
 **Thao tác:** Thêm provider | Xóa provider | Xem chi tiết | Tìm kiếm | Làm mới
 
