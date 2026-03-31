@@ -1,0 +1,123 @@
+---
+title: "Basic Chat"
+description: "Guide to using the chat interface with AI agents"
+---
+
+# Basic Chat
+
+## Overview
+
+The Chat interface is the primary interaction hub with AI agents on the Web Dashboard. It supports sending text messages, attaching files, viewing streaming responses with tool call cards, and managing multiple sessions in parallel.
+
+Route: `/chat/:sessionKey?`
+Sidebar Group: Core
+Access: Logged in
+
+---
+
+## Interface
+
+The chat interface has 3 main areas:
+
+- **Sidebar (left)**: Session list, new session button, agent selector (AgentSelector dropdown)
+- **Chat area (center)**: Message thread, streaming response, tool call cards, thinking blocks
+- **Input bar (bottom)**: Message input, file attachment button, send button
+- **Team task panel (right)**: Opens automatically when an agent is running team tasks
+
+On mobile: the sidebar is hidden; tap the menu icon to open it. On-screen keyboards on iOS/Android are handled automatically so the input bar is not covered.
+
+---
+
+## Guide
+
+### Create a New Session
+
+1. Open the sidebar (on mobile: tap the menu icon).
+2. Select an agent from the **AgentSelector** dropdown — shows all available agents.
+3. Click the **New Chat** button (the `+` icon).
+4. The URL updates to `/chat/{sessionKey}` — the session is created automatically when the first message is sent.
+
+The session key has the format `agent:{agentId}:{channel}:direct:{userId}`. Each agent has its own separate session namespace.
+
+### Send a Message
+
+- Type content in the input bar and press **Enter** (or the Send button) to send.
+- **Markdown** is supported in message content: `**bold**`, `*italic*`, backtick code, lists.
+- Attach files: drag and drop or click the attachment icon — files are uploaded via `/v1/media/upload` and the path is automatically injected into the message.
+- The input bar automatically grows in height as content is entered (multi-line).
+
+### View Streaming Response
+
+While the agent is processing, the response streams token by token:
+
+| Component | Description |
+|-----------|-------------|
+| ThinkingBlock | Displayed when the agent is thinking (Extended Thinking) — can be shown/hidden |
+| ToolCallCard | Card showing tool name and result (web_search, read_file, etc.) |
+| MessageBubble | Accumulates streaming text, renders Markdown when complete |
+| Typing indicator | Shown at the end of the thread while the agent is processing |
+
+The response auto-scrolls to the bottom when new messages arrive (smooth scroll). When the user manually scrolls up, auto-scroll pauses.
+
+### Stop a Response (Abort)
+
+While the agent is running:
+- A **Stop** button appears in the input area — click it to cancel the current request (`chat.abort`).
+- If multiple sub-agents are still running (team tasks), the `isBusy` state remains until all complete.
+- On Telegram: use `/stop` to cancel the current run, `/stopall` to cancel all.
+
+### View Chat History
+
+- History is loaded from `chat.history` when a session is selected.
+- Scroll up to view older messages.
+- Past sessions are listed in the sidebar, sorted by time.
+- **Read-only mode**: Another user's session is displayed in read-only mode (if permission is granted).
+
+### Delete a Session
+
+1. Hover over a session in the sidebar to reveal the Delete icon.
+2. Click the Delete icon — a confirmation dialog appears.
+3. Confirm to permanently delete (`sessions.delete`).
+
+Note: Deleting a session cannot be undone. Message history is permanently removed.
+
+---
+
+## Keyboard Shortcuts
+
+| Shortcut | Function |
+|----------|----------|
+| `Enter` | Send message |
+| `Shift+Enter` | New line in input |
+| `Escape` | Close sidebar (mobile) |
+
+---
+
+## Example
+
+Starting a chat with the "Assistant" agent:
+
+```
+1. Sidebar -> AgentSelector -> select "Assistant"
+2. Click New Chat (+)
+3. URL: /chat/agent:assistant-id:web:direct:system
+4. Type: "Summarize this article for me" + attach PDF file
+5. Press Enter -> agent receives file, processes it, returns result
+```
+
+---
+
+## Notes
+
+- Each agent has its own session namespace — switching agents means switching session namespaces; old sessions cannot be shared across agents.
+- Streaming only works over WebSocket RPC — ensure a stable WebSocket connection.
+- Tool call cards display in real time as the agent processes, letting you track what the agent is doing.
+- On external channels (Telegram, Discord, ...), the agent is assigned when the channel is configured; users don't need to select an agent.
+
+---
+
+## See Also
+
+- [02-session-management.md](./02-session-management.md) — Manage and search sessions
+- [03-channels.md](./03-channels.md) — Chat via Telegram, Discord, Slack
+- [../agents/01-agents-overview.md](../agents/01-agents-overview.md) — Learn more about agents and skills

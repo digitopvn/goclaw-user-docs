@@ -1,0 +1,103 @@
+---
+title: "Login and Select Organization"
+description: "Guide to logging in and selecting an organization in GoClaw"
+---
+
+# Login and Select Organization
+
+## Overview
+
+GoClaw supports two login methods: Token authentication and Device Pairing. After logging in, users who belong to multiple organizations (tenants) are redirected to the organization selection page before entering the dashboard.
+
+---
+
+## Login Guide
+
+### Method 1 — Token Login
+
+Route: `/login`
+
+1. Open the Web Dashboard; the login page shows the **Token** tab by default.
+2. Enter your **User ID** (default: `system`) and **Gateway Token**.
+3. Click **Connect**.
+4. On success: redirects to the originally requested page (or `/overview`).
+5. On failure (401 error): displays "Invalid credentials".
+
+The Gateway Token is the `GOCLAW_GATEWAY_TOKEN` value configured during onboarding.
+
+### Method 2 — Device Pairing
+
+Used when the token is unknown — requires admin approval via the Nodes page.
+
+1. Switch to the **Pairing** tab.
+2. Enter your **User ID**.
+3. Click **Request Access** — the system opens a WebSocket and displays a 6-character code.
+4. Provide this code to the admin.
+5. Admin approves via CLI:
+   ```bash
+   goclaw pairing approve {code}
+   ```
+6. Once approved, the connection completes automatically.
+
+Pairing states in order: **Waiting** → **Connecting** → **Pending Approval** → **Approved**.
+
+Click **Cancel** at any time to close the WebSocket and return to the waiting state.
+
+---
+
+## UI — Login Page
+
+Route: `/login`
+Access: Public
+
+**Two tabs:**
+
+| Tab | Input Fields | Action |
+|-----|-------------|--------|
+| Token | User ID, Gateway Token (password) | **Connect** |
+| Pairing | User ID | **Request Access**, **Cancel** |
+
+The Pairing tab displays a 6-character code plus the CLI command `goclaw pairing approve {code}` for admin approval.
+
+---
+
+## Select Organization (Tenant)
+
+Route: `/select-tenant`
+Access: Logged in
+
+Displayed after login when the user belongs to multiple organizations.
+
+**Shows:** A list of the current user's organization cards (name, slug, role).
+
+**Actions:**
+- Click a card to select the organization — scopes the working session to that organization.
+- If the user belongs to no organization and is not an owner: displays "no access" screen with a **Logout** button.
+
+---
+
+## Example — Full Login Flow
+
+```
+[User] -> /login (Token tab)
+  -> Enter system / <gateway-token>
+  -> Click Connect
+  -> [System] Authentication successful
+  -> Multiple tenants? -> /select-tenant -> Select organization
+  -> No tenant? -> /overview (home page)
+```
+
+---
+
+## Notes
+
+- The token is stored in the browser's session storage after login.
+- If accessing a page that requires login while unauthenticated, the system automatically redirects to `/login` and saves the original URL to redirect back after login.
+- The Pairing method is suitable for new users who don't yet have a token — admins manage approvals on the `/nodes` page.
+
+---
+
+## See Also
+
+- [04-setup-wizard.md](./04-setup-wizard.md) — Setup wizard after first login
+- [02-installation.md](./02-installation.md) — Configure Gateway token during installation

@@ -1,0 +1,85 @@
+---
+title: Setup Wizard
+description: First-run Setup Wizard walkthrough for GoClaw Web Dashboard
+---
+
+# Setup Wizard
+
+When you open the Web Dashboard for the first time, GoClaw presents a **Setup Wizard** that walks you through the minimum configuration needed to start chatting with an agent.
+
+---
+
+## Wizard Steps
+
+### Step 1 — Provider
+
+Add your first LLM provider and API key.
+
+| Field | Description |
+|-------|-------------|
+| Provider Type | Select from the dropdown: `anthropic`, `openai`, `openrouter`, etc. |
+| Display Name | A friendly label shown in the UI |
+| API Key | Your provider API key — encrypted AES-256-GCM before storage |
+
+Click **Save** to continue. GoClaw validates the connection before proceeding.
+
+Popular providers:
+- **Anthropic** — Claude models (`claude-sonnet-4-5`, `claude-opus-4`, etc.)
+- **OpenAI** — GPT models (`gpt-4o`, `gpt-4.1`, etc.)
+- **OpenRouter** — Access many models through a single API key
+- **Ollama** — Local models, no API key required
+
+---
+
+### Step 2 — Model
+
+Select the default model for the provider you just added.
+
+- Use the dropdown to browse available models, or type a model ID directly
+- Click **Check** to verify the model is reachable
+- The verified model becomes the default for new agents using this provider
+
+---
+
+### Step 3 — Agent
+
+Create your first agent.
+
+| Field | Description |
+|-------|-------------|
+| Display Name | The agent's name shown in the UI (e.g. "My Assistant") |
+| Agent Key | Auto-generated unique slug (e.g. `my-assistant`) |
+| Description | Describe personality and purpose — AI generates context files from this |
+| Self-Evolution | Allow the agent to evolve its communication style over time via SOUL.md |
+
+Leave Description blank to start with default templates.
+
+---
+
+### Step 4 — Channel (Optional)
+
+Connect an external messaging channel so users can chat with the agent via Telegram, Discord, Slack, or other platforms.
+
+You can skip this step and configure channels later under **Settings > Channels**.
+
+---
+
+## After the Wizard
+
+Once the wizard completes, the dashboard navigates to the **Overview** page. From here you can:
+
+- Go to **Chat** to start a conversation with your new agent
+- Go to **Agents** to add more agents or configure the existing one
+- Go to **Providers** to add more LLM providers
+- Go to **Channels** to set up messaging integrations
+
+---
+
+## Re-running the Wizard
+
+The wizard only appears automatically on first run. To reconfigure settings afterward, use the individual pages in the sidebar:
+
+- **Agents** — create and manage agents
+- **Providers** — manage LLM providers
+- **Channels** — manage channel integrations
+- **Settings > Config** — advanced gateway configuration

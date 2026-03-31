@@ -1,0 +1,13 @@
+{
+  "title": "GoClaw Docs",
+  "pages": [
+    "index",
+    "getting-started",
+    "chat-and-sessions",
+    "agents",
+    "teams",
+    "files-and-media",
+    "admin",
+    "reference"
+  ]
+}

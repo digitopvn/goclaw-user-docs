@@ -1,0 +1,179 @@
+---
+title: "Configuring Channels"
+description: "Configure messaging channels in GoClaw"
+---
+
+# Configuring Channels
+
+## Overview
+
+GoClaw supports 7 connected channels. Each channel instance can be assigned to a specific agent. Multiple channels can share the same agent.
+
+**List route:** `/channels`
+**Detail route:** `/channels/:id`
+**Access:** Admin
+
+---
+
+## Guide
+
+### 7 Supported Channels
+
+| Channel | Connection Type | DM | Groups | Streaming |
+|---------|-----------------|----|--------|-----------|
+| Telegram | Long polling | Yes | Yes | Typing indicator |
+| Discord | Gateway events | Yes | Yes | Edit "Thinking..." |
+| Slack | Socket Mode (WebSocket) | Yes | Yes | Edit-in-place |
+| Feishu/Lark | WebSocket / Webhook | Yes | Yes | Streaming card |
+| Zalo OA | Long polling | Yes | No | No |
+| Zalo Personal | Internal protocol | Yes | Yes | No |
+| WhatsApp | External WebSocket bridge | Yes | Yes | No |
+
+### Setup Telegram
+
+1. Message `@BotFather` on Telegram
+2. Send `/newbot`, set a name and username (must end with `bot`)
+3. BotFather returns a **Bot Token** like `123456789:ABC-DEF...`
+4. Go to **Channels > Add Channel > Telegram**, enter the Bot Token
+5. (Optional) API Server URL if using a local Bot API server for files >20 MB
+6. (Optional) HTTP Proxy if traffic needs to route through a proxy
+
+Telegram uses long polling — no webhook configuration needed.
+
+| Field | Default | Description |
+|-------|---------|-------------|
+| DM Policy | `pairing` | Requires pairing code for new users |
+| Group Policy | `pairing` | Requires approval for new groups |
+| Require @mention | `true` | Only reply when mentioned in groups |
+| Group History Limit | 50 | Number of group messages kept as context |
+
+### Setup Discord
+
+1. Go to [Discord Developer Portal](https://discord.com/developers/applications) > **New Application > Bot**
+2. Click **Reset Token** to get the bot token
+3. Enable Privileged Gateway Intents: `Server Members Intent` and `Message Content Intent`
+4. Create invite link: **OAuth2 > URL Generator** > scopes: `bot`, permissions: `Send Messages`, `Read Message History`, `View Channels`
+5. Go to **Channels > Add Channel > Discord**, enter the Bot Token
+
+### Setup Slack
+
+1. Go to [api.slack.com/apps](https://api.slack.com/apps) > **Create New App > From scratch**
+2. **Socket Mode** > enable `Enable Socket Mode` > create App-Level Token with scope `connections:write` (token `xapp-...`)
+3. **OAuth & Permissions > Bot Token Scopes**: add `chat:write`, `im:history`, `im:read`, `channels:history`, `channels:read`, `groups:history`, `reactions:write`
+4. **Install to Workspace** > copy Bot User OAuth Token (`xoxb-...`)
+5. Go to **Channels > Add Channel > Slack**:
+   - Bot Token: `xoxb-...`
+   - App-Level Token: `xapp-...`
+   - User Token (optional): `xoxp-...`
+   - Debounce Delay: default 300ms
+   - Thread Participation TTL: default 24h
+
+Slack uses Socket Mode — no public URL needed.
+
+### Setup Feishu/Lark
+
+1. Create a Custom App at [open.feishu.cn](https://open.feishu.cn) or [open.larksuite.com](https://open.larksuite.com)
+2. Get App ID (`cli_xxxxx`) and App Secret
+3. Required scopes: `im:message`, `im:message:send_as_bot`, `im:resource`, `contact:user.base:readonly`, `cardkit:card:write`
+4. Go to **Channels > Add Channel > Feishu**, enter App ID, App Secret, select Domain (`lark` or `feishu`), Connection Mode, Render Mode
+
+| Mode | Requirement | Recommendation |
+|------|-------------|----------------|
+| `websocket` | No public IP needed | Yes (default) |
+| `webhook` | Requires public endpoint | When websocket unavailable |
+
+### Setup Zalo OA
+
+1. Register a Zalo Official Account at [oa.zalo.me](https://oa.zalo.me)
+2. Go to **Dev Tools > API** to get OA Access Token
+3. Go to **Channels > Add Channel > Zalo OA**, enter OA Access Token
+4. (Optional) enter Webhook Secret
+
+> Default DM Policy is `pairing`. Limits: 2,000 character messages, media 5 MB. DM only.
+
+### Setup WhatsApp
+
+WhatsApp requires an external bridge (e.g. whatsapp-web.js). GoClaw connects to the bridge via WebSocket.
+
+1. Go to **Channels > Add Channel > WhatsApp**
+2. Enter Bridge URL: `http://bridge:3000`
+
+> GoClaw does not implement the WhatsApp protocol directly. The bridge must be deployed separately.
+
+---
+
+## UI
+
+### Detail Page (`/channels/:id`)
+
+**Displays:** Channel config, connection status, settings.
+
+**Actions:** View config | Delete channel | Back to list | Display connection status
+
+---
+
+## Channel Policies
+
+### DM Policy
+
+| Policy | Behavior |
+|--------|----------|
+| `open` | Accept from any user |
+| `allowlist` | Only accept users on the allowed list |
+| `pairing` | New users receive an 8-character code (valid 60 min), admin approves |
+| `disabled` | Reject all DMs |
+
+### Group Policy
+
+| Policy | Behavior |
+|--------|----------|
+| `open` | Accept from any group |
+| `allowlist` | Only accept groups on the allowed list |
+| `disabled` | Do not process group messages |
+
+### Mention Mode (Telegram, Slack, Feishu)
+
+| Mode | Behavior |
+|------|----------|
+| `strict` (default) | Only reply when @mentioned |
+| `yield` | Reply unless another bot is mentioned |
+
+---
+
+## Per-Group Overrides (Telegram)
+
+Configure settings per group or forum topic, overriding the global channel config.
+
+**Access:** Channels > select Telegram instance > **Group Overrides** tab
+
+Overridable fields: Group Policy, Require @mention, Mention Mode, Allowed Users, Skills Filter, Tool Allowlist, System Prompt, Enabled.
+
+Priority order: Global defaults &lt; Wildcard group `*` &lt; Specific group &lt; Specific topic.
+
+---
+
+## Voice Routing (Telegram)
+
+When receiving voice/audio, the Telegram channel:
+1. Downloads the audio file from Telegram
+2. Sends to STT proxy for transcription
+3. Prefixes content: `[audio: filename] Transcript: <text>`
+4. If VoiceAgentID is configured, routes to the specialized agent
+5. Otherwise, routes to the channel's default agent
+
+> Configure Voice Agent ID in the Advanced section of Telegram channel settings.
+
+---
+
+## Notes
+
+- Telegram, Discord, Slack: long polling or WebSocket — no public endpoint needed
+- Feishu webhook mode with `port=0`: bound to the gateway's HTTP port
+- WhatsApp requires deploying a separate bridge
+
+---
+
+## See Also
+
+- [../teams/teams-admin.md](../teams/teams-admin.md) — Manage contact directory
+- [security-and-permissions.md](security-and-permissions.md) — DM Policy and security

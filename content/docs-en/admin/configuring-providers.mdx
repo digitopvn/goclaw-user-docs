@@ -1,0 +1,158 @@
+---
+title: Configuring Providers
+description: Set up and manage LLM providers in GoClaw — admin guide
+---
+
+# Configuring Providers
+
+## 1. What is a Provider?
+
+A provider is a connection to an LLM backend. GoClaw abstracts all providers behind a common interface (`Chat` / `ChatStream`), so the agent loop works identically regardless of which backend is in use.
+
+Providers are stored in the `llm_providers` table. API keys are encrypted with AES-256-GCM before storage. Providers in the config file are overridden by providers with the same name in the database.
+
+---
+
+## 2. Supported Providers
+
+### Core Providers
+
+| Name | Type | Description |
+|------|------|-------------|
+| `anthropic` | Native HTTP+SSE | Claude models via api.anthropic.com |
+| `claude_cli` | stdio subprocess | Local `claude` binary, manages its own sessions |
+| `codex` | OAuth Responses API | ChatGPT via chatgpt.com/backend-api |
+| `acp` | JSON-RPC 2.0 | Claude Code / Codex / Gemini CLI as sub-agent |
+| `dashscope` | OpenAI-compat | Alibaba Qwen3 models |
+
+### OpenAI-Compatible Providers
+
+| Name | API Base | Default Model |
+|------|----------|--------------|
+| `openai` | api.openai.com/v1 | gpt-4o |
+| `openrouter` | openrouter.ai/api/v1 | anthropic/claude-sonnet-4-5-20250929 |
+| `groq` | api.groq.com/openai/v1 | llama-3.3-70b-versatile |
+| `deepseek` | api.deepseek.com/v1 | deepseek-chat |
+| `gemini` | generativelanguage.googleapis.com/v1beta/openai | gemini-2.0-flash |
+| `mistral` | api.mistral.ai/v1 | mistral-large-latest |
+| `xai` | api.x.ai/v1 | grok-3-mini |
+| `minimax` | api.minimax.io/v1 | MiniMax-M2.5 |
+| `cohere` | api.cohere.ai/compatibility/v1 | command-a |
+| `perplexity` | api.perplexity.ai | sonar-pro |
+| `ollama` | localhost:11434/v1 | llama3.3 (local) |
+| `bailian` | coding-intl.dashscope.aliyuncs.com/v1 | qwen3.5-plus |
+| `zai` | api.z.ai/api/paas/v4 | glm-5 |
+
+---
+
+## 3. Adding a Provider
+
+Click **Add Provider** on the Providers page.
+
+| Field | Description |
+|-------|-------------|
+| Display Name | Label shown in the UI |
+| Provider Name | Unique slug (e.g. `my-openrouter`) |
+| Provider Type | `openai_compat`, `anthropic`, `claude_cli`, `acp`, `chatgpt_oauth` |
+| API Key | Authentication key — encrypted AES-256-GCM on save |
+| API Base URL | Custom URL (only needed for OpenAI-compat with a custom endpoint) |
+| Enabled | Enable/disable. Disabled providers cannot be used by agents. |
+
+After filling in the fields, click **Save**.
+
+### Verifying the Connection
+
+In the create/edit agent dialog, the **Check** button sends a small test request:
+- Green: model valid, connection successful
+- Red: authentication error or model not found
+
+---
+
+## 4. Selecting a Model
+
+After selecting a provider, the model dropdown loads from `GET /v1/providers/{id}/models`.
+
+- Select from the list or type a model name directly (Combobox)
+- If the provider returns no model list, type the name manually and use **Check** to confirm
+- **Fallback**: if the selected provider is not found, the system uses the first provider in the registry
+
+---
+
+## 5. Extended Thinking
+
+Extended Thinking lets the LLM generate internal reasoning tokens before responding — improving quality on complex tasks at the cost of extra tokens and latency.
+
+### Thinking Levels
+
+| Level | Description |
+|-------|-------------|
+| `off` | Disabled (default) |
+| `low` | Light, fast thinking |
+| `medium` | Balance between speed and quality |
+| `high` | Deepest thinking, for complex tasks |
+
+### Provider Support
+
+| Provider | Supported | Budget Tokens (low/medium/high) | Notes |
+|----------|-----------|----------------------------------|-------|
+| Anthropic | Yes | 4K / 10K / 32K | Strips temperature; requires anthropic-beta header |
+| OpenAI-compat (GPT-5/Codex) | Yes | Via `reasoning_effort` | Capability-aware |
+| DashScope (Qwen3) | Yes (some models) | 4K / 16K / 32K | No streaming when tools are present |
+| Ollama / Groq / DeepSeek | No | — | Requests sent normally |
+
+### Web UI Configuration
+
+In the agent **Config** tab → **Thinking** section:
+1. **Inherit** — use provider defaults (`settings.reasoning_defaults`)
+2. **Custom** — override with a specific level for this agent
+
+**Expert Mode**: choose `reasoning_effort` values (`auto`, `minimal`, `xhigh`, etc.) and fallback behavior (`downgrade`, `off`, `provider_default`).
+
+---
+
+## 6. Provider Quotas
+
+For ChatGPT OAuth providers (`chatgpt_oauth`), GoClaw tracks usage quotas. On the Providers page:
+
+- Green badge: number of providers signed in successfully
+- Quota bar: remaining requests (per hour/day/week)
+- Unsigned providers show `needs_sign_in`
+
+Configure limits via **Config > Quotas** in tenant settings.
+
+---
+
+## 7. Provider Pool (Multiple Accounts)
+
+For `chatgpt_oauth`: pool multiple accounts for load balancing.
+
+```json
+{
+  "settings": {
+    "codex_pool": {
+      "strategy": "round_robin",
+      "extra_provider_names": ["codex-work", "codex-personal"]
+    }
+  }
+}
+```
+
+| Strategy | Description |
+|----------|-------------|
+| `primary_first` | Use primary account first, fall back on error |
+| `round_robin` | Rotate evenly among all accounts |
+| `priority_order` | Try primary first, drain secondary accounts in order |
+
+---
+
+## 8. Editing and Deleting Providers
+
+### Edit
+
+Click a provider in the list to open **Provider Detail**. Editable: Display Name, API Key, API Base URL, Enabled/Disabled, Advanced settings.
+
+**Note:** Renaming a provider breaks connections for agents using it. Update agents before renaming.
+
+### Delete
+
+Click the delete icon on the provider row. Confirm by typing the provider name. Deleting a provider does not delete agents — they fall back to the first provider in the registry.

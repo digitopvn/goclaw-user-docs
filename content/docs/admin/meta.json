@@ -1,0 +1,18 @@
+{
+  "title": "Quản trị",
+  "pages": [
+    "01-providers",
+    "02-channels-setup",
+    "03-tools-va-mcp",
+    "04-cron",
+    "05-bao-mat",
+    "06-theo-doi",
+    "07-sao-luu",
+    "08-tts",
+    "09-memory-kg",
+    "10-config",
+    "11-tenants",
+    "12-nodes",
+    "13-pending-messages"
+  ]
+}

@@ -1,0 +1,280 @@
+# Tham Chieu HTTP REST API
+
+GoClaw cung cap HTTP REST API day du song song voi WebSocket RPC. Tat ca endpoint duoc phuc vu tren cung mot cong voi gateway server.
+
+Tai lieu tuong tac co tai `/docs` (Swagger UI), spec raw tai `/docs/openapi.json`.
+
+---
+
+## Tong Quan
+
+- **Base URL:** `http://<host>:<port>` (mac dinh port 18790 doi voi Desktop, cau hinh qua `gateway.port`)
+- **Versioning:** Tat ca endpoint bat dau bang `/v1/`
+- **Protocol:** HTTP/1.1, JSON request/response
+- **Content-Type:** `application/json` cho request body
+- **Encoding:** UTF-8
+
+---
+
+## Xac Thuc (Authentication)
+
+Tat ca endpoint (tru `/health`) yeu cau xac thuc qua Bearer token trong header `Authorization`:
+
+```
+Authorization: Bearer <token>
+```
+
+Hai loai token duoc chap nhan:
+
+| Loai | Dinh dang | Pham vi |
+|------|-----------|---------|
+| Gateway token | Cau hinh trong `config.json` (truong `gateway.token`) | Admin toan quyen |
+| API key | `goclaw_` + 32 ky tu hex | Pham vi gioi han boi scope cua key |
+
+API key duoc hash SHA-256 truoc khi tra cuu — raw key khong bao gio duoc luu tru. Mot so endpoint chap nhan token qua query parameter `?token=<token>` (dung cho `<img>` va `<audio>` tags).
+
+### Headers Thuong Gap
+
+| Header | Muc dich |
+|--------|----------|
+| `Authorization` | Bearer token xac thuc |
+| `X-GoClaw-User-Id` | User ID ben ngoai cho context multi-tenant |
+| `X-GoClaw-Agent-Id` | Agent identifier cho tac vu co pham vi |
+| `X-GoClaw-Tenant-Id` | Tenant scope — UUID hoac slug |
+| `Accept-Language` | Locale (`en`, `vi`, `zh`) cho thong bao loi i18n |
+| `Content-Type` | `application/json` cho request body |
+
+---
+
+## Agents
+
+CRUD quan ly agent. Yeu cau header `X-GoClaw-User-Id` cho context multi-tenant.
+
+| Method | Path | Mo ta | Auth |
+|--------|------|-------|------|
+| `GET` | `/v1/agents` | Liet ke agents ma user truy cap duoc | Bearer |
+| `POST` | `/v1/agents` | Tao agent moi | Bearer |
+| `GET` | `/v1/agents/{id}` | Lay agent theo ID hoac key | Bearer |
+| `PUT` | `/v1/agents/{id}` | Cap nhat agent (chi owner) | Bearer |
+| `DELETE` | `/v1/agents/{id}` | Xoa agent (chi owner) | Bearer |
+
+### Agent Actions
+
+| Method | Path | Mo ta |
+|--------|------|-------|
+| `POST` | `/v1/agents/{id}/wake` | Kich hoat agent tu ben ngoai (n8n, orchestrators) |
+| `POST` | `/v1/agents/{id}/regenerate` | Tao lai cau hinh agent bang LLM |
+| `POST` | `/v1/agents/{id}/resummon` | Thu lai qua trinh summoning ban dau |
+
+### Agent Files va Instances
+
+| Method | Path | Mo ta |
+|--------|------|-------|
+| `GET` | `/v1/agents/{id}/instances` | Liet ke user instances |
+| `GET` | `/v1/agents/{id}/instances/{userID}/files` | Liet ke context files cua user |
+| `PUT` | `/v1/agents/{id}/instances/{userID}/files/{fileName}` | Cap nhat user file (chi USER.md) |
+
+### Agent Sharing
+
+| Method | Path | Mo ta |
+|--------|------|-------|
+| `GET` | `/v1/agents/{id}/sharing` | Liet ke shares cua agent |
+| `POST` | `/v1/agents/{id}/sharing` | Chia se agent voi user |
+| `DELETE` | `/v1/agents/{id}/sharing/{userID}` | Thu hoi quyen truy cap |
+
+---
+
+## Sessions
+
+| Method | Path | Mo ta |
+|--------|------|-------|
+| `GET` | `/v1/sessions` | Liet ke sessions (co phan trang) |
+
+Chi tiet session duoc quan ly chu yeu qua WebSocket RPC (xem `sessions.*` methods).
+
+---
+
+## Providers
+
+| Method | Path | Mo ta |
+|--------|------|-------|
+| `GET` | `/v1/providers` | Liet ke LLM providers |
+| `POST` | `/v1/providers` | Tao provider moi |
+| `GET` | `/v1/providers/{id}` | Lay chi tiet provider |
+| `PUT` | `/v1/providers/{id}` | Cap nhat cau hinh provider |
+| `DELETE` | `/v1/providers/{id}` | Xoa provider |
+
+---
+
+## Tools
+
+### Custom Tools
+
+| Method | Path | Mo ta |
+|--------|------|-------|
+| `GET` | `/v1/tools/custom` | Liet ke tools (loc theo `?agent_id=`) |
+| `POST` | `/v1/tools/custom` | Tao custom tool |
+| `GET` | `/v1/tools/custom/{id}` | Lay chi tiet tool |
+| `PUT` | `/v1/tools/custom/{id}` | Cap nhat tool |
+| `DELETE` | `/v1/tools/custom/{id}` | Xoa tool |
+| `POST` | `/v1/tools/invoke` | Goi truc tiep tool khong qua agent loop |
+
+---
+
+## MCP Servers
+
+| Method | Path | Mo ta |
+|--------|------|-------|
+| `GET` | `/v1/mcp/servers` | Liet ke MCP servers da dang ky |
+| `POST` | `/v1/mcp/servers` | Dang ky MCP server moi |
+| `GET` | `/v1/mcp/servers/{id}` | Lay chi tiet server |
+| `PUT` | `/v1/mcp/servers/{id}` | Cap nhat cau hinh server |
+| `DELETE` | `/v1/mcp/servers/{id}` | Xoa MCP server |
+| `POST` | `/v1/mcp/servers/{id}/grants/agent` | Cap quyen truy cap cho agent |
+| `DELETE` | `/v1/mcp/servers/{id}/grants/agent/{agentID}` | Thu hoi quyen agent |
+| `GET` | `/v1/mcp/grants/agent/{agentID}` | Liet ke MCP grants cua agent |
+| `POST` | `/v1/mcp/servers/{id}/grants/user` | Cap quyen truy cap cho user |
+| `DELETE` | `/v1/mcp/servers/{id}/grants/user/{userID}` | Thu hoi quyen user |
+| `POST` | `/v1/mcp/requests` | Yeu cau cap quyen (user tu phuc vu) |
+| `GET` | `/v1/mcp/requests` | Liet ke yeu cau dang cho |
+| `POST` | `/v1/mcp/requests/{id}/review` | Chap nhan hoac tu choi yeu cau |
+
+---
+
+## Channels
+
+| Method | Path | Mo ta |
+|--------|------|-------|
+| `GET` | `/v1/channel-instances` | Liet ke channel instances |
+| `POST` | `/v1/channel-instances` | Tao channel instance moi |
+| `GET` | `/v1/channel-instances/{id}` | Lay chi tiet instance |
+| `PUT` | `/v1/channel-instances/{id}` | Cap nhat cau hinh instance |
+| `DELETE` | `/v1/channel-instances/{id}` | Xoa channel instance |
+
+---
+
+## Skills
+
+| Method | Path | Mo ta |
+|--------|------|-------|
+| `GET` | `/v1/skills` | Liet ke tat ca skills |
+| `POST` | `/v1/skills/upload` | Upload ZIP chua SKILL.md (toi da 20 MB) |
+| `GET` | `/v1/skills/{id}` | Lay chi tiet skill |
+| `PUT` | `/v1/skills/{id}` | Cap nhat metadata skill |
+| `DELETE` | `/v1/skills/{id}` | Xoa skill (khong ap dung voi system skills) |
+| `POST` | `/v1/skills/{id}/toggle` | Bat/tat skill |
+| `GET` | `/v1/skills/{id}/versions` | Liet ke phien ban co san |
+| `GET` | `/v1/skills/{id}/files` | Liet ke files trong skill |
+| `POST` | `/v1/skills/{id}/grants/agent` | Cap skill cho agent |
+| `DELETE` | `/v1/skills/{id}/grants/agent/{agentID}` | Thu hoi skill khoi agent |
+| `GET` | `/v1/agents/{agentID}/skills` | Liet ke skills voi trang thai grant cua agent |
+
+---
+
+## Files
+
+| Method | Path | Mo ta |
+|--------|------|-------|
+| `GET` | `/v1/files` | Liet ke workspace files |
+| `GET` | `/v1/files/{path}` | Phuc vu noi dung file |
+| `DELETE` | `/v1/storage/{path}` | Xoa workspace file |
+| `POST` | `/v1/media/upload` | Upload media file |
+| `GET` | `/v1/media/{id}` | Phuc vu media file |
+
+---
+
+## Config, Usage, Traces, Audit
+
+| Method | Path | Mo ta |
+|--------|------|-------|
+| `GET` | `/v1/usage` | Lay metrics su dung |
+| `GET` | `/v1/usage/summary` | Lay tong hop su dung |
+| `GET` | `/v1/traces` | Liet ke traces (loc theo agent, user, status, ngay) |
+| `GET` | `/v1/traces/{id}` | Lay chi tiet trace voi tat ca spans |
+| `GET` | `/v1/activity` | Liet ke audit logs hoat dong |
+| `GET` | `/v1/api-keys` | Liet ke API keys (da che) |
+| `POST` | `/v1/api-keys` | Tao API key moi |
+| `DELETE` | `/v1/api-keys/{id}` | Thu hoi API key |
+| `GET` | `/v1/delegations` | Liet ke lich su delegation (phan trang) |
+| `GET` | `/v1/delegations/{id}` | Lay chi tiet delegation |
+| `GET` | `/v1/memory` | Lay memory entries |
+| `POST` | `/v1/memory` | Tao memory entry |
+| `DELETE` | `/v1/memory/{id}` | Xoa memory entry |
+
+---
+
+## OpenAI-Compatible Endpoint
+
+### `POST /v1/chat/completions`
+
+Tuong thich voi OpenAI Chat API de truy cap agent theo chuong trinh.
+
+**Request:**
+```json
+{
+  "model": "goclaw:agent-id-hoac-key",
+  "messages": [
+    {"role": "user", "content": "Xin chao"}
+  ],
+  "stream": false,
+  "user": "user-id-tuy-chon"
+}
+```
+
+Quy tac phan giai agent: truong `model` voi prefix `goclaw:` hoac `agent:`, sau do header `X-GoClaw-Agent-Id`, sau do agent `"default"`.
+
+**Response (non-streaming):**
+```json
+{
+  "id": "chatcmpl-...",
+  "object": "chat.completion",
+  "choices": [{
+    "index": 0,
+    "message": {"role": "assistant", "content": "..."},
+    "finish_reason": "stop"
+  }],
+  "usage": {"prompt_tokens": 10, "completion_tokens": 20, "total_tokens": 30}
+}
+```
+
+**Streaming:** Dat `"stream": true` de nhan Server-Sent Events (SSE) voi `data: {...}` chunks, ket thuc bang `data: [DONE]`.
+
+### `POST /v1/responses`
+
+Alternative protocol tuong thich voi OpenAI Responses API. Cung cap xac thuc tuong tu, tra ve response objects co cau truc (`response.started`, `response.delta`, `response.done`).
+
+---
+
+## Rate Limiting
+
+Token bucket rate limiting theo user hoac IP. Cau hinh qua `gateway.rate_limit_rpm` (0 = tat, > 0 = bat).
+
+- **Burst:** 5 requests
+- **HTTP 429** khi vuot gioi han, kem header `Retry-After: 60`
+- **Cleanup:** moi 5 phut, xoa entries khong hoat dong qua 10 phut
+
+---
+
+## Ma Loi (Error Codes)
+
+| Code | Mo ta |
+|------|-------|
+| `UNAUTHORIZED` | Xac thuc that bai hoac khong du quyen |
+| `INVALID_REQUEST` | Truong thieu hoac khong hop le trong request |
+| `NOT_FOUND` | Tai nguyen khong ton tai |
+| `ALREADY_EXISTS` | Tai nguyen da ton tai (conflict) |
+| `UNAVAILABLE` | Dich vu tam thoi khong kha dung |
+| `RESOURCE_EXHAUSTED` | Vuot gioi han rate limit |
+| `FAILED_PRECONDITION` | Dieu kien tien quyet chua duoc dap ung |
+| `AGENT_TIMEOUT` | Agent run vuot qua gioi han thoi gian |
+| `INTERNAL` | Loi server khong mong doi |
+
+Response loi bao gom truong `retryable` (boolean) va `retryAfterMs` (integer) de huong dan client retry.
+
+---
+
+## Xem Them
+
+- [WebSocket RPC](./02-websocket-rpc.md)
+- [Cau hinh tham chieu](./03-cau-hinh.md)
+- Swagger UI truc tiep: `http://<host>:<port>/docs`

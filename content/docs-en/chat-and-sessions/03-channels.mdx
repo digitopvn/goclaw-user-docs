@@ -1,0 +1,155 @@
+---
+title: "Connected Channels"
+description: "Connected channels in GoClaw"
+---
+
+# Connected Channels
+
+## Overview
+
+GoClaw supports 7 messaging channels to connect AI agents to popular messaging platforms. Each channel operates independently. Each user on each channel has a separate session.
+
+---
+
+## 7 Supported Channels
+
+| Channel | Connection Type | Groups | DMs | Streaming |
+|---------|----------------|--------|-----|-----------|
+| Telegram | Long polling | Yes | Yes | Typing indicator |
+| Discord | Gateway events | Yes | Yes | Edit "Thinking..." |
+| Slack | Socket Mode (WebSocket) | Yes | Yes | Edit "Thinking..." |
+| Feishu/Lark | WebSocket / Webhook | Yes | Yes | Streaming card |
+| Zalo OA | Long polling | No | Yes | No |
+| Zalo Personal | Internal protocol (unofficial) | Yes | Yes | No |
+| WhatsApp | External WebSocket bridge | Yes | Yes | No |
+
+---
+
+## Channel-Specific Usage Guide
+
+### Telegram
+
+- **DM**: Direct message the bot — processed immediately.
+- **Groups**: Bot must be `@mentioned` before replying (default). Messages before the mention are kept as context (up to 50 messages).
+- **Implicit reply**: Replying to a bot message in a group is treated as a mention.
+- **Voice/Audio**: Voice messages are transcribed via STT proxy; content is prefixed with `[audio: filename] Transcript: ...` before being sent to the agent.
+- **Forum topics**: Each topic in a supergroup has its own session and configuration.
+- **Bot commands**: `/stop` cancels the current run, `/stopall` cancels all, `/reset` clears history, `/help` shows help.
+
+### Discord
+
+- **DM**: Direct message the bot.
+- **Channels**: Bot requires `GuildMessages` + `MessageContent` permissions; must be `@mentioned` (default).
+- **Streaming**: Bot sends "Thinking..." then edits when the result is ready.
+- **Limit**: 2,000 characters per message — automatically split if exceeded.
+- **Typing indicator**: Keepalive every 9 seconds while the agent is processing.
+
+### Slack
+
+- **DM**: Direct message the bot.
+- **Channels**: Must be `@mentioned`; after the bot replies in a thread, subsequent messages in that thread auto-trigger the bot without a mention (TTL 24 hours).
+- **Socket Mode**: WebSocket connection — no public URL required.
+- **Streaming**: Edit-in-place via `chat.update`, throttled at 1000ms (Slack Tier 3).
+- **Reactions**: Status emoji on user messages (thinking, using tool, done, error).
+- **Limit**: 4,000 characters per message.
+
+### Feishu/Lark
+
+- **DM**: Direct message the bot.
+- **Groups**: Must `@mention` (default); this requirement can be disabled per channel.
+- **Streaming card**: Response displayed in an interactive card with live typing effect (throttled at 100ms).
+- **Topic session mode**: When enabled, each thread has its own session (session key: `{chatID}:topic:{rootMsgId}`).
+- **Media**: Receive/send images, files, audio (default max 30 MB).
+- **Connection**: WebSocket (default) or Webhook — can be bound to the gateway's HTTP port.
+
+### Zalo OA (Official Account)
+
+- DM only — no group support.
+- 2,000 character limit per message.
+- Default DM policy: `pairing` (requires code-based verification).
+- Supports image sending (max 5 MB).
+
+### Zalo Personal
+
+- Uses unofficial (reverse-engineered) protocol.
+- Supports both DMs and groups.
+- Default policy: `allowlist` (only accepts users on the allowed list).
+- Warning: Account may be banned by Zalo at any time due to terms of service violations.
+
+---
+
+## Pairing Flow (Device Authentication)
+
+Applies when a channel uses the `pairing` policy for DMs:
+
+1. A new user sends their first message — the bot replies with instructions and an **8-character code** (valid for 60 minutes).
+2. The user provides this code to the admin.
+3. Admin approves via `device.pair.approve` (Web UI or WebSocket RPC).
+4. The connection is paired — subsequent messages are processed normally.
+
+Pairing code characteristics:
+- Length: 8 characters
+- Alphabet: `ABCDEFGHJKLMNPQRSTUVWXYZ23456789` (excludes ambiguous characters like 0, O, 1, I, L)
+- Max 3 requests per account
+- Debounce: bot won't resend instructions more than once per 60 seconds
+
+---
+
+## Channel Policies
+
+### DM Policies
+
+| Policy | Behavior |
+|--------|----------|
+| `open` | Accept messages from anyone |
+| `allowlist` | Only accept senders on the allowed list |
+| `pairing` | Require pairing verification before processing |
+| `disabled` | Reject all DMs |
+
+### Group Policies
+
+| Policy | Behavior |
+|--------|----------|
+| `open` | Accept messages from any group |
+| `allowlist` | Only accept groups on the allowed list |
+| `disabled` | Do not process group messages |
+
+---
+
+## Channel Management UI
+
+Route: `/channels`
+Sidebar Group: Connections
+Access: Admin
+
+Displays a paginated list of channels with status indicators (online / offline / connecting) and a search box.
+
+**Actions:**
+- **Create channel** — wizard (steps vary by channel type):
+  - Step 1: Key (slug), Display Name, Channel Type, Agent, Credentials, Config, Enable/Disable
+  - Step 2: Authentication (QR code, OAuth, etc.) — can be skipped
+  - Step 3: Group/topic settings — can be skipped
+- **Edit channel** — update configuration
+- **Delete channel** — type the channel name exactly to confirm (blocked for default channels)
+- **Re-authenticate** — re-run the authentication flow (e.g. Zalo QR)
+- **View channel detail** — navigate to detail page
+
+**Advanced channel settings**: Network, Limits, Streaming, Behavior, Access Control.
+
+Admins can enable/disable channels via `channels.toggle` (requires admin permission).
+
+---
+
+## Notes
+
+- Each channel is assigned to a single agent — to use multiple agents, create multiple channels.
+- Changing a channel's agent affects all new messages (old sessions continue using the previous agent).
+- Zalo Personal is not an official channel — use at your own risk. Use Zalo OA for production purposes.
+- WhatsApp requires an external WebSocket bridge — contact your provider for setup.
+
+---
+
+## See Also
+
+- [01-basic-chat.md](./01-basic-chat.md) — Chat interface on the Web
+- [02-session-management.md](./02-session-management.md) — Manage sessions

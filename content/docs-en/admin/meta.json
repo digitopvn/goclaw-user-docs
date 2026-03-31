@@ -1,0 +1,13 @@
+{
+  "title": "Administration",
+  "pages": [
+    "managing-agents",
+    "configuring-providers",
+    "configuring-channels",
+    "tools-and-mcp",
+    "cron-and-scheduling",
+    "security-and-permissions",
+    "monitoring-and-logs",
+    "backup-and-restore"
+  ]
+}

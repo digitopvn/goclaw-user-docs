@@ -1,0 +1,106 @@
+---
+title: Teams Administration
+description: Manage agent teams, members, tasks, and workspace via Web UI and API
+---
+
+# Teams Administration
+
+## 1. Managing Teams via Web UI
+
+Navigate to **Teams** in the sidebar to see all teams in the tenant.
+
+### Actions Available
+
+| Action | Steps |
+|--------|-------|
+| Create team | Click **Create Team**, fill in name/description, select lead and members |
+| Edit team | Click a team card → **Settings** tab |
+| Delete team | Click the delete icon, confirm by typing the team name |
+| Add member | Team detail → **Members** tab → **Add Member** |
+| Remove member | Team detail → **Members** tab → remove icon next to member |
+
+**Note:** Only predefined agents can be added as team members. Open agents have per-user context and lack the shared context needed for team collaboration.
+
+---
+
+## 2. Task Management
+
+Access the task board from the team detail page → **Tasks** tab.
+
+### Creating Tasks
+
+Tasks are typically created by the lead agent during execution. Admins can also create tasks manually via:
+- Web UI: **Tasks** tab → **New Task**
+- WebSocket: `teams.tasks.create`
+
+### Task Fields
+
+| Field | Type | Description |
+|-------|------|-------------|
+| Subject | string | Short title |
+| Description | string | Detailed instructions |
+| Assignee | agent ID | Member assigned to the task |
+| Priority | integer | Higher = processed first |
+| blocked_by | task IDs | Dependencies that must complete first |
+
+### Reviewing Tasks
+
+When a member submits a task for review (`in_review`):
+- Admin or lead can **Approve** → status moves to `completed`
+- Admin or lead can **Reject** → status moves to `cancelled`
+
+WebSocket methods: `teams.tasks.approve`, `teams.tasks.reject`
+
+---
+
+## 3. Team Workspace Management
+
+Access via team detail → **Workspace** tab.
+
+| Action | WebSocket Method |
+|--------|----------------|
+| List workspace items | `teams.workspace.list` |
+| Read a file | `teams.workspace.read` |
+| Delete a file | `teams.workspace.delete` |
+
+Workspace files are also accessible via HTTP:
+```
+GET /v1/files/{path}?ft={token}
+```
+
+---
+
+## 4. WebSocket Methods Reference
+
+All team methods require **Admin** role minimum.
+
+| Method | Description |
+|--------|-------------|
+| `teams.list` | List all teams |
+| `teams.create` | Create a new team |
+| `teams.get` | Get team detail with members |
+| `teams.update` | Update team properties |
+| `teams.delete` | Delete a team |
+| `teams.members.add` | Add an agent to the team |
+| `teams.members.remove` | Remove an agent from the team |
+| `teams.tasks.list` | List team tasks (filterable) |
+| `teams.tasks.get` | Get task with comments/events |
+| `teams.tasks.create` | Create a task |
+| `teams.tasks.approve` | Approve a task |
+| `teams.tasks.reject` | Reject a task |
+| `teams.tasks.comment` | Add a comment to a task |
+| `teams.tasks.assign` | Assign a task to a member |
+| `teams.tasks.delete` | Delete a task |
+| `teams.workspace.list` | List workspace items |
+| `teams.workspace.read` | Read a workspace file |
+| `teams.workspace.delete` | Delete a workspace item |
+
+---
+
+## 5. Delegations
+
+The **Delegations** tab in team detail shows the delegation links between the lead and each member. These are created automatically when members are added.
+
+View delegation history:
+- WebSocket: `delegations.list`, `delegations.get`
+- HTTP: `GET /v1/delegations`

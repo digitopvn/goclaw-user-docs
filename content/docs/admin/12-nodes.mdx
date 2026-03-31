@@ -1,0 +1,116 @@
+---
+title: "Nodes (Ghep Noi Thiet Bi)"
+description: "Quan ly nodes va ghep noi thiet bi"
+---
+
+# Nodes (Ghep Noi Thiet Bi)
+
+**Route:** `/nodes`
+**Nhom Sidebar:** Ket Noi
+**Quyen truy cap:** Admin
+
+---
+
+## Tong Quan
+
+Nodes quan ly viec ghep noi (pairing) cac thiet bi vat ly hoac ung dung client voi he thong GoClaw. Khi mot thiet bi duoc ghep, no co the giao tiep voi agents qua channel cu the ma khong can xac thuc lai tung lan.
+
+Co che nay thich hop cho:
+- Thiet bi IoT gui tin nhan dinh ky
+- Ung dung mobile ket noi voi agent cu the
+- Trien khai da instances voi cac thiet bi rieng biet
+
+---
+
+## Giao Dien (UI)
+
+**Route:** `/nodes`
+
+Trang chia thanh hai phan chinh:
+
+**Yeu cau ghep noi dang cho** — danh sach cac thiet bi da gui yeu cau pairing, cho admin phe duyet hoac tu choi.
+
+**Thiet bi da ghep** — bang cac thiet bi dang hoat dong, hien thi: kenh (channel), sender ID, ngay ghep, ghep boi (admin nao da duyet).
+
+---
+
+## Huong Dan
+
+### Quy Trinh Ghep Thiet Bi
+
+1. **Thiet bi gui yeu cau** — thiet bi goi `device.pair.request` qua WebSocket voi ma ghep noi
+2. **Hien thi trong "Yeu cau dang cho"** — admin thay yeu cau moi tren trang `/nodes`
+3. **Admin phe duyet** — nhan nut phe duyet, xac nhan thong tin
+4. **Thiet bi nhan xac nhan** — thiet bi chuyen sang trang thai da xac thuc
+
+### Phe Duyet Yeu Cau Ghep
+
+1. Tim yeu cau trong phan "Yeu cau ghep noi dang cho"
+2. Nhan **Phe duyet**
+3. Kiem tra thong tin trong hop thoai: kenh, sender ID, ma ghep noi
+4. Nhan **Phe duyet** de xac nhan
+
+### Tu Choi Yeu Cau Ghep
+
+1. Tim yeu cau can tu choi
+2. Nhan **Tu choi**
+3. Xac nhan trong hop thoai (hanh dong nguy hiem)
+4. Nhan **Tu choi** — yeu cau bi xoa
+
+### Thu Hoi Thiet Bi Da Ghep
+
+1. Tim thiet bi trong bang "Thiet bi da ghep"
+2. Nhan **Thu hoi**
+3. Xac nhan trong hop thoai — hien thi kenh va sender ID
+4. Nhan **Thu hoi** — kich hoat su kien `EventPairingRevoked`, ngat ket noi phien phia server ngay lap tuc
+
+### Lam Moi
+
+Nhan **Lam moi** de cap nhat danh sach tu server.
+
+---
+
+## Trien Khai Da Instances
+
+Trong moi truong co nhieu instance GoClaw chay song song (horizontal scaling), moi instance can biet ve cac thiet bi da ghep de xu ly tin nhan dung:
+
+- **Dong bo trang thai pairing** — thong tin ghep noi luu trong database chung (PostgreSQL), tat ca instances deu co the tra cuu
+- **Sender ID** — dinh danh duy nhat cua thiet bi, dung de dinh tuyen tin nhan dung instance
+- **Thu hoi tu xa** — khi thu hoi tren bat ky instance nao, su kien broadcast den tat ca instances de ngat ket noi
+
+### Cac Truong Hop Can Luu Y
+
+| Tinh huong | Xu ly |
+|-----------|-------|
+| Thiet bi doi IP | Pairing van hop le — dinh danh dua tren sender ID, khong phai IP |
+| Instance bi restart | Thiet bi tu dong reconnect va pairing duoc khoi phuc tu DB |
+| Thu hoi khi thiet bi offline | Thu hoi ghi vao DB, co hieu luc khi thiet bi ket noi lai |
+| Nhieu thiet bi cung sender ID | Khong cho phep — moi sender ID chi ghep mot lan |
+
+---
+
+## Vi Du
+
+**Ghep may tinh bang (tablet) voi agent ho tro khach hang:**
+
+1. App tren tablet goi `device.pair.request` voi kenh `web` va sender ID `tablet-reception-01`
+2. Admin mo `/nodes`, thay yeu cau tu `tablet-reception-01`
+3. Xac nhan day la thiet bi hop le → Phe duyet
+4. Tablet duoc ghep, tu do co the gui tin nhan ma khong can token
+
+---
+
+## Luu Y
+
+- Thu hoi (`revoke`) ngat ket noi ngay lap tuc phia server — thiet bi se nhan loi WebSocket va can xin ghep lai
+- `EventPairingRevoked` co the duoc lang nghe boi cac he thong khac de phan ung theo
+- Pairing codes co thoi han — kiem tra cau hinh `gateway.pairing_code_ttl` neu yeu cau tu dong het han
+- Nodes chi hien thi trong Standard edition co multi-channel; Desktop (Lite) khong co channels nen khong su dung trang nay
+
+---
+
+## Xem Them
+
+- [Cau hinh kenh ket noi](../admin/03-channels.md)
+- [WebSocket RPC — Pairing methods](../reference/02-websocket-rpc.md)
+- [Bao mat va phan quyen](../admin/05-security.md)

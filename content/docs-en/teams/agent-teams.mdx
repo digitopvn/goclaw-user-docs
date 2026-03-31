@@ -1,0 +1,153 @@
+---
+title: Agent Teams
+description: Multi-agent collaboration with task boards, delegation, and parallel execution in GoClaw
+---
+
+# Agent Teams
+
+## 1. What is a Team?
+
+An **agent team** is a group of AI agents collaborating through a **shared task board**. Each team has:
+
+- **Lead agent** — coordinates work, creates tasks, assigns them to members, synthesizes results
+- **Member agents** — receive tasks, execute independently, report results back
+
+The lead receives messages from the user, breaks work into tasks on the board, and dispatches each task to the right member. Members can run **in parallel** — results are collected and returned to the user in a single response.
+
+---
+
+## 2. When to Use Teams
+
+| Scenario | Example |
+|----------|---------|
+| Research + report writing | Member A finds sources, Member B drafts the document |
+| Code writing + review | Member A writes code, Member B checks for bugs |
+| Multi-format content creation | Member A writes captions, Member B generates images |
+| Multi-source analysis | Each member processes a separate dataset |
+| Human-in-the-loop approval | Tasks require human review before completion |
+
+---
+
+## 3. Creating a Team
+
+Create a team in **Web UI > Teams > New Team**:
+
+1. Set the team name and description
+2. Select the **lead agent** (only one lead)
+3. Add **member agents** (multiple members allowed)
+4. Save — the system automatically creates delegation links from the lead to each member
+
+**Lite edition:** max 1 team, 5 members.
+**Standard edition:** unlimited.
+
+---
+
+## 4. Task Board
+
+The task board is where the lead creates tasks and members claim and execute them. Each task has:
+
+- **Subject** — short title
+- **Description** — detailed description
+- **Assignee** — assigned member (required)
+- **Priority** — integer; higher number = higher priority
+- **Status** — see lifecycle below
+
+### Task Lifecycle
+
+```
+pending → in_progress → completed
+    ↓           ↓
+  blocked     in_review → approved → completed
+                       → rejected → cancelled
+    ↓
+  failed → (retry) → pending
+```
+
+| Status | Meaning |
+|--------|---------|
+| `pending` | Newly created, waiting to be picked up |
+| `in_progress` | Member is working on it |
+| `in_review` | Member submitted for review |
+| `completed` | Done |
+| `blocked` | Waiting for a dependency task |
+| `failed` | Hit an error / escalation blocker |
+| `cancelled` | Cancelled |
+| `stale` | No activity for an extended period |
+
+---
+
+## 5. Task Dependencies
+
+Set `blocked_by` when a task requires another task to complete first:
+
+- The task stays `blocked` until **all** dependency tasks are completed
+- When a dependency completes, the blocked task automatically moves to `pending` and gets dispatched
+- Cancelled tasks (`cancelled`) also unblock dependents
+
+Use this to build pipelines: write code → review → deploy.
+
+---
+
+## 6. Comments and Attachments
+
+### Comments
+
+Both users and agents can add comments to tasks:
+
+- **Regular comment** — feedback, explanation
+- **Blocker comment** — when an agent hits a blocker, the task automatically moves to `failed` and the lead receives an escalation notification
+
+Example blocker comment from an agent:
+```
+team_tasks(action="comment", task_id="...", text="Cannot find API documentation", type="blocker")
+```
+
+### Attachments
+
+Files created during task execution are automatically:
+- Saved to the **team workspace**
+- Linked to the current task
+- Displayed on the task detail page in the Web UI
+
+---
+
+## 7. Delegation Between Agents
+
+The lead does not call members directly — all work goes through the task board:
+
+1. Lead creates a task with `assignee=member`
+2. The system dispatches the task to the member via the message bus
+3. Member executes in their own session
+4. Member calls `team_tasks(action="complete")` when done
+5. Result is sent to the lead, who synthesizes and replies to the user
+
+**Parallel execution:** the lead can create multiple tasks simultaneously. Results from all members are collected and sent to the lead in a single batch.
+
+---
+
+## 8. Team Workspace
+
+Each team has a shared directory for files generated during work:
+
+| Mode | Directory | Use When |
+|------|-----------|----------|
+| Isolated (default) | `teams/{teamID}/{chatID}/` | Separate files per conversation |
+| Shared | `teams/{teamID}/` | All members share one directory |
+
+Workspace limits:
+
+| Limit | Value |
+|-------|-------|
+| Max file size | 10 MB |
+| Max files | 100 files/scope |
+
+---
+
+## 9. Feature Limits by Edition
+
+| Feature | Lite | Standard |
+|---------|:----:|:--------:|
+| Max teams | 1 | Unlimited |
+| Members per team | 5 | Unlimited |
+| Comment / Review / Attach | Not supported | Full |
+| Ask user reminder | Not supported | Full |

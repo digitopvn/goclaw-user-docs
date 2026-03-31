@@ -1,0 +1,172 @@
+---
+title: "Agent Configuration"
+description: "Guide to configuring agents in GoClaw"
+---
+
+# Agent Configuration
+
+## Overview
+
+The agent detail page (`/agents/:id`) provides a full set of tools to configure the model, behavior, sandbox, rate limits, and context files. This page is for admins and operators who need to fine-tune agents for production environments.
+
+Route: `/agents/:id`
+Sidebar Group: Core
+Access: Logged in (some sections require Admin)
+
+---
+
+## Agent Detail Interface
+
+The page has 4 main tabs:
+
+| Tab | Content |
+|-----|---------|
+| Overview | Model, provider, behavior settings |
+| Files | Context files (SOUL.md, IDENTITY.md, AGENTS.md, ...) |
+| Permissions | Per-user access control |
+| Instances | Only shown for predefined agents — list of per-user instances |
+
+**Main actions on the page:**
+- Update agent configuration
+- Regenerate from prompt — rebuild the agent from a new description
+- Re-summon — reinitialize the agent (re-runs context file generation)
+- Delete agent — confirmation dialog
+- Advanced settings — opens advanced dialog
+- Configure Heartbeat — set up health checks
+- Manage Codex Pool — navigate to `/agents/:id/codex-pool`
+
+---
+
+## Configuration Guide
+
+### Model and Provider
+
+In the **Overview** tab:
+
+| Field | Description |
+|-------|-------------|
+| Provider | Registered provider name (e.g. `anthropic`, `openrouter`) |
+| Model | Specific model name (e.g. `claude-sonnet-4-5-20250929`, `gpt-4o`) |
+| Max Iterations | Maximum loop iterations per run (default: 20). Increase for complex multi-tool-call tasks. |
+| History Limit | Number of user turns kept in history. Shorter saves tokens; longer preserves context. |
+
+### Context Files (Files Tab)
+
+Files that define the agent's personality and knowledge:
+
+| File | Function |
+|------|----------|
+| `IDENTITY.md` | Agent name, role, background. Injected into the system prompt in the "primacy zone". |
+| `SOUL.md` | Main system prompt — communication style, values, processing principles. |
+| `BOOTSTRAP.md` | If present, agent runs immediately on startup (mandatory notice). |
+| `AGENTS.md` | Describes agents in the system so the main agent knows how to spawn sub-agents. |
+| `TOOLS.md` | Documentation about available tools for the agent. |
+
+Any file can be added to the workspace. Files are injected into the system prompt under "Project Context" with a defensive preamble to protect the agent from being manipulated by external content.
+
+**Per-user context files** (open agents): Each user has their own `base/{userID}/` directory. The `USER.md` file is auto-created when the user first chats — the agent can update this file over time.
+
+**Regenerate from prompt** (Files Tab):
+1. Click **Regenerate from Prompt**.
+2. Enter a new role description in the textarea.
+3. Click **Regenerate** — the system regenerates SOUL.md and context files.
+
+### Behavior Settings
+
+| Setting | Description |
+|---------|-------------|
+| Debounce | Wait time (ms) before processing messages in group chat (prevents spam flooding) |
+| Streaming | Enable/disable streaming response in chunks. Disable for debugging. |
+| Tool Status | Show tool call status in UI (tool.call / tool.result events) |
+| Input Guard | Enable prompt injection scanning (default: `warn` — logs but does not block) |
+
+### Advanced Settings
+
+Open via the **Advanced Settings** button:
+
+| Section | Content |
+|---------|---------|
+| Workspace sharing | Configure workspace sharing between agents |
+| Reasoning | Mode, level, fallback for Extended Thinking |
+| ChatGPT OAuth routing | Configure Codex Pool routing |
+| Context compression | Threshold and strategy for compressing conversation history |
+| Context pruning | Remove less relevant context sections |
+| Sandbox | Docker sandbox configuration for code execution |
+
+### Sandbox Mode
+
+Run code in a Docker container isolated from the main server.
+
+| Field | Description |
+|-------|-------------|
+| Mode | `off` — no sandbox; `non-main` — sandbox sub-agents only; `all` — sandbox everything |
+| Workspace Access | `none` fully isolated; `ro` read-only mount; `rw` full read-write |
+| Image | Docker image to use (e.g. `goclaw-sandbox:bookworm-slim`) |
+| Scope | `session` — 1 container/session; `agent` — shared across sessions; `shared` — shared across all agents |
+| Timeout | Maximum time (seconds) per command run in the sandbox (default: 300) |
+| Memory | Maximum RAM (MB) for the container (default: 512) |
+| CPUs | Number of CPU cores (fractions allowed, e.g. 0.5) |
+| Network | Enable/disable network access from the container |
+
+Sandbox requires Docker installed on the server. The image must be pre-built.
+
+### Rate Limits and Permissions (Permissions Tab)
+
+- Limit the number of tool calls within a time period (per hour/day/week).
+- Apply RBAC: `admin` / `operator` / `viewer`.
+- Deny specific tools to an agent via **Tool Policy**.
+
+**Add per-user permission:**
+- Enter User ID, Config Type, Scope, Permission (allow/deny).
+- Click **Add (+)** to grant permission.
+- Click **Delete (X)** to revoke permission.
+
+### Heartbeat (Health Check)
+
+Click **Configure Heartbeat** to set up:
+
+| Field | Description |
+|-------|-------------|
+| Enable/Disable | Turn heartbeat on or off |
+| Interval (minutes) | Time between checks |
+| Provider/Model override | Use a different provider/model for heartbeat |
+| Channel | Channel to receive notifications |
+| Chat ID | Conversation ID to receive notifications |
+| Active hours | Time window in which heartbeat is allowed to run |
+| Timezone | Timezone to apply |
+| Check list | Custom check steps |
+
+Click **Run Now** to test immediately. View heartbeat history via **Heartbeat Log**.
+
+---
+
+## Example — Configure Sandbox for a Coding Agent
+
+```
+/agents/my-coder -> Advanced Settings -> Sandbox:
+  Mode: non-main
+  Workspace Access: rw
+  Image: goclaw-sandbox:bookworm-slim
+  Scope: session
+  Timeout: 120
+  Memory: 1024
+  Network: enabled
+-> Save
+```
+
+---
+
+## Notes
+
+- Changing Model/Provider takes effect immediately for new sessions; running sessions are not interrupted.
+- Max Iterations set too low may cause the agent to stop mid-task when there are many complex tool calls.
+- Sandbox requires the Docker daemon running on the server — verify with `docker info` before enabling.
+- The Instances tab only appears for predefined agents — allows viewing and managing each user's separate context.
+
+---
+
+## See Also
+
+- [01-agents-overview.md](./01-agents-overview.md) — Core agent concepts
+- [03-skills.md](./03-skills.md) — Add skills to an agent
+- [04-codex-pool.md](./04-codex-pool.md) — Configure Codex Pool routing

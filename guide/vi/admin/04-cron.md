@@ -1,0 +1,134 @@
+# Cron va Lich Trinh Tu Dong
+
+## Tong Quan
+
+Cron cho phep agent tu dong chay theo thoi gian dat truoc — khong can gui tin nhan thu cong. Moi cron job kich hoat mot agent turn voi mot prompt cu the, chay trong lane `cron` rieng biet (toi da 30 luong song song).
+
+**Route danh sach:** `/cron` — Da dang nhap
+**Route chi tiet:** `/cron/:id` — Da dang nhap
+
+---
+
+## Huong Dan
+
+### 3 Loai Bieu Thuc Lich
+
+| Loai | Tham So | Vi Du | Hanh Vi |
+|------|---------|-------|---------|
+| `at` | Thoi diem epoch ms | Ngay mai 15:00 | Chay 1 lan, tu xoa sau khi chay |
+| `every` | Khoang cach ms | `1800000` (30 phut) | Lap lai co dinh |
+| `cron` | Bieu thuc 5 truong | `"0 9 * * 1-5"` | Lich linh hoat |
+
+**Cron expression 5 truong:** `phut gio ngay-thang thang ngay-trong-tuan`
+
+Vi du hay dung:
+- `"0 9 * * 1-5"` — 9:00 sang cac ngay trong tuan
+- `"0 */6 * * *"` — moi 6 tieng
+- `"30 8 * * 0"` — Chu nhat 8:30 sang
+
+### Tao Cron Job
+
+1. Vao **Cron > New Job**
+2. Dien cac truong:
+   - **Name**: ten mo ta (bat buoc, tu dong tao slug)
+   - **Agent**: chon agent se chay
+   - **Prompt/Message**: noi dung tin nhan gui cho agent (bat buoc)
+   - **Schedule**: chon loai lich va nhap gia tri
+     - `every`: chu ky tinh bang giay (toi thieu 1)
+     - `cron`: bieu thuc cron (vd `0 * * * *`)
+     - `at`: mot lan, mac dinh = hien tai + 1 phut
+3. Nhan **Tao** — job bat dau hoat dong ngay
+
+### Quan Ly Jobs
+
+**Enable/Disable:** Click toggle tren row hoac trong chi tiet job. Job tat se bi bo qua trong vong kiem tra dinh ky.
+
+**Xoa:** Click **Delete** tren row, xac nhan truoc khi xoa. Job `at` tu dong xoa sau khi chay xong.
+
+**Manual Trigger:** Vao chi tiet job > nhan **Chay Ngay** — dung de kiem tra truoc khi dat lich chinh thuc.
+
+**Lich Su Chay:** Vao chi tiet job > xem **Run Log** — thoi diem chay, thoi gian thuc hien, trang thai, output va thong bao loi. He thong luu toi da 200 ban ghi.
+
+### Cai Dat Nang Cao (Chi Tiet Job)
+
+- **Mui gio**: IANA timezone (mac dinh UTC)
+- **Giao hang**: Gui den Kenh (switch) — chon Kenh + Nguoi nhan; Danh thuc Heartbeat (switch)
+- **Vong doi**: Xoa Sau Khi Chay (switch); Khong Trang Thai (switch)
+
+---
+
+## Giao Dien (UI)
+
+### Trang Danh Sach (`/cron`)
+
+**Hien thi:** Danh sach phan trang tat ca jobs co tim kiem: trang thai, lich trinh, lan chay ke tiep, lan chay gan nhat.
+
+**Thao tac:** Tao job | Chay ngay | Xoa | Xem chi tiet | Lam moi
+
+**Hop thoai Tao Job:**
+- Truong: Ten (bat buoc), Agent ID, Loai lich (nhom nut: every/cron/at), Tin nhan (bat buoc)
+- Thao tac: **Tao** | **Huy**
+
+### Trang Chi Tiet (`/cron/:id`)
+
+**Hien thi:** Lich, payload, agent dich, lich su chay, trang thai bat/tat.
+
+**Thao tac:** Chay ngay | Bat/tat | Cap nhat cai dat | Xoa | Xem nhat ky chay
+
+**Hop thoai Nhat Ky Chay:** Danh sach cuon — thoi gian, huy hieu trang thai (xanh/do), tom tat, loi. Trang thai trong: "Khong co lich su chay".
+
+**Hop thoai Cai Dat Nang Cao:** Mui gio, Giao hang, Vong doi. **Luu** | **Huy**
+
+---
+
+## Lane-Based Concurrency
+
+| Lane | Concurrency Mac Dinh | Override Env |
+|------|:-------------------:|--------------|
+| `main` | 30 | `GOCLAW_LANE_MAIN` |
+| `subagent` | 50 | `GOCLAW_LANE_SUBAGENT` |
+| `team` | 100 | `GOCLAW_LANE_TEAM` |
+| `cron` | 30 | `GOCLAW_LANE_CRON` |
+
+Cron jobs khong tranh chap tai nguyen voi chat sessions. Cac jobs cung session xep hang tuan tu tranh race condition.
+
+---
+
+## Retry Tu Dong
+
+| Tham So | Gia Tri |
+|---------|--------|
+| So lan thu toi da | 3 |
+| Delay ban dau | 2 giay |
+| Delay toi da | 30 giay |
+
+Cong thuc: `delay = min(2 x 2^lan, 30)` +/- 25% jitter.
+
+---
+
+## Vi Du Thuc Te
+
+**Bao cao hang ngay:**
+- Loai: `cron`, Bieu thuc: `"0 8 * * 1-5"`
+- Agent: Analyst Agent
+- Prompt: *"Tao bao cao hoat dong he thong 24 gio qua va gui tom tat qua kenh #reports"*
+
+**Kiem tra dinh ky:**
+- Loai: `every`, Khoang cach: `1800000` (30 phut)
+- Agent: Monitor Agent
+- Prompt: *"Kiem tra trang thai cac service chinh, bao cao neu phat hien bat thuong"*
+
+---
+
+## Luu Y
+
+- Lane `cron` toi da 30 jobs dong thoi
+- Job `at` tu dong bi xoa sau khi chay — khong can don dep thu cong
+- Dung **Chay Ngay** de test truoc khi dat lich chinh thuc
+
+---
+
+## Xem Them
+
+- [guide/vi/admin/06-theo-doi.md](06-theo-doi.md) — Xem lich su chay va traces
+- [guide/vi/admin/03-tools-va-mcp.md](03-tools-va-mcp.md) — Tool `cron` de agent tu quan ly jobs

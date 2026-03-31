@@ -1,0 +1,136 @@
+---
+title: Managing Agents
+description: Create, configure, and manage AI agents in GoClaw — admin guide
+---
+
+# Managing Agents
+
+## 1. Overview
+
+The **Agents** page (`/agents`) displays all agents in the tenant. Each agent is an independent AI entity with its own model, provider, context files, and behavior settings.
+
+Two agent types:
+- **predefined** — shared context for all users (SOUL.md, IDENTITY.md at agent level). Suitable for public bots and product assistants.
+- **open** — each user has their own workspace and files. Suitable for personal assistants.
+
+---
+
+## 2. Creating a New Agent
+
+Click **+ New Agent** to open the create dialog.
+
+| Field | Description |
+|-------|-------------|
+| Display Name | Visible name (optional emoji) |
+| Agent Key | Unique slug, auto-generated from name (e.g. `my-agent`) |
+| Provider | Select a configured provider or type manually |
+| Model | Select from the provider model list or type manually |
+| Agent Type | `predefined` (shared context) or `open` (per-user) |
+| Description | Agent role — used to auto-generate SOUL.md |
+| Self Evolution | Allow agent to auto-update SOUL.md based on user feedback |
+
+Click **Check & Create** to verify the model connection before creating. Once verified, the button changes to **Create**.
+
+---
+
+## 3. Model and Provider Settings
+
+In the agent **Config** tab:
+
+- **Provider** — registered provider name (e.g. `anthropic`, `openrouter`)
+- **Model** — specific model ID (e.g. `claude-sonnet-4-5-20250929`, `gpt-4o`)
+- **Max Iterations** — maximum loop iterations per run (default: 20). Increase for agents with many complex tool calls.
+- **History Limit** — number of user turns retained in history. Shorter saves tokens; longer helps the agent remember context.
+
+---
+
+## 4. Context Files
+
+The **Files** tab manages files that define the agent's personality and knowledge.
+
+### Standard Files
+
+| File | Function |
+|------|----------|
+| `IDENTITY.md` | Agent name, role, background. Injected at the "primacy zone" of the system prompt. |
+| `SOUL.md` | Main system prompt — communication style, values, processing principles. |
+| `BOOTSTRAP.md` | If present, agent runs immediately on startup (mandatory notice). |
+| `AGENTS.md` | Describes agents in the system for sub-agent spawning. |
+| `TOOLS.md` | Documentation for available tools. |
+
+### Custom Files
+
+Any file added to the workspace is injected into the system prompt under "Project Context" with a defensive preamble that protects the agent from manipulation by external content.
+
+---
+
+## 5. Per-User Context Files
+
+For **open agents**: each user has their own workspace directory (`base/{userID}/`). Auto-created on first chat:
+- `USER.md` — personal information, preferences, history. The agent can update this over time.
+
+For **predefined agents**: shared context (SOUL.md, IDENTITY.md) plus a separate `USER.md` per user for personal information.
+
+---
+
+## 6. Behavior Settings
+
+In the **Config** tab, Behavior section:
+
+| Setting | Description |
+|---------|-------------|
+| Debounce | Wait time (ms) before processing messages in group chat (prevents spam) |
+| Streaming | Enable/disable chunk streaming. Disabling helps with debugging. |
+| Tool Status | Show tool call status in the UI (`tool.call` / `tool.result` events) |
+| Input Guard | Enable prompt injection scanning (default: `warn` — logs but does not block) |
+
+---
+
+## 7. Sandbox Mode
+
+Runs code inside Docker containers isolated from the main server.
+
+| Field | Description |
+|-------|-------------|
+| Mode | `off` — disabled; `non-main` — sandbox sub-agents only; `all` — sandbox everything |
+| Workspace Access | `none` full isolation; `ro` read-only mount; `rw` full read-write |
+| Image | Docker image (e.g. `goclaw-sandbox:bookworm-slim`) |
+| Scope | `session` — 1 container/session; `agent` — shared across sessions; `shared` — all agents share |
+| Timeout | Max seconds per command (default: 300) |
+| Memory | Max RAM in MB (default: 512) |
+| CPUs | CPU cores, fractional allowed (e.g. `0.5`) |
+| Network | Enable/disable network from container |
+
+Requires Docker installed on the server. Image must be pre-built.
+
+---
+
+## 8. Rate Limits and Permissions
+
+The **Permissions** tab lets you set tool execution limits per agent:
+
+- Limit tool calls within a time window (per hour/day/week)
+- Apply RBAC roles: `admin` / `operator` / `viewer`
+- Deny specific tools via **Tool Policy**
+
+---
+
+## 9. Export and Import Agents
+
+Agent configuration is stored in PostgreSQL. To back up:
+
+1. `GET /v1/agents/{id}` — retrieve the JSON configuration
+2. Save all context files from the workspace (`SOUL.md`, `IDENTITY.md`, etc.)
+3. To restore: `POST /v1/agents` with the same payload, then re-upload the files
+
+---
+
+## 10. Agent Sharing
+
+Agents can be shared via a **pairing link** (for external channels):
+
+- Each channel has an `agent_key` linked to an agent
+- Sharing links are generated from the Web UI or via `pairing.generate` WebSocket method
+- Users who scan or click the link connect to the corresponding agent
+
+To restrict access: disable the channel or delete the agent.

@@ -1,0 +1,9 @@
+{
+  "title": "Reference",
+  "pages": [
+    "http-api",
+    "websocket-rpc",
+    "configuration",
+    "desktop-edition"
+  ]
+}

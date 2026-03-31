@@ -1,0 +1,185 @@
+---
+title: "Cau Hinh He Thong"
+description: "Cau hinh toan bo he thong GoClaw"
+---
+
+# Cau Hinh He Thong
+
+**Route:** `/config`
+**Nhom Sidebar:** He Thong
+**Quyen truy cap:** Owner (Cross-tenant)
+
+---
+
+## Tong Quan
+
+Trang cau hinh he thong cho phep quan tri vien chinh sua toan bo `config.json` truc tiep qua giao dien web. Cau hinh duoc phan thanh 6 tab chuyen biet, moi tab co nut Luu rieng.
+
+He thong su dung ky thuat **optimistic locking** qua hash cau hinh — neu nhieu nguoi cung chinh sua, phien bien sau se bao loi conflict.
+
+> **Canh bao:** Thay doi tren trang nay anh huong truc tiep den hoat dong cua toan bo he thong. Doc ky truoc khi luu.
+
+---
+
+## Giao Dien (UI)
+
+**Route:** `/config`
+
+Trinh chinh sua cau hinh voi 6 tab doc ben trai. Hien thi:
+- **Huy hieu hash cau hinh** — ma hash hien tai, dung cho optimistic locking
+- **Bang canh bao** — nhac nho khi chon cac truong nhay cam
+- **Nut Lam moi** — tai lai cau hinh tu server, bo qua cac thay doi chua luu
+
+Cac thay doi duoc luu rieng biet theo tung tab. Nhan **Luu** sau khi chinh sua xong moi tab.
+
+---
+
+## Huong Dan Theo Tab
+
+### Tab May Chu (Server)
+
+Dieu khien gateway server: dia chi lang nghe, cong, token xac thuc, CORS, rate limit, debounce, va cac chinh sach xu ly tin nhan.
+
+Cac truong quan trong:
+
+| Truong | Mo ta |
+|--------|-------|
+| `gateway.host` | Dia chi lang nghe (mac dinh `0.0.0.0`) |
+| `gateway.port` | Cong HTTP/WS (mac dinh `8080`) |
+| `gateway.token` | Bearer token — **dung env var, khong nhap truc tiep** |
+| `gateway.rate_limit_rpm` | Gioi han request/phut/user (`0` = tat) |
+| `gateway.inbound_debounce_ms` | Gop tin nhan nhanh cung sender (ms) |
+| `gateway.injection_action` | Xu ly prompt injection: `log`, `warn`, `block`, `off` |
+| `gateway.allowed_origins` | WebSocket CORS whitelist |
+
+### Tab Hanh Vi (Behavior)
+
+Chinh sach phan quyen va pham vi phien:
+
+| Truong | Mo ta |
+|--------|-------|
+| `sessions.scope` | `per-sender` hoac `global` |
+| `sessions.dm_scope` | Pham vi session DM (xem tai lieu cau hinh) |
+| `gateway.block_reply` | Gui text trung gian khi tool dang chay |
+| `gateway.tool_status` | Hien thi ten tool trong preview streaming |
+
+### Tab Mac Dinh AI (AI Defaults)
+
+Gia tri mac dinh ap dung cho tat ca agents khi khong co cai dat rieng:
+
+| Truong | Mo ta |
+|--------|-------|
+| `agents.defaults.provider` | Provider LLM mac dinh |
+| `agents.defaults.model` | Model mac dinh |
+| `agents.defaults.max_tokens` | Max output tokens (mac dinh `8192`) |
+| `agents.defaults.temperature` | Nhiet do LLM (mac dinh `0.7`) |
+| `agents.defaults.max_tool_iterations` | So lan lap tool toi da (mac dinh `30`) |
+| `agents.defaults.agent_type` | `open` hoac `predefined` |
+
+### Tab Han Muc (Quotas)
+
+Cau hinh gioi han su dung theo user, provider, channel, hoac nhom:
+
+```json5
+{
+  gateway: {
+    quota: {
+      enabled: true,
+      default: { hour: 20, day: 100, week: 500 },
+      providers: {
+        "anthropic": { hour: 50, day: 200 }
+      },
+      groups: {
+        "user-id-vip": { hour: 100, day: 500, week: 2000 }
+      }
+    }
+  }
+}
+```
+
+Thu tu uu tien merge: Groups > Channels > Providers > Default.
+
+### Tab Cong Cu (Tools)
+
+Dieu khien tinh kha dung cua tools:
+
+| Truong | Mo ta |
+|--------|-------|
+| `tools.profile` | Profile toan cuc: `minimal`, `coding`, `messaging`, `full` |
+| `tools.allow` / `tools.deny` | Danh sach cho phep / chan theo ten hoac nhom |
+| `tools.execApproval.security` | `deny`, `allowlist`, `full` |
+| `tools.execApproval.ask` | Hoi user truoc khi chay: `off`, `on-miss`, `always` |
+| `tools.web_fetch.policy` | `allow_all` hoac `allowlist` |
+| `tools.browser.enabled` | Bat browser automation |
+
+### Tab Tich Hop (Integrations)
+
+Cac tich hop he thong:
+
+- **TTS** — lien ket nhanh den trang `/tts`
+- **Cron** — cau hinh scheduler (timezone, ...)
+- **Telemetry** — cau hinh thu thap du lieu hieu suat
+- **Bindings** — ket noi den cac dich vu ben ngoai
+
+---
+
+## Cu Phap JSON5
+
+Trang config ho tro JSON5 — dinh dang mo rong cua JSON:
+
+```json5
+{
+  // Day la comment
+  gateway: {
+    port: 8080,      // trailing comma duoc phep
+    host: "0.0.0.0",
+  },
+}
+```
+
+---
+
+## Vi Du Cau Hinh Nhanh
+
+**Bat rate limiting va quota:**
+```json5
+{
+  gateway: {
+    rate_limit_rpm: 30,
+    quota: {
+      enabled: true,
+      default: { hour: 20, day: 100 }
+    }
+  }
+}
+```
+
+**Doi model mac dinh:**
+```json5
+{
+  agents: {
+    defaults: {
+      provider: "anthropic",
+      model: "claude-opus-4-5",
+      max_tokens: 16384
+    }
+  }
+}
+```
+
+---
+
+## Luu Y
+
+- Secrets (API keys, tokens, DSN) **khong bao gio** luu trong `config.json` — dung bien moi truong hoac `.env.local`
+- Hash cau hinh thay doi moi lan luu — giu lai hash cu neu can rollback thu cong
+- Mot so truong yeu cau khoi dong lai server de co hieu luc
+- `config.patch` qua WebSocket RPC cho phep cap nhat mot phan ma khong anh huong phan con lai
+
+---
+
+## Xem Them
+
+- [Cau hinh tham chieu day du](../reference/03-cau-hinh.md)
+- [Cau hinh TTS](../admin/08-tts.md)
+- [WebSocket RPC — config methods](../reference/02-websocket-rpc.md)

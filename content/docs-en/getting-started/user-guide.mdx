@@ -1,0 +1,84 @@
+---
+title: User Guide
+description: Create agents, start conversations, and manage sessions in GoClaw
+---
+
+# User Guide
+
+This guide covers the essential tasks for day-to-day use of GoClaw through the Web UI.
+
+---
+
+## 1. Creating Your First Agent
+
+1. Go to **Agents** in the sidebar
+2. Click **Create Agent**
+3. Fill in the fields:
+   - **Display Name** — the agent's visible name (emoji optional)
+   - **Agent Key** — unique slug, auto-generated from the name (e.g. `my-agent`)
+   - **Provider** — select a configured LLM provider
+   - **Model** — select or type the model ID
+   - **Agent Type** — `open` (per-user context) or `predefined` (shared context)
+   - **Description** — describe the agent's role; AI will auto-generate context files from this
+4. Click **Check & Create** to verify the model connection, then **Create**
+
+---
+
+## 2. Starting a Chat
+
+1. Go to **Chat** in the sidebar
+2. Select an agent from the **AgentSelector** dropdown
+3. Click **New Chat** (the `+` icon)
+4. Type a message and press **Enter** to send
+
+The session URL updates to `/chat/{sessionKey}` and the session is created automatically on the first message.
+
+---
+
+## 3. Managing Sessions
+
+Sessions are listed in the sidebar, sorted by time. Each agent has its own session namespace.
+
+**To delete a session:** hover over it in the sidebar to reveal the delete icon, click it, then confirm.
+
+**To view chat history:** click any session in the sidebar to load its messages.
+
+---
+
+## 4. Connecting External Channels
+
+If the admin has configured messaging channels (Telegram, Discord, Slack, etc.), you can chat with your agents directly through those platforms.
+
+Each channel is linked to a specific agent when configured. Users on external channels get their own isolated sessions automatically.
+
+For Telegram:
+- Send a direct message to the bot
+- In groups, `@mention` the bot to trigger a response
+- Use `/reset` to clear history, `/help` for available commands
+
+---
+
+## 5. Uploading Files
+
+You can attach files to chat messages in two ways:
+- **Drag and drop** a file into the chat window
+- **Click the attachment icon** (clip icon) in the input bar
+
+Supported formats include images (JPEG, PNG, WebP), documents (PDF, DOCX, XLSX), audio (MP3, WAV), and plain text/code files.
+
+---
+
+## 6. Keyboard Shortcuts
+
+| Shortcut | Action |
+|----------|--------|
+| `Enter` | Send message |
+| `Shift+Enter` | New line in input |
+| `Escape` | Close sidebar (mobile) |
+
+---
+
+## Next Steps
+
+- [Basic Chat](/en/docs/chat-and-sessions/basic-chat) — Detailed chat UI guide
+- [Agents & Skills](/en/docs/agents/agents-and-skills) — Agent configuration, skills, and memory

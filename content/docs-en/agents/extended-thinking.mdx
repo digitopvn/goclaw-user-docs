@@ -1,0 +1,74 @@
+---
+title: Extended Thinking
+description: Configure deep reasoning for agents using Extended Thinking in GoClaw
+---
+
+# Extended Thinking
+
+Extended Thinking allows an LLM to reason internally before producing a response — significantly improving quality on complex, multi-step, or analytical tasks.
+
+---
+
+## How It Works
+
+When Extended Thinking is enabled, the model generates internal "reasoning tokens" (a scratchpad) before composing the final response. These tokens are not part of the output but are counted toward token usage.
+
+In the Web UI chat, a **ThinkingBlock** appears while the model is reasoning. You can expand or collapse it to see the model's thought process.
+
+---
+
+## Thinking Levels
+
+| Level | Description | Use When |
+|-------|-------------|----------|
+| `off` | Disabled (default) | Most everyday tasks |
+| `low` | Quick reasoning, minimal budget | Light analysis, simple clarifications |
+| `medium` | Balanced speed and quality | Moderate complexity, code review |
+| `high` | Maximum depth | Hard problems, complex reasoning, research |
+
+---
+
+## Provider Support
+
+| Provider | Support | Token Budget (low / medium / high) |
+|----------|---------|-------------------------------------|
+| Anthropic (Claude) | Full | 4,096 / 10,240 / 32,768 |
+| OpenAI (o1, o3, GPT-5) | Via `reasoning_effort` | auto / minimal / xhigh |
+| DashScope (Qwen3) | Some models | 4,096 / 16,384 / 32,768 |
+| Groq, DeepSeek, Ollama | Not supported | — |
+
+For Anthropic, Extended Thinking requires stripping the `temperature` parameter and adding the `anthropic-beta` header — GoClaw handles this automatically.
+
+For DashScope (Qwen3), streaming is not available when tools are present alongside thinking.
+
+---
+
+## Configuration
+
+### Agent-Level Setting
+
+Go to **Agents** → select an agent → **Config** tab → **Thinking** section:
+
+- **Inherit** — use the provider's `reasoning_defaults` setting
+- **Custom** — override with a specific level for this agent
+
+### Expert Mode
+
+When the provider supports it, Expert Mode exposes:
+- `reasoning_effort` values: `auto`, `minimal`, `low`, `medium`, `high`, `xhigh`
+- Fallback behavior when thinking is unsupported: `downgrade`, `off`, `provider_default`
+
+### Provider-Level Defaults
+
+Set default thinking behavior for all agents using a provider via **Provider Detail** → **Advanced** → `reasoning_defaults`.
+
+---
+
+## Token Cost Considerations
+
+Extended Thinking tokens are billed at the same rate as output tokens for most providers. At `high` level with Anthropic, up to 32,768 reasoning tokens may be used per response — this can significantly increase cost.
+
+Recommendation:
+- Leave at `off` for simple Q&A, creative writing, and routine tasks
+- Use `low` or `medium` for code generation, data analysis, and moderate reasoning
+- Reserve `high` for research, complex problem solving, and multi-step planning

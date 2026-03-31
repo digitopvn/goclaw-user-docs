@@ -1,0 +1,137 @@
+---
+title: Agents & Skills
+description: Understanding agents, skills, tools, memory, and extended thinking in GoClaw
+---
+
+# Agents & Skills
+
+---
+
+## 1. What is an Agent?
+
+An agent is an AI assistant configured with:
+
+- **Personality & identity** (SOUL.md, IDENTITY.md) — voice, style, name, icon
+- **Foundational knowledge** (AGENTS.md, TOOLS.md) — how to operate, available tools
+- **User profile** (USER.md) — your name, timezone, preferences
+- **Skills & tools** — extended capabilities for specific tasks
+
+Each agent runs a **Think → Act → Observe** loop (up to 20 iterations) until it produces a final response.
+
+---
+
+## 2. Two Agent Types
+
+### Open Agent
+
+- Every user gets a **completely separate context** (6 files: AGENTS.md, SOUL.md, TOOLS.md, IDENTITY.md, USER.md, BOOTSTRAP.md)
+- Personality and skills can be customized per user
+- Best when each person needs a different personalized AI assistant
+
+### Predefined Agent
+
+- **Shared personality** for all users (SOUL.md, IDENTITY.md, AGENTS.md at the agent level)
+- Each user still gets their own USER.md to store personal information
+- USER_PREDEFINED.md provides shared rules for handling users
+- Best for consistent, standardized assistants (e.g. customer support bots)
+
+| Characteristic | Open | Predefined |
+|----------------|------|-----------|
+| Context | Fully isolated | Shared personality, individual profile |
+| Customization | Full | USER.md only |
+| Use case | Personal assistant | Shared assistant |
+
+---
+
+## 3. Selecting an Agent in Chat
+
+- The chat sidebar has an **AgentSelector** dropdown — select an agent before creating a new session
+- Default agent is `default` if none selected
+- The session key encodes agent info: `agent:{agentId}:...` — switching sessions switches agents
+- On external channels (Telegram, Discord, etc.), the agent is assigned when the channel is configured; users do not need to select one
+
+---
+
+## 4. Skills — Extended Knowledge
+
+Skills are knowledge modules or instruction sets injected into the system prompt, teaching the agent how to use tools or handle specific domains.
+
+**Example built-in skills:**
+
+| Skill | Function |
+|-------|----------|
+| `pdf` | Read, create, merge, split PDF files |
+| `xlsx` | Read, create, edit spreadsheets |
+| `docx` | Read, create, edit Word documents |
+| `pptx` | Read, create, edit presentations |
+| `skill-creator` | Create new skills |
+
+**Skill discovery:**
+
+- If ≤ 20 skills and total tokens ≤ 3,500: the skill list is injected directly into the system prompt (inline mode)
+- If more: the agent uses the `skill_search` tool to search by keyword (BM25 + vector search)
+
+**Visibility levels:**
+
+| Level | Access |
+|-------|--------|
+| `public` | All agents and users |
+| `private` | Owner only |
+| `internal` | Must be explicitly granted |
+
+---
+
+## 5. Tools — Agent Capabilities
+
+Tools are executable functions, distinct from skills (which are knowledge). The agent selects the appropriate tool and calls it during processing.
+
+| Tool Group | Examples |
+|-----------|---------|
+| Filesystem | `read_file`, `write_file`, `list_files` |
+| Web | `web_search`, `browser_act`, `browser_screenshot` |
+| Code execution | `exec` (run Python, Node.js in Docker sandbox) |
+| Memory | `memory_search`, `memory_write` |
+| TTS | `tts_convert` (text to speech) |
+| Subagent | Delegate to another agent for subtasks |
+| MCP tools | Tools from external MCP servers |
+
+Each request can have its own tool allowlist (e.g. a Telegram forum topic can restrict available tools).
+
+---
+
+## 6. Memory — What the Agent Remembers
+
+Agents store long-term memories in `MEMORY.md` (and `memory/*.md`) files in the workspace.
+
+**How it works:**
+
+- When a session approaches the context threshold (>85%), the agent is prompted to save important memories before history is summarized
+- Memories are chunked, embedded, and indexed with hybrid search (FTS + pgvector)
+- On subsequent chats, the agent automatically queries and injects relevant memories into the system prompt
+
+**Deleting memory:**
+
+- Via Web UI: go to **Memory**, find the memory entry, click Delete
+- Via API: `DELETE /v1/memory/{id}`
+- Delete the MEMORY.md file directly in the workspace (if you have access)
+
+---
+
+## 7. Extended Thinking
+
+Extended Thinking lets the model "think out loud" before responding, improving quality on complex questions.
+
+**Levels:**
+
+| Level | Description |
+|-------|-------------|
+| `off` | Disabled (default) |
+| `low` | Quick, minimal thinking |
+| `medium` | Balance between speed and quality |
+| `high` | Deepest thinking, for complex tasks |
+
+**Supported providers:** Anthropic (Claude), OpenAI (GPT-4o reasoning, o1, o3), ACP.
+
+**Note:** Extended Thinking consumes more tokens and increases response latency. Only enable it for difficult problems, multi-step reasoning, or complex analysis.
+
+**Configuration:** Toggle in agent settings (`other_config.thinking_level`) or inherit from the provider (`reasoning_defaults`). While chatting, the ThinkingBlock displays the model's reasoning (can be shown or hidden).

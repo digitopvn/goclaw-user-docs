@@ -1,0 +1,166 @@
+---
+title: "Backup and Restore"
+description: "Backup and restore GoClaw data"
+---
+
+# Backup and Restore
+
+## Overview
+
+GoClaw supports exporting and importing agents, skills, MCP configs, and teams via the Web UI. For production, it is recommended to combine this with database backup using `pg_dump`.
+
+**Route:** `/import-export`
+**Access:** Admin
+
+> The Import/Export feature is currently in **beta**. Verify your configuration after restoring.
+
+---
+
+## Guide
+
+### Access Import/Export
+
+Go to **System > Import / Export**. The interface has 3 main tabs:
+- **Teams** — export/import teams
+- **Agents** — export/import agents
+- **Skills & MCP** — export/import skills and MCP configs
+
+Each tab has 2 inner tabs: **Export** and **Import**.
+
+### Export Agents
+
+1. Go to the **Agents > Export** tab
+2. Select agent(s) to back up
+3. Click **Preview** to inspect the content
+4. Click **Start Export** → progress tree → **Download** button (JSON file)
+
+Content includes: name, description, model, system prompt, tool profile, context files, per-user seed files, tool policies, exec settings, and other customizations.
+
+> Important: LLM provider API keys are **not exported** for security reasons.
+
+### Import Agents
+
+1. Go to the **Agents > Import** tab
+2. Drag and drop a `.tar.gz` file or select a JSON file
+3. **Import Preview** — detect conflicts before importing
+4. Select **Import New** (create new agents) or **Merge Import** (merge into existing agents)
+5. View completion summary (including "do not use" warnings)
+
+### Export / Import Skills
+
+**Export:**
+1. **Skills & MCP > Export** tab
+2. Select skills to back up
+3. Click **Export** → download JSON file
+
+**Import:**
+1. **Skills & MCP > Import** tab
+2. Select JSON file → confirm → **Import**
+
+### Export / Import MCP Configs
+
+**Export:**
+1. **Skills & MCP > Export** tab
+2. Select MCP server configs
+3. Click **Export**
+
+> MCP server API keys are **not exported**. After importing, re-enter credentials at Settings > MCP.
+
+**Import:**
+1. **Skills & MCP > Import** tab
+2. Select JSON file → **Import** — recreates MCP server configs (without credentials)
+
+### Export / Import Teams
+
+**Export:**
+1. **Teams > Export** tab
+2. Select team to back up
+3. Click **Export** — JSON file includes team config, agent list, workspace settings
+
+**Import:**
+1. **Teams > Import** tab
+2. Select JSON file → **Import**
+
+> If agents referenced in the team don't yet exist, import agents first then import the team.
+
+### Database Backup (PostgreSQL)
+
+Recommended to run regularly for production environments:
+
+**Backup:**
+```bash
+pg_dump -h localhost -U goclaw -d goclaw_db -F c -f backup_$(date +%Y%m%d_%H%M%S).dump
+```
+
+| Parameter | Description |
+|-----------|-------------|
+| `-F c` | Custom format (compressed, flexible restore) |
+| `-f` | Output file name |
+| `-h` | Database host |
+| `-U` | Username |
+| `-d` | Database name |
+
+**Restore:**
+```bash
+pg_restore -h localhost -U goclaw -d goclaw_db_new backup_20260330_080000.dump
+```
+
+**Automated backup schedule (recommended):**
+```bash
+# Add to crontab — backup every day at 2:00 AM
+0 2 * * * pg_dump -U goclaw -d goclaw_db -F c -f /backups/goclaw_$(date +\%Y\%m\%d).dump
+```
+
+Store backups off the main server (S3, NFS, etc.).
+
+---
+
+## UI
+
+### Import/Export Page (`/import-export`)
+
+**Displays:** 3-tab page: Teams, Agents, Skills & MCP. Each tab has Export/Import sub-tabs. Beta feature warning banner.
+
+**Export Flow:** Select target (combobox) → Preview → **Start Export** → progress tree → **Download** button
+
+**Import Flow:** Drag and drop `.tar.gz` file → Preview (detect conflicts) → **Import New** or **Merge** → completion summary (with "do not use" warnings)
+
+**Teams Tab:** Export teams (JSON with members and tasks) | Import teams
+
+**Agents Tab:** Export preview | Export | Import preview | Import new | Merge import
+
+**Skills & MCP Tab:** Export/Import skills (JSON) | Export/Import MCP servers (JSON)
+
+---
+
+## After Import/Restore
+
+**Required steps:**
+1. **Settings > Providers** — re-enter API key for each LLM provider
+2. **Settings > MCP** — re-enter credentials for MCP servers with authentication
+3. **Settings > Custom Tools** — re-enter env vars if needed
+
+**Verification checks:**
+- Run a test agent chat — confirm LLM provider is working
+- Check cron jobs have correct schedules
+- Confirm MCP servers have reconnected successfully
+- Verify channel connections (Telegram, Discord, etc.)
+
+---
+
+## Notes
+
+GoClaw **never exports** the following secrets for security reasons:
+- LLM provider API keys (`llm_providers.api_key`)
+- MCP server API keys (`mcp_servers.api_key`)
+- Custom tool env vars (`custom_tools.env`)
+
+All are encrypted with AES-256-GCM and excluded from export files.
+
+---
+
+## See Also
+
+- [configuring-providers.md](configuring-providers.md) — Re-enter LLM provider credentials
+- [tools-and-mcp.md](tools-and-mcp.md) — Re-enter MCP credentials
+- [security-and-permissions.md](security-and-permissions.md) — AES-256-GCM encryption

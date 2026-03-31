@@ -1,0 +1,109 @@
+---
+title: "Quan Ly Sessions"
+description: "Quan ly cac session chat trong GoClaw"
+---
+
+# Quan Ly Sessions
+
+## Tong quan
+
+Trang Sessions cho phep xem, tim kiem, va quan ly toan bo lich su hoi thoai trong he thong. Trang chi tiet session hien thi day du lich su tin nhan, metadata, va cac thao tac chinh sua.
+
+---
+
+## Giao dien — Danh sach Sessions
+
+Route: `/sessions`
+Nhom Sidebar: Hoi Thoai
+Quyen truy cap: Da dang nhap
+
+Hien thi bang phan trang tat ca session voi cac cot:
+
+| Cot | Noi dung |
+|-----|----------|
+| Ten phien / Nguoi dung | Key session va ten hien thi |
+| Agent | Agent xu ly session nay |
+| Su dung ngu canh | Thanh bar: token uoc tinh so voi cua so + so lan nen |
+| So tin nhan | Tong tin nhan trong session |
+| Cap nhat | Thoi gian tin nhan cuoi cung |
+
+**Thao tac:**
+- **Tim kiem** — theo key, nhan, ten hien thi, ten nguoi dung, tieu de chat
+- **Xem chi tiet** — nhan vao dong de chuyen den `/sessions/:key`
+
+---
+
+## Giao dien — Chi tiet Session
+
+Route: `/sessions/:key`
+Nhom Sidebar: Hoi Thoai
+Quyen truy cap: Da dang nhap
+
+Hien thi toan bo lich su tin nhan dang bong bong chat (nguoi dung / tro ly / he thong).
+
+**Metadata session** hien thi phia tren:
+
+| Truong | Mo ta |
+|--------|-------|
+| Agent | Agent xu ly session |
+| Kenh | Kenh tin nhan (web, telegram, discord, ...) |
+| Nguoi dung | ID nguoi dung |
+| Loai ngang hang | Peer type cua session |
+| Token vao/ra | Tong token da tieu thu |
+
+**Khoi tom tat** (co the mo rong): Tom tat noi dung hoi thoai neu agent da tao.
+
+---
+
+## Huong dan — Thao tac tren Session
+
+### Chinh sua tieu de
+
+1. Tren trang chi tiet session, nhan vao tieu de de chinh sua inline.
+2. Nhan **Enter** hoac icon tic (v) de luu.
+3. Nhan **Escape** hoac icon x de huy.
+
+### Dat lai session
+
+Xoa lich su hoi thoai nhung giu lai session (khong xoa session khoi danh sach).
+
+1. Nhan nut **Dat lai**.
+2. Hien dialog xac nhan — nhan **Xac nhan Dat lai**.
+3. Lich su tin nhan bi xoa, session van con.
+
+### Xoa session
+
+Xoa vinh vien session va toan bo lich su.
+
+1. Nhan nut **Xoa**.
+2. Hien dialog xac nhan — nhan **Xac nhan Xoa** (mau nguy hiem).
+3. Sau khi xoa, tu dong chuyen ve danh sach `/sessions`.
+
+Canh bao: Xoa session khong the phuc hoi.
+
+---
+
+## Vi du — Tim kiem session theo nguoi dung
+
+```
+/sessions
+  -> O tim kiem: "user123"
+  -> He thong loc cac session cua user123
+  -> Nhan vao session de xem lich su day du
+```
+
+---
+
+## Luu y
+
+- Thanh bar "su dung ngu canh" cho biet session sap day context window — khi day, agent tu dong nen lich su cu.
+- So lan nen hien thi trong thanh bar: cang nhieu lan nen, agent cang it nho lich su cu.
+- Trang Sessions hien thi tat ca session trong tenant (admin thay tat ca, nguoi dung thuong chi thay session cua minh tuy theo cau hinh RBAC).
+- De chat lai voi session cu, nhan vao session trong sidebar cua trang Chat.
+
+---
+
+## Xem them
+
+- [01-chat-co-ban.md](./01-chat-co-ban.md) — Giao dien chat chinh
+- [03-kenh-ket-noi.md](./03-kenh-ket-noi.md) — Sessions qua cac kenh ngoai

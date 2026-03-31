@@ -1,0 +1,92 @@
+---
+title: Basic Chat
+description: Using the Web UI chat interface in GoClaw
+---
+
+# Basic Chat
+
+Guide to using the chat interface in the GoClaw Web UI.
+
+---
+
+## 1. Interface Overview
+
+The chat interface has three main areas:
+
+- **Sidebar (left)** — session list, new session button, agent selector
+- **Chat area (center)** — message thread, streaming responses, tool call cards
+- **Input bar (bottom)** — message input, file attachment button, send button
+
+On mobile, the sidebar is hidden by default; tap the menu icon to open it. The virtual keyboard on iOS/Android is handled automatically so the input bar stays visible.
+
+---
+
+## 2. Starting a New Session
+
+1. Open the sidebar (menu icon on mobile, or always visible on desktop)
+2. Select an agent from the **AgentSelector** dropdown
+3. Click **New Chat** (the `+` icon)
+4. The URL updates to `/chat/{sessionKey}` — the session is created automatically when you send the first message
+
+Session keys follow the format `agent:{agentId}:{channel}:direct:{userId}`. Each agent has its own session namespace.
+
+---
+
+## 3. Sending Messages
+
+- Type in the input bar and press **Enter** (or the Send button) to send
+- **Markdown** is supported in messages: `**bold**`, `*italic*`, backtick code, lists
+- **File attachments** — drag and drop, or click the attachment icon. Files are uploaded via `/v1/media/upload` and the path is injected into the message automatically
+- The input bar expands automatically as you type (multi-line)
+
+---
+
+## 4. Streaming Responses
+
+While the agent processes your message, the response streams token by token:
+
+- **ThinkingBlock** — shown when the agent is reasoning (Extended Thinking)
+- **ToolCallCard** — displays the tool name and result (`web_search`, `read_file`, etc.)
+- **MessageBubble** — accumulates streaming text and renders Markdown when complete
+- A typing indicator appears at the end of the thread while the agent is processing
+
+The thread auto-scrolls to the latest message (smooth scroll). Auto-scroll pauses when you manually scroll up.
+
+---
+
+## 5. Viewing Chat History
+
+- History loads from `chat.history` when you select a session
+- Scroll up to view older messages
+- Past sessions are listed in the sidebar, sorted by time
+- Any session can be revisited at any time
+
+---
+
+## 6. Stopping a Response (Abort)
+
+While an agent is running:
+
+- A **Stop** button appears in the input area — click it to cancel the current request (`chat.abort`)
+- If team tasks are still running, the `isBusy` state remains until all tasks complete
+- On Telegram: use `/stop` to cancel the current run, `/stopall` to cancel all
+
+---
+
+## 7. Deleting a Session
+
+1. Hover over the session in the sidebar to reveal the delete icon
+2. Click the delete icon — a confirmation dialog appears
+3. Confirm to permanently delete (`sessions.delete`)
+
+**Note:** Deleted sessions cannot be recovered. The full message history is removed.
+
+---
+
+## 8. Keyboard Shortcuts
+
+| Shortcut | Action |
+|----------|--------|
+| `Enter` | Send message |
+| `Shift+Enter` | New line in input |
+| `Escape` | Close sidebar (mobile) |
