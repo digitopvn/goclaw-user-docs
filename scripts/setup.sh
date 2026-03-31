@@ -1,0 +1,500 @@
+#!/usr/bin/env bash
+# GoClaw Quick Setup — interactive wizard covering all deployment cases.
+#
+# Usage:
+#   ./scripts/setup.sh              # interactive
+#   ./scripts/setup.sh --mode docker
+#   ./scripts/setup.sh --mode native
+#   ./scripts/setup.sh --mode lite
+#
+# Modes:
+#   docker  — GoClaw + PostgreSQL in Docker (recommended for servers)
+#   native  — GoClaw binary on host, connecting to your own PostgreSQL
+#   lite    — GoClaw Desktop (SQLite, no PostgreSQL needed)
+
+set -euo pipefail
+
+REPO="nextlevelbuilder/goclaw"
+MODE=""
+PG_SOURCE=""        # bundled | external
+WITH_UI=false
+NONINTERACTIVE=false
+
+# ── Colors ──
+RED='\033[0;31m'; YELLOW='\033[1;33m'; GREEN='\033[0;32m'
+CYAN='\033[0;36m'; BOLD='\033[1m'; RESET='\033[0m'
+
+info()    { echo -e "${CYAN}  $*${RESET}"; }
+success() { echo -e "${GREEN}  ✓ $*${RESET}"; }
+warn()    { echo -e "${YELLOW}  ⚠  $*${RESET}"; }
+error()   { echo -e "${RED}  ✗ $*${RESET}"; }
+bold()    { echo -e "${BOLD}$*${RESET}"; }
+
+# ── Parse args ──
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --mode)         MODE="$2"; shift 2 ;;
+    --pg)           PG_SOURCE="$2"; shift 2 ;;
+    --with-ui)      WITH_UI=true; shift ;;
+    --yes|-y)       NONINTERACTIVE=true; shift ;;
+    --help|-h)
+      sed -n '2,12p' "$0" | sed 's/^# \?//'
+      exit 0
+      ;;
+    *) echo "Unknown option: $1"; exit 1 ;;
+  esac
+done
+
+# ── Prompt helper ──
+ask() {
+  local prompt="$1" default="${2:-}" var
+  if [ -n "$default" ]; then
+    read -rp "  ${prompt} [${default}]: " var
+    echo "${var:-$default}"
+  else
+    read -rp "  ${prompt}: " var
+    echo "$var"
+  fi
+}
+
+ask_yn() {
+  local prompt="$1" default="${2:-y}"
+  local yn
+  read -rp "  ${prompt} [$([ "$default" = y ] && echo 'Y/n' || echo 'y/N')]: " yn
+  yn="${yn:-$default}"
+  [[ "$yn" =~ ^[Yy] ]]
+}
+
+# ── Detect available tools ──
+has_docker=false
+has_docker_compose=false
+has_goclaw=false
+
+command -v docker &>/dev/null && has_docker=true
+( command -v docker &>/dev/null && docker compose version &>/dev/null ) && has_docker_compose=true
+command -v goclaw &>/dev/null && has_goclaw=true
+
+# ── Banner ──
+echo
+bold "╔══════════════════════════════════════════════╗"
+bold "║          GoClaw Setup Wizard                 ║"
+bold "╚══════════════════════════════════════════════╝"
+echo
+
+# ── Mode selection ──
+if [ -z "$MODE" ]; then
+  bold "── Choose deployment mode ──"
+  echo
+  echo "  1) Docker      — GoClaw + Postgres in containers  (recommended, no install needed)"
+  echo "  2) Native      — GoClaw binary on this host       (you manage PostgreSQL)"
+  echo "  3) Lite        — Desktop app with embedded SQLite (no PostgreSQL needed)"
+  echo
+
+  if ! $has_docker; then
+    warn "Docker not detected on this system — option 1 may not work."
+    echo
+  fi
+
+  read -rp "  Choice [1-3, default=1]: " choice
+  case "${choice:-1}" in
+    1|docker)  MODE="docker" ;;
+    2|native)  MODE="native" ;;
+    3|lite)    MODE="lite" ;;
+    *) error "Invalid choice"; exit 1 ;;
+  esac
+fi
+
+echo
+
+# ════════════════════════════════════════════════
+# MODE: LITE (Desktop)
+# ════════════════════════════════════════════════
+if [ "$MODE" = "lite" ]; then
+  bold "── GoClaw Lite — Desktop App ──"
+  echo
+  info "Downloads the desktop app (SQLite embedded, no PostgreSQL needed)."
+  echo
+
+  OS="$(uname -s | tr '[:upper:]' '[:lower:]')"
+  if [ "$OS" = "darwin" ]; then
+    info "Running macOS installer..."
+    echo
+    SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+    bash "${SCRIPT_DIR}/install-lite.sh"
+  else
+    warn "Lite desktop installer currently supports macOS only."
+    echo "  Windows: download the .zip from https://github.com/${REPO}/releases"
+    echo "  Linux:   not available yet"
+  fi
+  exit 0
+fi
+
+# ════════════════════════════════════════════════
+# MODE: DOCKER
+# ════════════════════════════════════════════════
+if [ "$MODE" = "docker" ]; then
+  if ! $has_docker; then
+    error "Docker is not installed. Install Docker Desktop from https://docker.com and retry."
+    exit 1
+  fi
+  if ! $has_docker_compose; then
+    error "Docker Compose plugin not found. Make sure you have Docker Desktop ≥ 4.x or install the compose plugin."
+    exit 1
+  fi
+
+  bold "── Docker Setup ──"
+  echo
+
+  # ── PostgreSQL source ──
+  if [ -z "$PG_SOURCE" ]; then
+    echo "  PostgreSQL:"
+    echo "  1) Bundled   — spin up a postgres container automatically (easiest)"
+    echo "  2) External  — connect to your own PostgreSQL (managed service, existing server)"
+    echo
+    read -rp "  Choice [1-2, default=1]: " pg_choice
+    case "${pg_choice:-1}" in
+      1|bundled)  PG_SOURCE="bundled" ;;
+      2|external) PG_SOURCE="external" ;;
+      *) error "Invalid choice"; exit 1 ;;
+    esac
+  fi
+
+  echo
+
+  # ── Dashboard ──
+  if ! $WITH_UI && ! $NONINTERACTIVE; then
+    ask_yn "Include web dashboard UI?" "y" && WITH_UI=true
+  fi
+
+  echo
+
+  # ── Resolve data dir ──
+  DATA_DIR="${GOCLAW_DATA_DIR:-./goclaw-data}"
+  info "Creating data directory: ${DATA_DIR}"
+  mkdir -p "${DATA_DIR}"
+
+  ENV_FILE="${DATA_DIR}/.env"
+
+  # ── Generate secrets ──
+  gen_secret() { openssl rand -hex "$1" 2>/dev/null || head -c $(( $1 * 2 )) /dev/urandom | od -An -tx1 | tr -d ' \n'; }
+
+  if [ ! -f "$ENV_FILE" ]; then
+    GATEWAY_TOKEN="$(gen_secret 32)"
+    ENCRYPTION_KEY="$(gen_secret 16)"
+    GOCLAW_PORT="${GOCLAW_PORT:-18790}"
+    UI_PORT="${GOCLAW_UI_PORT:-3000}"
+
+    {
+      echo "# GoClaw environment — generated by setup.sh"
+      echo "GOCLAW_GATEWAY_TOKEN=${GATEWAY_TOKEN}"
+      echo "GOCLAW_ENCRYPTION_KEY=${ENCRYPTION_KEY}"
+      echo "GOCLAW_PORT=${GOCLAW_PORT}"
+      echo "GOCLAW_UI_PORT=${UI_PORT}"
+    } > "$ENV_FILE"
+
+    if [ "$PG_SOURCE" = "bundled" ]; then
+      PG_PASSWORD="$(gen_secret 12)"
+      {
+        echo "POSTGRES_PORT=5432"
+        echo "POSTGRES_USER=goclaw"
+        echo "POSTGRES_PASSWORD=${PG_PASSWORD}"
+        echo "POSTGRES_DB=goclaw"
+      } >> "$ENV_FILE"
+      success "Generated ${ENV_FILE} with random secrets."
+    else
+      success "Generated ${ENV_FILE} (no PG credentials — using external DSN)."
+    fi
+  else
+    info "Using existing ${ENV_FILE}"
+    # Load existing env
+    set -a; source "$ENV_FILE"; set +a
+    GOCLAW_PORT="${GOCLAW_PORT:-18790}"
+    UI_PORT="${GOCLAW_UI_PORT:-3000}"
+  fi
+
+  # ── External PG: collect DSN ──
+  if [ "$PG_SOURCE" = "external" ]; then
+    echo
+    bold "── External PostgreSQL ──"
+    echo
+    info "Enter your PostgreSQL connection string."
+    info "Format: postgres://user:pass@host:5432/dbname?sslmode=disable"
+    echo
+
+    GOCLAW_POSTGRES_DSN="${GOCLAW_POSTGRES_DSN:-}"
+    if [ -z "$GOCLAW_POSTGRES_DSN" ]; then
+      GOCLAW_POSTGRES_DSN="$(ask "DSN")"
+    else
+      info "Using GOCLAW_POSTGRES_DSN from environment."
+    fi
+
+    # Rewrite localhost → host.docker.internal
+    if echo "$GOCLAW_POSTGRES_DSN" | grep -qE 'localhost|127\.0\.0\.1'; then
+      warn "DSN contains 'localhost' — inside Docker this resolves to the container itself."
+      GOCLAW_POSTGRES_DSN="${GOCLAW_POSTGRES_DSN/localhost/host.docker.internal}"
+      GOCLAW_POSTGRES_DSN="${GOCLAW_POSTGRES_DSN/127.0.0.1/host.docker.internal}"
+      info "Auto-replaced with: ${GOCLAW_POSTGRES_DSN}"
+    fi
+
+    echo "GOCLAW_POSTGRES_DSN=${GOCLAW_POSTGRES_DSN}" >> "$ENV_FILE"
+
+    # Check pgvector on external PG
+    echo
+    info "Checking pgvector on your PostgreSQL instance..."
+    if command -v psql &>/dev/null; then
+      if psql "$GOCLAW_POSTGRES_DSN" -tAc "SELECT 1 FROM pg_extension WHERE extname='vector'" 2>/dev/null | grep -q 1; then
+        success "pgvector extension found — all features enabled."
+      else
+        warn "pgvector not found on your PostgreSQL."
+        warn "Memory semantic search, KG embeddings, and skill vector search will be disabled."
+        warn "To enable: run 'CREATE EXTENSION vector;' as superuser, or enable it in your provider's dashboard."
+      fi
+    else
+      warn "psql not available — cannot check pgvector. Setup will continue; check after startup with: goclaw doctor"
+    fi
+  fi
+
+  # ── Generate self-contained docker-compose.yaml ──
+  COMPOSE_FILE="${DATA_DIR}/docker-compose.yaml"
+
+  # Build postgres service block (bundled only)
+  PG_SERVICE=""
+  PG_DSN_ENV=""
+  PG_DEPENDS=""
+  if [ "$PG_SOURCE" = "bundled" ]; then
+    PG_SERVICE='
+  postgres:
+    image: pgvector/pgvector:pg18
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-goclaw}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-goclaw}
+      POSTGRES_DB: ${POSTGRES_DB:-goclaw}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-goclaw} -d ${POSTGRES_DB:-goclaw}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped'
+    PG_DSN_ENV='      - GOCLAW_POSTGRES_DSN=postgres://${POSTGRES_USER:-goclaw}:${POSTGRES_PASSWORD:-goclaw}@postgres:5432/${POSTGRES_DB:-goclaw}?sslmode=disable'
+    PG_DEPENDS='    depends_on:
+      postgres:
+        condition: service_healthy'
+  else
+    PG_DSN_ENV="      - GOCLAW_POSTGRES_DSN=${GOCLAW_POSTGRES_DSN}"
+  fi
+
+  # Build UI service block (optional)
+  UI_SERVICE=""
+  if $WITH_UI; then
+    UI_SERVICE='
+  goclaw-ui:
+    image: ghcr.io/nextlevelbuilder/goclaw-web:latest
+    ports:
+      - "${GOCLAW_UI_PORT:-3000}:80"
+    depends_on:
+      - goclaw
+    restart: unless-stopped'
+  fi
+
+  # Build volumes block
+  VOLUMES_BLOCK="volumes:
+  goclaw-data:
+  goclaw-workspace:"
+  if [ "$PG_SOURCE" = "bundled" ]; then
+    VOLUMES_BLOCK="${VOLUMES_BLOCK}
+  postgres-data:"
+  fi
+
+  cat > "$COMPOSE_FILE" <<COMPOSE
+# GoClaw — generated by setup.sh
+# Edit as needed. Re-run setup.sh to regenerate.
+# Start:   docker compose up -d
+# Stop:    docker compose down
+# Logs:    docker compose logs -f goclaw
+# Migrate: docker compose exec goclaw goclaw migrate up
+
+services:${PG_SERVICE}
+
+  goclaw:
+    image: ghcr.io/nextlevelbuilder/goclaw:latest
+    ports:
+      - "\${GOCLAW_PORT:-18790}:18790"
+    env_file:
+      - .env
+    environment:
+      - GOCLAW_HOST=0.0.0.0
+      - GOCLAW_PORT=18790
+      - GOCLAW_CONFIG=/app/data/config.json
+      - GOCLAW_SKILLS_DIR=/app/data/skills
+${PG_DSN_ENV}
+    volumes:
+      - goclaw-data:/app/data
+      - goclaw-workspace:/app/workspace
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+${PG_DEPENDS}
+    security_opt:
+      - no-new-privileges:true
+    init: true
+    cap_drop:
+      - ALL
+    cap_add:
+      - SETUID
+      - SETGID
+      - CHOWN
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=256m
+    restart: unless-stopped
+${UI_SERVICE}
+
+${VOLUMES_BLOCK}
+COMPOSE
+
+  # ── Generate start.sh wrapper ──
+  WRAPPER="${DATA_DIR}/start.sh"
+  cat > "$WRAPPER" <<'WRAPPER_EOF'
+#!/usr/bin/env bash
+# GoClaw start — generated by setup.sh
+set -euo pipefail
+cd "$(dirname "$0")"
+docker compose "$@"
+WRAPPER_EOF
+  chmod +x "$WRAPPER"
+
+  echo
+  bold "╔══════════════════════════════════════════════╗"
+  bold "║         Docker Setup Ready!                  ║"
+  bold "╚══════════════════════════════════════════════╝"
+  echo
+  echo "  Config:   ${COMPOSE_FILE}"
+  echo "  Secrets:  ${ENV_FILE}"
+  echo "  Start:    ${WRAPPER}"
+  echo
+  bold "── Quick Start ──"
+  echo
+  echo "  cd ${DATA_DIR}"
+  echo "  ./start.sh up -d"
+  echo
+  bold "── First-time only: run migrations ──"
+  echo
+  echo "  ./start.sh exec goclaw goclaw migrate up"
+  echo
+  if $WITH_UI; then
+    echo "  Gateway:    http://localhost:${GOCLAW_PORT:-18790}"
+    echo "  Dashboard:  http://localhost:${UI_PORT:-3000}"
+  else
+    echo "  Gateway:    http://localhost:${GOCLAW_PORT:-18790}"
+    info "Re-run with --with-ui to add the web dashboard."
+  fi
+  echo
+
+  exit 0
+fi
+
+# ════════════════════════════════════════════════
+# MODE: NATIVE BINARY
+# ════════════════════════════════════════════════
+if [ "$MODE" = "native" ]; then
+  bold "── Native Binary Setup ──"
+  echo
+
+  # ── Install binary if not present ──
+  if ! $has_goclaw; then
+    info "GoClaw binary not found. Installing..."
+    echo
+    SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+    bash "${SCRIPT_DIR}/install.sh"
+    echo
+  else
+    VER="$(goclaw version 2>/dev/null || echo unknown)"
+    success "GoClaw already installed: ${VER}"
+  fi
+
+  echo
+
+  # ── PostgreSQL DSN ──
+  bold "── Database Connection ──"
+  echo
+  echo "  Options:"
+  echo "  1) Enter DSN manually"
+  echo "  2) Use GOCLAW_POSTGRES_DSN environment variable (already set)"
+  echo "  3) I don't have PostgreSQL — show me how to get one"
+  echo
+
+  PG_DSN="${GOCLAW_POSTGRES_DSN:-}"
+  if [ -n "$PG_DSN" ]; then
+    info "GOCLAW_POSTGRES_DSN is set in environment. Using it."
+  else
+    read -rp "  Choice [1-3, default=1]: " pg_opt
+    case "${pg_opt:-1}" in
+      1)
+        echo
+        info "Format: postgres://user:pass@host:5432/dbname?sslmode=disable"
+        PG_DSN="$(ask "PostgreSQL DSN")"
+        ;;
+      2)
+        error "GOCLAW_POSTGRES_DSN is not set in your environment. Set it and re-run."
+        exit 1
+        ;;
+      3)
+        echo
+        bold "── PostgreSQL Setup Options ──"
+        echo
+        echo "  Docker (fastest):    docker run -d --name goclaw-pg -p 5432:5432 \\"
+        echo "                         -e POSTGRES_PASSWORD=goclaw pgvector/pgvector:pg18"
+        echo
+        echo "  Homebrew (macOS):    brew install postgresql@16 && brew services start postgresql@16"
+        echo
+        echo "  APT (Ubuntu/Debian): sudo apt install postgresql"
+        echo
+        echo "  Managed services:    Supabase (free tier), Neon, Railway, Render"
+        echo "                       → Enable the 'vector' extension in the dashboard"
+        echo
+        warn "After setting up PostgreSQL, re-run: ./scripts/setup.sh --mode native"
+        exit 0
+        ;;
+    esac
+  fi
+
+  echo
+  info "Testing connection..."
+  if ! goclaw onboard --dsn-check "$PG_DSN" 2>/dev/null; then
+    # Fall back to running full onboard with the DSN pre-set
+    export GOCLAW_POSTGRES_DSN="$PG_DSN"
+  fi
+
+  # ── Check pgvector ──
+  echo
+  info "Checking pgvector extension..."
+  if command -v psql &>/dev/null; then
+    if psql "$PG_DSN" -tAc "SELECT 1 FROM pg_extension WHERE extname='vector'" 2>/dev/null | grep -q 1; then
+      success "pgvector found — all features enabled."
+    else
+      warn "pgvector not installed on this PostgreSQL instance."
+      warn "Memory semantic search, KG embeddings, and skill vector search will be disabled."
+      echo
+      info "To enable pgvector:"
+      echo "    Docker: use pgvector/pgvector:pg18 image"
+      echo "    APT:    sudo apt install postgresql-16-pgvector"
+      echo "    Homebrew: brew install pgvector"
+      echo "    Managed: enable 'vector' extension in your provider dashboard"
+      echo
+      ask_yn "Continue without pgvector?" "y" || exit 0
+    fi
+  else
+    warn "psql not available — cannot verify pgvector. Continuing..."
+  fi
+
+  # ── Run onboard ──
+  echo
+  bold "── Running GoClaw Onboard Wizard ──"
+  echo
+  export GOCLAW_POSTGRES_DSN="$PG_DSN"
+  goclaw onboard
+
+  exit 0
+fi
