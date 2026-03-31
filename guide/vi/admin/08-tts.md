@@ -1,89 +1,89 @@
-# Cau Hinh TTS (Chuyen Van Ban Thanh Giong Noi)
+# Cấu Hình TTS (Chuyển Văn Bản Thành Giọng Nói)
 
 **Route:** `/tts`
-**Nhom Sidebar:** Kha Nang
-**Quyen truy cap:** Owner (Cross-tenant)
+**Nhóm Sidebar:** Khả Năng
+**Quyền truy cập:** Owner (Cross-tenant)
 
 ---
 
-## Tong Quan
+## Tổng Quan
 
-TTS (Text-to-Speech) cho phep GoClaw doc to phan hoi cua agent bang giong noi tong hop. He thong ho tro nhieu provider va co the cau hinh de tu dong phat am thanh theo dieu kien.
+TTS (Text-to-Speech) cho phép GoClaw đọc to phản hồi của agent bằng giọng nói tổng hợp. Hệ thống hỗ trợ nhiều provider và có thể cấu hình để tự động phát âm thanh theo điều kiện.
 
 ---
 
-## Huong Dan Cau Hinh
+## Hướng Dẫn Cấu Hình
 
-### 1. Chon provider chinh
+### 1. Chọn provider chính
 
-Vao `/tts`, chon provider tu danh sach:
+Vào `/tts`, chọn provider từ danh sách:
 
-- **Khong co** — tat TTS
-- **openai** — su dung OpenAI TTS API
-- **elevenlabs** — su dung ElevenLabs API (giong cao chat luong)
-- **edge** — su dung Microsoft Edge TTS (mien phi, khong can API key)
-- **minimax** — su dung MiniMax TTS API
+- **Không có** — tắt TTS
+- **openai** — sử dụng OpenAI TTS API
+- **elevenlabs** — sử dụng ElevenLabs API (giọng cao chất lượng)
+- **edge** — sử dụng Microsoft Edge TTS (miễn phí, không cần API key)
+- **minimax** — sử dụng MiniMax TTS API
 
-### 2. Cau hinh che do tu dong (Auto Mode)
+### 2. Cấu hình chế độ tự động (Auto Mode)
 
-| Gia tri | Mo ta |
+| Giá trị | Mô tả |
 |---------|-------|
-| `off` | Khong tu dong phat am thanh |
-| `always` | Phat am thanh cho moi phan hoi |
-| `inbound` | Chi phat khi tin nhan den tu channel ben ngoai |
-| `tagged` | Chi phat khi phan hoi co the dac biet |
+| `off` | Không tự động phát âm thanh |
+| `always` | Phát âm thanh cho mọi phản hồi |
+| `inbound` | Chỉ phát khi tin nhắn đến từ channel bên ngoài |
+| `tagged` | Chỉ phát khi phản hồi có thẻ đặc biệt |
 
-### 3. Che do tra loi (Reply Mode)
+### 3. Chế độ trả lời (Reply Mode)
 
-- **final** — chi phat am thanh cho phan hoi hoan chinh cuoi cung
-- **all** — phat am thanh cho tat ca cac turns trong hoi thoai
+- **final** — chỉ phát âm thanh cho phản hồi hoàn chỉnh cuối cùng
+- **all** — phát âm thanh cho tất cả các turns trong hội thoại
 
-### 4. Gioi han va timeout
+### 4. Giới hạn và timeout
 
-- **Max length** — do dai van ban toi da truoc khi cat (mac dinh: 1500 ky tu)
-- **Timeout** — thoi gian cho doi API call toi da (mac dinh: 30 giay)
+- **Max length** — độ dài văn bản tối đa trước khi cắt (mặc định: 1500 ký tự)
+- **Timeout** — thời gian chờ đợi API call tối đa (mặc định: 30 giây)
 
-### 5. Cau hinh theo provider
+### 5. Cấu hình theo provider
 
-Moi provider co cac tham so rieng:
+Mỗi provider có các tham số riêng:
 
 **OpenAI TTS**
-- API Key (lay tu env `OPENAI_API_KEY`)
-- Model: mac dinh `gpt-4o-mini-tts`
-- Voice: `alloy`, `echo`, `fable`, `onyx`, `nova`, `shimmer`
+- API Key (lấy từ env `OPENAI_API_KEY`)
+- Model: mặc định `gpt-4o-mini-tts`
+- Giọng nói: `alloy`, `echo`, `fable`, `onyx`, `nova`, `shimmer`
 
 **ElevenLabs**
-- API Key (lay tu env `ELEVENLABS_API_KEY`)
-- Voice ID: mac dinh `pMsXgVXv3BLzUgSXRplE`
-- Model ID: mac dinh `eleven_multilingual_v2`
+- API Key (lấy từ env `ELEVENLABS_API_KEY`)
+- Voice ID: mặc định `pMsXgVXv3BLzUgSXRplE`
+- Model ID: mặc định `eleven_multilingual_v2`
 
 **Edge TTS**
-- Bat/tat toggle
-- Voice: mac dinh `en-US-MichelleNeural`
-- Rate: toc do doc (vi du: `+10%`, `-20%`)
+- Bật/tắt toggle
+- Giọng nói: mặc định `en-US-MichelleNeural`
+- Tốc độ nói: tốc độ đọc (ví dụ: `+10%`, `-20%`)
 
 **MiniMax**
 - API Key + Group ID
-- Model: mac dinh `speech-02-hd`
-- Voice ID: chon giong doc
+- Model: mặc định `speech-02-hd`
+- Voice ID: chọn giọng đọc
 
 ---
 
-## Giao Dien (UI)
+## Giao Diện (UI)
 
-Trang cau hinh TTS gom:
+Trang cấu hình TTS gồm:
 
-- **The trang thai** — hien thi provider dang hoat dong va trang thai ket noi
-- **Cai dat chung** — provider chinh, auto mode, reply mode, max length, timeout
-- **The cai dat theo provider** — moi provider co the rieng voi cac truong tuong ung
-- **Nut Luu** — luu toan bo cai dat
-- **Nut Lam moi** — tai lai tu server
+- **Thẻ trạng thái** — hiển thị provider đang hoạt động và trạng thái kết nối
+- **Cài đặt chung** — provider chính, chế độ tự động, chế độ trả lời, max length, timeout
+- **Thẻ cài đặt theo provider** — mỗi provider có thẻ riêng với các trường tương ứng
+- **Nút Lưu** — lưu toàn bộ cài đặt
+- **Nút Làm mới** — tải lại từ server
 
 ---
 
-## Vi Du
+## Ví Dụ
 
-Cau hinh TTS su dung Edge TTS (mien phi), tu dong phat cho tin nhan den:
+Cấu hình TTS sử dụng Edge TTS (miễn phí), tự động phát cho tin nhắn đến:
 
 ```json5
 {
@@ -95,7 +95,7 @@ Cau hinh TTS su dung Edge TTS (mien phi), tu dong phat cho tin nhan den:
     timeout_ms: 30000,
     edge: {
       enabled: true,
-      voice: "vi-VN-HoaiMyNeural",  // Giong Viet Nam
+      voice: "vi-VN-HoaiMyNeural",  // Giọng Việt Nam
       rate: "+0%"
     }
   }
@@ -104,16 +104,16 @@ Cau hinh TTS su dung Edge TTS (mien phi), tu dong phat cho tin nhan den:
 
 ---
 
-## Luu Y
+## Lưu Ý
 
-- API keys cua TTS providers khong luu trong `config.json` — dung bien moi truong hoac `.env.local`
-- Edge TTS khong can API key nhung phu thuoc vao ket noi internet
-- `auto: "tagged"` yeu cau agent tra ve the dac biet trong phan hoi — kiem tra tai lieu agent tuong ung
-- Khi `mode: "all"`, so lan goi API tang len nhieu — can theo doi chi phi voi OpenAI/ElevenLabs
+- API keys của TTS providers không lưu trong `config.json` — dùng biến môi trường hoặc `.env.local`
+- Edge TTS không cần API key nhưng phụ thuộc vào kết nối internet
+- `auto: "tagged"` yêu cầu agent trả về thẻ đặc biệt trong phản hồi — kiểm tra tài liệu agent tương ứng
+- Khi `mode: "all"`, số lần gọi API tăng lên nhiều — cần theo dõi chi phí với OpenAI/ElevenLabs
 
 ---
 
-## Xem Them
+## Xem Thêm
 
-- [Cau hinh tham chieu — Section tts](../reference/03-cau-hinh.md#7-section-tts)
-- [Cau hinh providers](../admin/02-providers.md)
+- [Cấu hình tham chiếu — Section tts](../reference/03-cau-hinh.md#7-section-tts)
+- [Cấu hình providers](../admin/02-providers.md)

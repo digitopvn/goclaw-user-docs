@@ -1,115 +1,115 @@
-# Quan Ly To Chuc (Multi-Tenant)
+# Quản Lý Tổ Chức (Multi-Tenant)
 
-**Route danh sach:** `/admin/tenants`
-**Route chi tiet:** `/admin/tenants/:id`
-**Nhom Sidebar:** He Thong
-**Quyen truy cap:** Owner (Cross-tenant)
+**Route danh sách:** `/admin/tenants`
+**Route chi tiết:** `/admin/tenants/:id`
+**Nhóm Sidebar:** Hệ Thống
+**Quyền truy cập:** Owner (Cross-tenant)
 
-> **Chi danh cho Standard Edition.** Desktop (Lite) khong ho tro multi-tenant.
-
----
-
-## Tong Quan
-
-Multi-tenant cho phep mot he thong GoClaw phuc vu nhieu to chuc (tenant) doc lap. Moi tenant co nguoi dung, agents, va du lieu rieng biet. Quan tri vien cap Owner co the tao va quan ly tat ca tenants tu giao dien nay.
+> **Chỉ dành cho Standard Edition.** Desktop (Lite) không hỗ trợ multi-tenant.
 
 ---
 
-## Danh Sach To Chuc
+## Tổng Quan
+
+Multi-tenant cho phép một hệ thống GoClaw phục vụ nhiều tổ chức (tenant) độc lập. Mỗi tenant có người dùng, agents, và dữ liệu riêng biệt. Quản trị viên cấp Owner có thể tạo và quản lý tất cả tenants từ giao diện này.
+
+---
+
+## Danh Sách Tổ Chức
 
 **Route:** `/admin/tenants`
 
-### Giao Dien
+### Giao Diện
 
-Bang hien thi tat ca to chuc hien co: ten, slug, trang thai (hoat dong / tam dung), ngay tao.
+Bảng hiển thị tất cả tổ chức hiện có: tên, slug, trạng thái (hoạt động / tạm ngưng), ngày tạo.
 
-### Tao To Chuc Moi
+### Tạo Tổ Chức Mới
 
-1. Nhan nut **"Tao to chuc"**
-2. Dien vao hop thoai:
-   - **Ten** (bat buoc) — ten hien thi cua to chuc
-   - **Slug** (bat buoc) — tu dong tao tu ten (chu thuong + gach ngang); co the chinh sua
-3. Nhan **Tao** — he thong tao tenant va chuyen den trang chi tiet
+1. Nhấn nút **"Tạo tổ chức"**
+2. Điền vào hộp thoại:
+   - **Tên** (bắt buộc) — tên hiển thị của tổ chức
+   - **Slug** (bắt buộc) — tự động tạo từ tên (chữ thường + gạch ngang); có thể chỉnh sửa
+3. Nhấn **Tạo** — hệ thống tạo tenant và chuyển đến trang chi tiết
 
-> Slug khong the thay doi sau khi tao. Chon can than.
+> Slug không thể thay đổi sau khi tạo. Chọn cẩn thận.
 
-### Lam Moi
+### Làm Mới
 
-Nhan **Lam moi** de tai lai danh sach tu server.
+Nhấn **Làm mới** để tải lại danh sách từ server.
 
 ---
 
-## Chi Tiet To Chuc
+## Chi Tiết Tổ Chức
 
 **Route:** `/admin/tenants/:id`
 
-### Giao Dien
+### Giao Diện
 
-- **The thong tin** — hien thi slug, trang thai, ngay tao
-- **Phan quan ly nguoi dung** — danh sach thanh vien va vai tro cua ho trong tenant nay
+- **Thẻ thông tin** — hiển thị slug, trạng thái, ngày tạo
+- **Phần quản lý người dùng** — danh sách thành viên và vai trò của họ trong tenant này
 
-### Them Nguoi Dung
+### Thêm Người Dùng
 
-1. Nhan **"Them nguoi dung"**
-2. Dien vao hop thoai:
-   - **ID Nguoi dung** — tim kiem qua UserPickerCombobox hoac nhap thu cong
-   - **Vai tro** — chon mot trong: `owner`, `admin`, `operator`, `member`, `viewer`
-3. Nhan **Them Nguoi dung**
+1. Nhấn **"Thêm người dùng"**
+2. Điền vào hộp thoại:
+   - **ID Người dùng** — tìm kiếm qua UserPickerCombobox hoặc nhập thủ công
+   - **Vai trò** — chọn một trong: `owner`, `admin`, `operator`, `member`, `viewer`
+3. Nhấn **Thêm người dùng**
 
-### Xoa Nguoi Dung
+### Xóa Người Dùng
 
-1. Nhan nut xoa tren dong nguoi dung can xoa
-2. Xac nhan trong hop thoai — hien thi ID nguoi dung bi xoa
-3. Nhan **Xoa Nguoi dung** (hanh dong nguy hiem — khong the hoan tac)
+1. Nhấn nút xóa trên dòng người dùng cần xóa
+2. Xác nhận trong hộp thoại — hiển thị ID người dùng bị xóa
+3. Nhấn **Xóa người dùng** (hành động nguy hiểm — không thể hoàn tác)
 
-### Lam Moi Danh Sach
+### Làm Mới Danh Sách
 
-Nhan **Lam moi danh sach nguoi dung** de dong bo voi server.
+Nhấn **Làm mới** để đồng bộ với server.
 
 ---
 
-## He Thong Vai Tro
+## Hệ Thống Vai Trò
 
-| Vai tro | Quyen truy cap |
+| Vai trò | Quyền truy cập |
 |---------|---------------|
-| `owner` | Toan quyen — quan ly tenant, nguoi dung, cau hinh he thong |
-| `admin` | Quan ly agents, channels, tools, cron, providers |
-| `operator` | Chat, quan ly sessions, cron, gui tin nhan ra ngoai |
-| `member` | Chat va xem lich su cua chinh minh |
-| `viewer` | Chi doc — xem agents, sessions, lich su |
+| `owner` | Toàn quyền — quản lý tenant, người dùng, cấu hình hệ thống |
+| `admin` | Quản lý agents, channels, tools, cron, providers |
+| `operator` | Chat, quản lý sessions, cron, gửi tin nhắn ra ngoài |
+| `member` | Chat và xem lịch sử của chính mình |
+| `viewer` | Chỉ đọc — xem agents, sessions, lịch sử |
 
 ---
 
-## Luong Lam Viec Dien Hinh
+## Luồng Làm Việc Điển Hình
 
-**Tao tenant cho phong ban moi:**
+**Tạo tenant cho phòng ban mới:**
 
-1. `/admin/tenants` → Tao to chuc → Nhap ten "Marketing Team", slug tu dong `marketing-team`
-2. Chuyen den chi tiet tenant vua tao
-3. Them truong phong: vai tro `admin`
-4. Them nhan vien: vai tro `member`
+1. `/admin/tenants` → Tạo tổ chức → Nhập tên "Marketing Team", slug tự động `marketing-team`
+2. Chuyển đến chi tiết tenant vừa tạo
+3. Thêm trưởng phòng: vai trò `admin`
+4. Thêm nhân viên: vai trò `member`
 
-**Them nguoi dung vao tenant hien co:**
+**Thêm người dùng vào tenant hiện có:**
 
-1. `/admin/tenants` → Nhan vao dong tenant
-2. Nhan **Them nguoi dung**
-3. Tim kiem ID nguoi dung qua combobox
-4. Chon vai tro phu hop → Nhan **Them**
-
----
-
-## Luu Y
-
-- Moi tenant duoc co lap hoan toan — nguoi dung cua tenant A khong the truy cap du lieu cua tenant B
-- Header `X-GoClaw-Tenant-Id` trong API requests xac dinh tenant scope (UUID hoac slug deu duoc)
-- Owner co quyen **cross-tenant** — co the thao tac tren tat ca tenants tu mot tai khoan
-- Xoa nguoi dung khoi tenant khong xoa tai khoan nguoi dung — chi xoa quyen truy cap vao tenant do
-- Tenant "default" la tenant goc, luon ton tai va khong the xoa
+1. `/admin/tenants` → Nhấn vào dòng tenant
+2. Nhấn **Thêm người dùng**
+3. Tìm kiếm ID người dùng qua combobox
+4. Chọn vai trò phù hợp → Nhấn **Thêm**
 
 ---
 
-## Xem Them
+## Lưu Ý
 
-- [Bao mat va phan quyen](../admin/05-security.md)
+- Mỗi tenant được cô lập hoàn toàn — người dùng của tenant A không thể truy cập dữ liệu của tenant B
+- Header `X-GoClaw-Tenant-Id` trong API requests xác định tenant scope (UUID hoặc slug đều được)
+- Owner có quyền **cross-tenant** — có thể thao tác trên tất cả tenants từ một tài khoản
+- Xóa người dùng khỏi tenant không xóa tài khoản người dùng — chỉ xóa quyền truy cập vào tenant đó
+- Tenant "default" là tenant gốc, luôn tồn tại và không thể xóa
+
+---
+
+## Xem Thêm
+
+- [Bảo mật và phân quyền](../admin/05-security.md)
 - [API Reference — Headers multi-tenant](../reference/01-api-reference.md)
-- [Cau hinh tham chieu](../reference/03-cau-hinh.md)
+- [Cấu hình tham chiếu](../reference/03-cau-hinh.md)

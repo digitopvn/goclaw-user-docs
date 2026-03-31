@@ -1,8 +1,8 @@
-# Theo Doi va Logs
+# Theo Dõi và Logs
 
-## Tong Quan
+## Tổng Quan
 
-GoClaw cung cap 5 cong cu theo doi: Traces (LLM calls), Events (real-time), Activity (audit log), Logs (system log), va Usage Stats. Tat ca cong cu tap trung trong nhom sidebar **Giam Sat**.
+GoClaw cung cấp 5 công cụ theo dõi: Traces (LLM calls), Events (real-time), Activity (audit log), Logs (system log), và Usage Stats. Tất cả công cụ tập trung trong nhóm sidebar **Giám Sát**.
 
 **Routes:**
 - `/traces` — Operator+
@@ -13,33 +13,33 @@ GoClaw cung cap 5 cong cu theo doi: Traces (LLM calls), Events (real-time), Acti
 
 ---
 
-## Huong Dan
+## Hướng Dẫn
 
 ### Xem Traces
 
-Traces ghi lai toan bo hoat dong agent theo tung request: LLM calls, tool calls, token count, latency, cost.
+Traces ghi lại toàn bộ hoạt động agent theo từng request: LLM calls, tool calls, token count, latency, cost.
 
-1. Vao **Traces** trong menu chinh
-2. Loc theo: Agent, Kenh, Trang thai (`running` / `success` / `error` / `cancelled`)
-3. Click vao mot trace de xem chi tiet
+1. Vào **Theo dõi** trong menu chính
+2. Lọc theo: Agent, Kênh, Trạng thái (`running` / `success` / `error` / `cancelled`)
+3. Click vào một trace để xem chi tiết
 
-**Thong tin trace:**
+**Thông tin trace:**
 
-| Truong | Mo Ta |
+| Trường | Mô Tả |
 |--------|-------|
-| Duration | Thoi gian thuc hien tong cong |
-| Input / Output tokens | Tong token LLM da dung |
-| Cost | Chi phi uoc tinh |
-| Status | Trang thai cuoi |
-| Tool calls | So luong tool duoc goi |
+| Duration | Thời gian thực hiện tổng cộng |
+| Input / Output tokens | Tổng token LLM đã dùng |
+| Cost | Chi phí ước tính |
+| Status | Trạng thái cuối |
+| Tool calls | Số lượng tool được gọi |
 
-**Dung trace dang chay:** Nhan nut dung tren dong dang xu ly.
+**Dừng trace đang chạy:** Nhấn nút dừng trên dòng đang xử lý.
 
-**Xuat trace:** Nut **Xuat** trong chi tiet trace → tai `trace-{id}.json.gz`.
+**Xuất trace:** Nút **Xuất trace** trong chi tiết trace → tải `trace-{id}.json.gz`.
 
-### Trace Detail — Cay Span
+### Trace Detail — Cây Span
 
-Moi trace gom nhieu span theo thu bac:
+Mỗi trace gồm nhiều span theo thứ bậc:
 
 ```
 Agent Span (root)
@@ -50,123 +50,123 @@ Agent Span (root)
   LLM Call Span N
 ```
 
-**Loai span:**
+**Loại span:**
 
-| Loai | Mo Ta |
+| Loại | Mô Tả |
 |------|-------|
-| `agent` | Span goc, bao gom toan bo agent run |
-| `llm_call` | Mot lan goi LLM provider |
-| `tool_call` | Mot lan chay tool |
-| `embedding` | Tao vector embedding |
-| `event` | Su kien roi rac (khong co duration) |
+| `agent` | Span gốc, bao gồm toàn bộ agent run |
+| `llm_call` | Một lần gọi LLM provider |
+| `tool_call` | Một lần chạy tool |
+| `embedding` | Tạo vector embedding |
+| `event` | Sự kiện rời rạc (không có duration) |
 
-**Prompt Cache Metrics** (Anthropic Claude): hien thi `cache_read_tokens` va `cache_create_tokens` trong span `llm_call`.
+**Prompt Cache Metrics** (Anthropic Claude): hiển thị `cache_read_tokens` và `cache_create_tokens` trong span `llm_call`.
 
-**Verbose Mode** (xem toan bo noi dung): dat bien moi truong `GOCLAW_TRACE_VERBOSE=1`. Luu den 200KB cho moi input/output span.
+**Verbose Mode** (xem toàn bộ nội dung): đặt biến môi trường `GOCLAW_TRACE_VERBOSE=1`. Lưu đến 200KB cho mỗi input/output span.
 
-### Events — Su Kien Real-Time
+### Events — Sự Kiện Real-Time
 
-**Route `/events`:** Luong su kien truc tiep qua WebSocket theo thu tu thoi gian.
+**Route `/events`:** Luồng sự kiện trực tiếp qua WebSocket theo thứ tự thời gian.
 
-- **Loc theo category:** team.task / team.message / agent / team.crud / agent_link
-- **Loc theo nhom / nguoi dung / chat** — dropdown
-- **Tam dung / Tiep tuc** stream
-- **Xoa tat ca su kien** — xoa view hien tai
+- **Lọc theo category:** team.task / team.message / agent / team.crud / agent_link
+- **Lọc theo nhóm / người dùng / chat** — dropdown
+- **Tạm dừng / Tiếp tục** stream
+- **Xóa tất cả sự kiện** — xóa view hiện tại
 
-Su kien tu dong cuon xuong khi co su kien moi.
+Sự kiện tự động cuộn xuống khi có sự kiện mới.
 
-### Activity — Nhat Ky Quan Tri
+### Activity — Nhật Ký Quản Trị
 
-**Route `/activity`:** Bang nhat ky kiem toan phan trang — hanh dong, nguoi thuc hien, loai thuc the, ID thuc the, dia chi IP, thoi gian.
+**Route `/activity`:** Bảng nhật ký kiểm toán phân trang — hành động, người thực hiện, loại thực thể, ID thực thể, địa chỉ IP, thời gian.
 
-- Loc theo loai hanh dong (vd: `agent.created` / `agent.updated` / `agent.deleted`)
-- Loc theo loai thuc the
-- Chi xem, khong co thao tac thay doi du lieu
+- Lọc theo loại hành động (vd: `agent.created` / `agent.updated` / `agent.deleted`)
+- Lọc theo loại thực thể
+- Chỉ xem, không có thao tác thay đổi dữ liệu
 
-**Cac thao tac quan tri duoc ghi lai:**
-- Tao / thu hoi API key
-- Thay doi cau hinh agent
-- Duyet / tu choi browser pairing
-- Thay doi RBAC va quyen truy cap
-- Tao / xoa cron job
+**Các thao tác quản trị được ghi lại:**
+- Tạo / thu hồi API key
+- Thay đổi cấu hình agent
+- Duyệt / từ chối browser pairing
+- Thay đổi RBAC và quyền truy cập
+- Tạo / xóa cron job
 
-### Logs — Nhat Ky He Thong
+### Logs — Nhật Ký Hệ Thống
 
-**Route `/logs`:** Trinh xem nhat ky real-time, giao dien terminal toi.
+**Route `/logs`:** Trình xem nhật ký real-time, giao diện terminal tối.
 
-Moi muc: thoi gian, muc do (debug/info/warn/error), nguon, tin nhan, thuoc tinh.
+Mỗi mục: thời gian, mức độ (debug/info/warn/error), nguồn, tin nhắn, thuộc tính.
 
-**Thao tac:**
-- Chon muc do truoc khi bat dau theo doi
-- **Bat dau theo doi** — stream nhat ky truc tiep
-- **Dung theo doi** — tam dung stream
-- **Loc theo muc do** — pill: debug / info / warn / error
-- **Tim kiem van ban** — loc theo tu khoa
-- **Xoa nhat ky** — xoa view hien tai
+**Thao tác:**
+- Chọn mức độ trước khi bắt đầu theo dõi
+- **Bắt đầu** — stream nhật ký trực tiếp
+- **Dừng** — tạm dừng stream
+- **Lọc theo mức độ** — pill: debug / info / warn / error
+- **Tìm kiếm văn bản** — lọc theo từ khóa
+- **Xóa nhật ký** — xóa view hiện tại
 
-**Loc su kien bao mat** tu log file:
+**Lọc sự kiện bảo mật** từ log file:
 ```bash
 grep "security." goclaw.log
 ```
 
-| Event | Y Nghia |
+| Event | Ý Nghĩa |
 |-------|---------|
-| `security.injection_detected` | Phat hien prompt injection |
-| `security.injection_blocked` | Message bi chan |
-| `security.rate_limited` | Request bi gioi han |
-| `security.cors_rejected` | Ket noi WebSocket bi tu choi |
-| `security.message_truncated` | Message bi cat do qua dai |
+| `security.injection_detected` | Phát hiện prompt injection |
+| `security.injection_blocked` | Message bị chặn |
+| `security.rate_limited` | Request bị giới hạn |
+| `security.cors_rejected` | Kết nối WebSocket bị từ chối |
+| `security.message_truncated` | Message bị cắt do quá dài |
 
 ---
 
-## Giao Dien (UI)
+## Giao Diện (UI)
 
 ### Trang Traces (`/traces`)
 
-**Hien thi:** Bang phan trang: ten, trang thai, thoi luong, token vao/ra + cache, so span, thoi gian. Bo loc agent va kenh.
+**Hiển thị:** Bảng phân trang: tên, trạng thái, thời lượng, token vào/ra + cache, số span, thời gian. Bộ lọc agent và kênh.
 
-**Hop thoai Chi Tiet Trace:**
-- Header: Sao chep Trace ID | Xuat | Dung (trace dang chay)
-- Luoi tom tat: Ten, Trang thai, Thoi luong, Kenh, Token, So span, Thoi gian bat dau, Trace cha (co the nhan)
-- Khoi xem truoc: input + sao chep | output + sao chep | khoi loi (vien do)
-- Cay Span: huy hieu loai, ten, token, cache/suy nghi, thoi luong, trang thai. Nhan span → bang chi tiet: thoi gian, model, phan tich token, metadata suy luan, xem truoc vao/ra
+**Hộp thoại Chi Tiết Trace:**
+- Header: Sao chép Trace ID | Xuất trace | Dừng (trace đang chạy)
+- Lưới tóm tắt: Tên, Trạng thái, Thời lượng, Kênh, Token, Số span, Thời gian bắt đầu, Trace cha (có thể nhấn)
+- Khối xem trước: input + sao chép | output + sao chép | khối lỗi (viền đỏ)
+- Cây Span: huy hiệu loại, tên, token, cache/suy nghĩ, thời lượng, trạng thái. Nhấn span → bảng chi tiết: thời gian, model, phân tích token, metadata suy luận, xem trước vào/ra
 
-### Trang Chi Tiet Trace (`/traces/:id`)
+### Trang Chi Tiết Trace (`/traces/:id`)
 
-Mo duoi dang hop thoai tren trang `/traces`. Cay span co the thu gon. Phan tich thoi gian va token theo span. **Dieu huong** trace truoc/sau.
+Mở dưới dạng hộp thoại trên trang `/traces`. Cây span có thể thu gọn. Phân tích thời gian và token theo span. **Điều hướng** trace trước/sau.
 
 ### Trang Events (`/events`)
 
-Luong su kien theo thoi gian thuc. Tu dong cuon xuong. Subscription WebSocket real-time.
+Luồng sự kiện theo thời gian thực. Tự động cuộn xuống. Subscription WebSocket real-time.
 
 ### Trang Activity (`/activity`)
 
-Bang nhat ky kiem toan phan trang. Chi xem.
+Bảng nhật ký kiểm toán phân trang. Chỉ xem.
 
 ### Trang Logs (`/logs`)
 
-Giao dien terminal toi. Tu dong cuon xuong khi nhat ky moi den. Chon muc do truoc khi bat dau theo doi.
+Giao diện terminal tối. Tự động cuộn xuống khi nhật ký mới đến. Chọn mức độ trước khi bắt đầu theo dõi.
 
 ---
 
-## Usage Stats — Thong Ke Su Dung
+## Usage Stats — Thống Kê Sử Dụng
 
-He thong tong hop thong ke theo gio vao bang `usage_snapshots`.
+Hệ thống tổng hợp thống kê theo giờ vào bảng `usage_snapshots`.
 
-| Chi So | Mo Ta |
+| Chỉ Số | Mô Tả |
 |--------|-------|
-| `request_count` | So agent runs |
-| `error_count` | So runs that bai |
-| `unique_users` | So user duy nhat |
-| `input_tokens` / `output_tokens` | Tong token |
-| `total_cost` | Tong chi phi uoc tinh |
-| `tool_call_count` | Tong so tool calls |
-| `avg_duration_ms` | Thoi gian trung binh moi run |
-| `cache_read_tokens` | Token doc tu prompt cache |
+| `request_count` | Số agent runs |
+| `error_count` | Số runs thất bại |
+| `unique_users` | Số user duy nhất |
+| `input_tokens` / `output_tokens` | Tổng token |
+| `total_cost` | Tổng chi phí ước tính |
+| `tool_call_count` | Tổng số tool calls |
+| `avg_duration_ms` | Thời gian trung bình mỗi run |
+| `cache_read_tokens` | Token đọc từ prompt cache |
 
-**Chu ky tong hop:** `SnapshotWorker` chay moi gio vao phut thu 5 (HH:05:00 UTC). Khi khoi dong, tu dong backfill cac gio bi bo lo.
+**Chu kỳ tổng hợp:** `SnapshotWorker` chạy mỗi giờ vào phút thứ 5 (HH:05:00 UTC). Khi khởi động, tự động backfill các giờ bị bỏ lỡ.
 
-**Cong thuc tinh cost:**
+**Công thức tính cost:**
 ```
 Cost = (input_tokens x InputCostPerM) / 1,000,000
      + (output_tokens x OutputCostPerM) / 1,000,000
@@ -176,11 +176,11 @@ Cost = (input_tokens x InputCostPerM) / 1,000,000
 
 ---
 
-## OpenTelemetry — Export Ra Ngoai
+## OpenTelemetry — Export Ra Ngoài
 
-Ho tro xuat spans den Jaeger, Grafana Tempo, Datadog qua OTLP.
+Hỗ trợ xuất spans đến Jaeger, Grafana Tempo, Datadog qua OTLP.
 
-Them vao `config.json`:
+Thêm vào `config.json`:
 ```json
 {
   "tracing": {
@@ -195,28 +195,28 @@ Them vao `config.json`:
 }
 ```
 
-| Tham So | Mo Ta |
+| Tham Số | Mô Tả |
 |---------|-------|
 | `endpoint` | OTLP endpoint (gRPC: 4317, HTTP: 4318) |
-| `protocol` | `grpc` (mac dinh) hoac `http` |
-| `insecure` | Bo qua TLS cho moi truong dev |
-| `service_name` | Mac dinh: `goclaw-gateway` |
+| `protocol` | `grpc` (mặc định) hoặc `http` |
+| `insecure` | Bỏ qua TLS cho môi trường dev |
+| `service_name` | Mặc định: `goclaw-gateway` |
 
-Khi OTel duoc cau hinh, span ghi ca vao PostgreSQL lan OTLP backend. Batch: toi da 100 spans moi 5 giay.
+Khi OTel được cấu hình, span ghi cả vào PostgreSQL lẫn OTLP backend. Batch: tối đa 100 spans mỗi 5 giây.
 
-> Luu y: package OTel tang ~15-20MB kich thuoc binary. Khong cau hinh OTel thi khong anh huong hieu nang.
-
----
-
-## Luu Y
-
-- Route `/logs` yeu cau quyen Admin; cac route khac yeu cau Operator+
-- Verbose mode (`GOCLAW_TRACE_VERBOSE=1`) co the tang dung luong luu tru dang ke
-- Nhat ky he thong xuat ra stdout cua process GoClaw
+> Lưu ý: package OTel tăng ~15-20MB kích thước binary. Không cấu hình OTel thì không ảnh hưởng hiệu năng.
 
 ---
 
-## Xem Them
+## Lưu Ý
 
-- [guide/vi/admin/05-bao-mat.md](05-bao-mat.md) — Security events va injection detection
-- [guide/vi/admin/04-cron.md](04-cron.md) — Run log cua cron jobs
+- Route `/logs` yêu cầu quyền Admin; các route khác yêu cầu Operator+
+- Verbose mode (`GOCLAW_TRACE_VERBOSE=1`) có thể tăng dung lượng lưu trữ đáng kể
+- Nhật ký hệ thống xuất ra stdout của process GoClaw
+
+---
+
+## Xem Thêm
+
+- [guide/vi/admin/05-bao-mat.md](05-bao-mat.md) — Security events và injection detection
+- [guide/vi/admin/04-cron.md](04-cron.md) — Run log của cron jobs

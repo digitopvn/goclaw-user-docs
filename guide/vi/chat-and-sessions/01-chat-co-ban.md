@@ -1,118 +1,118 @@
-# Chat Co Ban
+# Chat Cơ Bản
 
-## Tong quan
+## Tổng quan
 
-Giao dien Chat la trung tam tuong tac chinh voi AI agents tren Web Dashboard. Ho tro gui tin nhan van ban, dinh kem file, xem streaming response voi tool call cards, va quan ly nhieu session song song.
+Giao diện Chat là trung tâm tương tác chính với AI agents trên Web Dashboard. Hỗ trợ gửi tin nhắn văn bản, đính kèm file, xem streaming response với tool call cards, và quản lý nhiều session song song.
 
 Route: `/chat/:sessionKey?`
-Nhom Sidebar: Core
-Quyen truy cap: Da dang nhap
+Nhóm Sidebar: Core
+Quyền truy cập: Đã đăng nhập
 
 ---
 
-## Giao dien
+## Giao diện
 
-Giao dien chat gom 3 khu vuc chinh:
+Giao diện chat gồm 3 khu vực chính:
 
-- **Sidebar (trai)**: Danh sach session, nut tao session moi, bo chon agent (AgentSelector dropdown)
-- **Chat area (giua)**: Luong tin nhan, streaming response, tool call cards, thinking blocks
-- **Input bar (duoi)**: O nhap tin nhan, nut dinh kem file, nut gui
-- **Bang task nhom (phai)**: Tu dong mo khi agent dang chay nhiem vu nhom (team tasks)
+- **Sidebar (trái)**: Danh sách session, nút tạo session mới, bộ chọn agent (AgentSelector dropdown)
+- **Chat area (giữa)**: Luồng tin nhắn, streaming response, tool call cards, thinking blocks
+- **Input bar (dưới)**: Ô nhập tin nhắn, nút đính kèm file, nút gửi
+- **Bảng task nhóm (phải)**: Tự động mở khi agent đang chạy nhiệm vụ nhóm (team tasks)
 
-Tren mobile: sidebar bi an, nhan icon menu de mo. Keyboard ao tren iOS/Android duoc xu ly tu dong de input bar khong bi che.
+Trên mobile: sidebar bị ẩn, nhấn icon menu để mở. Bàn phím ảo trên iOS/Android được xử lý tự động để input bar không bị che.
 
 ---
 
-## Huong dan
+## Hướng dẫn
 
-### Tao session moi
+### Tạo session mới
 
-1. Mo sidebar (tren mobile: nhan icon menu).
-2. Chon agent tu dropdown **AgentSelector** — hien danh sach tat ca agent.
-3. Nhan nut **New Chat** (icon `+`).
-4. URL cap nhat thanh `/chat/{sessionKey}` — session duoc tao tu dong khi gui tin nhan dau tien.
+1. Mở sidebar (trên mobile: nhấn icon menu).
+2. Chọn agent từ dropdown **AgentSelector** — hiện danh sách tất cả agent.
+3. Nhấn nút **Trò chuyện mới** (icon `+`).
+4. URL cập nhật thành `/chat/{sessionKey}` — session được tạo tự động khi gửi tin nhắn đầu tiên.
 
-Session key co dinh dang `agent:{agentId}:{channel}:direct:{userId}`. Moi agent co namespace session rieng biet.
+Session key có định dạng `agent:{agentId}:{channel}:direct:{userId}`. Mỗi agent có namespace session riêng biệt.
 
-### Gui tin nhan
+### Gửi tin nhắn
 
-- Nhap noi dung vao input bar, nhan **Enter** (hoac nut Send) de gui.
-- Ho tro **Markdown** trong noi dung nhap: `**bold**`, `*italic*`, backtick code, list.
-- Dinh kem file: keo tha hoac nhan icon dinh kem — file duoc upload qua `/v1/media/upload` va duong dan tu dong inject vao tin nhan.
-- Input bar tu dong tang chieu cao theo noi dung nhap (multi-line).
+- Nhập nội dung vào input bar, nhấn **Enter** (hoặc nút Gửi tin nhắn) để gửi.
+- Hỗ trợ **Markdown** trong nội dung nhập: `**bold**`, `*italic*`, backtick code, list.
+- Đính kèm file: kéo thả hoặc nhấn icon đính kèm tệp — file được upload qua `/v1/media/upload` và đường dẫn tự động inject vào tin nhắn.
+- Input bar tự động tăng chiều cao theo nội dung nhập (multi-line).
 
 ### Xem streaming response
 
-Khi agent xu ly, response duoc stream theo tung token:
+Khi agent xử lý, response được stream theo từng token:
 
-| Thanh phan | Mo ta |
+| Thành phần | Mô tả |
 |------------|-------|
-| ThinkingBlock | Hien thi khi agent dang suy nghi (Extended Thinking) — co the an/hien |
-| ToolCallCard | The hien thi ten tool va ket qua (web_search, read_file, v.v.) |
-| MessageBubble | Tich luy text streaming, render Markdown sau khi hoan thanh |
-| Typing indicator | Hien o cuoi thread khi agent dang xu ly |
+| ThinkingBlock | Hiển thị khi agent đang suy nghĩ (Extended Thinking) — có thể ẩn/hiện |
+| ToolCallCard | Thẻ hiển thị tên tool và kết quả (web_search, read_file, v.v.) |
+| MessageBubble | Tích lũy text streaming, render Markdown sau khi hoàn thành |
+| Typing indicator | Hiện ở cuối thread khi agent đang xử lý |
 
-Response tu dong cuon xuong khi co tin nhan moi (smooth scroll). Khi user tu cuon len, auto-scroll tam dung.
+Response tự động cuộn xuống khi có tin nhắn mới (smooth scroll). Khi user tự cuộn lên, auto-scroll tạm dừng.
 
-### Dung response (Abort)
+### Dừng response (Abort)
 
-Khi agent dang chay:
-- Nut **Stop** hien thi trong input area — nhan de huy request hien tai (`chat.abort`).
-- Neu co nhieu agent con dang chay (team tasks), trang thai `isBusy` van con cho den khi tat ca hoan thanh.
-- Tren Telegram: dung lenh `/stop` de huy run hien tai, `/stopall` de huy tat ca.
+Khi agent đang chạy:
+- Nút **Dừng tạo** hiển thị trong input area — nhấn để hủy request hiện tại (`chat.abort`).
+- Nếu có nhiều agent con đang chạy (team tasks), trạng thái `isBusy` vẫn còn cho đến khi tất cả hoàn thành.
+- Trên Telegram: dùng lệnh `/stop` để hủy run hiện tại, `/stopall` để hủy tất cả.
 
-### Xem lich su chat
+### Xem lịch sử chat
 
-- Lich su duoc load tu `chat.history` khi chon session.
-- Cuon len de xem tin nhan cu.
-- Session cu duoc liet ke trong sidebar, sap xep theo thoi gian.
-- **Che do chi doc**: Session cua nguoi dung khac hien thi o che do read-only (neu duoc cap quyen).
+- Lịch sử được load từ `chat.history` khi chọn session.
+- Cuộn lên để xem tin nhắn cũ.
+- Session cũ được liệt kê trong sidebar, sắp xếp theo thời gian.
+- **Chế độ chỉ đọc**: Session của người dùng khác hiển thị ở chế độ read-only (nếu được cấp quyền).
 
-### Xoa session
+### Xóa session
 
-1. Hover vao session trong sidebar de hien icon Xoa.
-2. Nhan icon Xoa — xuat hien dialog xac nhan.
-3. Xac nhan de xoa vinh vien (`sessions.delete`).
+1. Hover vào session trong sidebar để hiện icon Xóa.
+2. Nhấn icon Xóa — xuất hiện dialog xác nhận.
+3. Xác nhận để xóa vĩnh viễn (`sessions.delete`).
 
-Luu y: Xoa session khong the phuc hoi. Lich su tin nhan bi xoa hoan toan.
+Lưu ý: Xóa session không thể phục hồi. Lịch sử tin nhắn bị xóa hoàn toàn.
 
 ---
 
-## Phim tat
+## Phím tắt
 
-| Phim tat | Chuc nang |
+| Phím tắt | Chức năng |
 |----------|-----------|
-| `Enter` | Gui tin nhan |
-| `Shift+Enter` | Xuong dong moi trong input |
-| `Escape` | Dong sidebar (mobile) |
+| `Enter` | Gửi tin nhắn |
+| `Shift+Enter` | Xuống dòng mới trong input |
+| `Escape` | Đóng sidebar (mobile) |
 
 ---
 
-## Vi du
+## Ví dụ
 
-Bat dau chat voi agent "Assistant":
+Bắt đầu chat với agent "Assistant":
 
 ```
-1. Sidebar -> AgentSelector -> chon "Assistant"
-2. Nhan New Chat (+)
+1. Sidebar -> AgentSelector -> chọn "Assistant"
+2. Nhấn Trò chuyện mới (+)
 3. URL: /chat/agent:assistant-id:web:direct:system
-4. Nhap: "Tong ket bai viet nay cho toi" + dinh kem file PDF
-5. Nhan Enter -> agent nhan file, xu ly, tra ket qua
+4. Nhập: "Tóm tắt bài viết này cho tôi" + đính kèm file PDF
+5. Nhấn Enter -> agent nhận file, xử lý, trả kết quả
 ```
 
 ---
 
-## Luu y
+## Lưu ý
 
-- Moi agent co namespace session rieng — chuyen agent la chuyen session namespace, khong the dung chung session cu.
-- Streaming chi hoat dong qua WebSocket RPC — dam bao ket noi WebSocket on dinh.
-- Tool call cards hien thi theo thoi gian thuc trong qua trinh agent xu ly, giup theo doi agent dang lam gi.
-- Tren cac kenh ngoai (Telegram, Discord, ...), agent duoc gan khi cau hinh kenh; nguoi dung khong can chon agent.
+- Mỗi agent có namespace session riêng — chuyển agent là chuyển session namespace, không thể dùng chung session cũ.
+- Streaming chỉ hoạt động qua WebSocket RPC — đảm bảo kết nối WebSocket ổn định.
+- Tool call cards hiển thị theo thời gian thực trong quá trình agent xử lý, giúp theo dõi agent đang làm gì.
+- Trên các kênh ngoài (Telegram, Discord, ...), agent được gắn khi cấu hình kênh; người dùng không cần chọn agent.
 
 ---
 
-## Xem them
+## Xem thêm
 
-- [02-quan-ly-sessions.md](./02-quan-ly-sessions.md) — Quan ly va tim kiem sessions
+- [02-quan-ly-sessions.md](./02-quan-ly-sessions.md) — Quản lý và tìm kiếm sessions
 - [03-kenh-ket-noi.md](./03-kenh-ket-noi.md) — Chat qua Telegram, Discord, Slack
-- [../agents/01-tong-quan-agents.md](../agents/01-tong-quan-agents.md) — Hieu ro ve agents va skills
+- [../agents/01-tong-quan-agents.md](../agents/01-tong-quan-agents.md) — Hiểu rõ về agents và skills

@@ -1,98 +1,98 @@
-# Dang Nhap va Chon To Chuc
+# Đăng Nhập và Chọn Tổ Chức
 
-## Tong quan
+## Tổng quan
 
-GoClaw ho tro hai phuong thuc dang nhap: xac thuc bang Token va xac thuc bang Ghep noi thiet bi. Sau khi dang nhap, nguoi dung co nhieu to chuc (tenant) se duoc chuyen den trang chon to chuc truoc khi vao dashboard.
+GoClaw hỗ trợ hai phương thức đăng nhập: xác thực bằng Token và xác thực bằng Ghép nối thiết bị. Sau khi đăng nhập, người dùng có nhiều tổ chức (tenant) sẽ được chuyển đến trang chọn tổ chức trước khi vào dashboard.
 
 ---
 
-## Huong dan dang nhap
+## Hướng dẫn đăng nhập
 
-### Phuong thuc 1 — Dang nhap bang Token
+### Phương thức 1 — Đăng nhập bằng Token
 
 Route: `/login`
 
-1. Mo Web Dashboard, trang dang nhap hien thi mac dinh o tab **Token**.
-2. Nhap **ID Nguoi dung** (mac dinh: `system`) va **Token Gateway**.
-3. Nhan **Ket noi**.
-4. Neu thanh cong: chuyen huong den trang yeu cau ban dau (hoac `/overview`).
-5. Neu that bai (loi 401): hien thi thong bao "Thong tin khong hop le".
+1. Mở Web Dashboard, trang đăng nhập hiển thị mặc định ở tab **Token**.
+2. Nhập **User ID** (mặc định: `system`) và **Gateway Token**.
+3. Nhấn **Kết nối**.
+4. Nếu thành công: chuyển hướng đến trang yêu cầu ban đầu (hoặc `/overview`).
+5. Nếu thất bại (lỗi 401): hiển thị thông báo "Thông tin xác thực không hợp lệ".
 
-Token Gateway la gia tri `GOCLAW_GATEWAY_TOKEN` duoc cau hinh trong buoc onboard.
+Gateway Token là giá trị `GOCLAW_GATEWAY_TOKEN` được cấu hình trong bước onboard.
 
-### Phuong thuc 2 — Dang nhap bang Ghep noi
+### Phương thức 2 — Đăng nhập bằng Ghép nối
 
-Dung khi khong biet token — yeu cau admin phe duyet qua trang Nodes.
+Dùng khi không biết token — yêu cầu admin phê duyệt qua trang Nodes.
 
-1. Chuyen sang tab **Ghep noi**.
-2. Nhap **ID Nguoi dung**.
-3. Nhan **Yeu cau Truy cap** — he thong mo WebSocket va hien thi ma 6 ky tu.
-4. Cung cap ma nay cho admin.
-5. Admin phe duyet qua lenh CLI:
+1. Chuyển sang tab **Ghép nối**.
+2. Nhập **User ID**.
+3. Nhấn **Yêu cầu truy cập** — hệ thống mở WebSocket và hiển thị mã 6 ký tự.
+4. Cung cấp mã này cho admin.
+5. Admin phê duyệt qua lệnh CLI:
    ```bash
-   goclaw pairing approve {ma}
+   goclaw pairing approve {mã}
    ```
-6. Sau khi duoc duyet, ket noi tu dong hoan tat.
+6. Sau khi được duyệt, kết nối tự động hoàn tất.
 
-Trang thai ghep noi theo thu tu: **Cho** → **Ket noi** → **Dang cho duyet** → **Da duyet**.
+Trạng thái ghép nối theo thứ tự: **Chờ** → **Đang kết nối** → **Đang chờ phê duyệt** → **Đã phê duyệt**.
 
-Nhan **Huy** bat ky luc nao de dong WebSocket va quay ve trang thai cho.
+Nhấn **Hủy** bất kỳ lúc nào để đóng WebSocket và quay về trạng thái chờ.
 
 ---
 
-## Giao dien — Trang dang nhap
+## Giao diện — Trang đăng nhập
 
 Route: `/login`
-Quyen truy cap: Cong khai
+Quyền truy cập: Công khai
 
 **Hai tab:**
 
-| Tab | Truong nhap | Thao tac |
+| Tab | Trường nhập | Thao tác |
 |-----|-------------|----------|
-| Token | ID Nguoi dung, Token Gateway (password) | **Ket noi** |
-| Ghep noi | ID Nguoi dung | **Yeu cau Truy cap**, **Huy** |
+| Token | User ID, Gateway Token (password) | **Kết nối** |
+| Ghép nối | User ID | **Yêu cầu truy cập**, **Hủy** |
 
-Tab Ghep noi hien thi ma 6 ky tu + lenh CLI `goclaw pairing approve {ma}` de admin phe duyet.
+Tab Ghép nối hiển thị mã 6 ký tự + lệnh CLI `goclaw pairing approve {mã}` để admin phê duyệt.
 
 ---
 
-## Chon to chuc (Tenant)
+## Chọn tổ chức (Tenant)
 
 Route: `/select-tenant`
-Quyen truy cap: Da dang nhap
+Quyền truy cập: Đã đăng nhập
 
-Hien thi sau khi dang nhap neu nguoi dung thuoc nhieu to chuc.
+Hiển thị sau khi đăng nhập nếu người dùng thuộc nhiều tổ chức.
 
-**Hien thi:** Danh sach the to chuc cua nguoi dung hien tai (ten, slug, vai tro).
+**Hiển thị:** Danh sách thẻ tổ chức của người dùng hiện tại (tên, slug, vai trò).
 
-**Thao tac:**
-- Nhan the de chon to chuc — dat pham vi phien lam viec theo to chuc do.
-- Neu khong thuoc to chuc nao va khong phai owner: hien man hinh "khong co quyen truy cap" + nut **Dang xuat**.
+**Thao tác:**
+- Nhấn thẻ để chọn tổ chức — đặt phạm vi phiên làm việc theo tổ chức đó.
+- Nếu không thuộc tổ chức nào và không phải owner: hiển thị màn hình "không có quyền truy cập" + nút **Đăng xuất**.
 
 ---
 
-## Vi du — Luong dang nhap day du
+## Ví dụ — Luồng đăng nhập đầy đủ
 
 ```
-[Nguoi dung] -> /login (tab Token)
-  -> Nhap system / <gateway-token>
-  -> Nhan Ket noi
-  -> [He thong] Xac thuc thanh cong
-  -> Co nhieu tenant? -> /select-tenant -> Chon to chuc
-  -> Khong co tenant? -> /overview (trang chu)
+[Người dùng] -> /login (tab Token)
+  -> Nhập system / <gateway-token>
+  -> Nhấn Kết nối
+  -> [Hệ thống] Xác thực thành công
+  -> Có nhiều tenant? -> /select-tenant -> Chọn tổ chức
+  -> Không có tenant? -> /overview (trang chủ)
 ```
 
 ---
 
-## Luu y
+## Lưu ý
 
-- Token duoc luu trong session storage cua trinh duyet sau khi dang nhap.
-- Neu truy cap trang yeu cau dang nhap khi chua xac thuc, he thong tu dong chuyen ve `/login` va luu lai URL goc de chuyen huong sau khi dang nhap.
-- Phuong thuc Ghep noi phu hop cho nguoi dung moi chua co token — admin quan ly phe duyet tren trang `/nodes`.
+- Token được lưu trong session storage của trình duyệt sau khi đăng nhập.
+- Nếu truy cập trang yêu cầu đăng nhập khi chưa xác thực, hệ thống tự động chuyển về `/login` và lưu lại URL gốc để chuyển hướng sau khi đăng nhập.
+- Phương thức Ghép nối phù hợp cho người dùng mới chưa có token — admin quản lý phê duyệt trên trang `/nodes`.
 
 ---
 
-## Xem them
+## Xem thêm
 
-- [04-setup-wizard.md](./04-setup-wizard.md) — Setup wizard sau khi dang nhap lan dau
-- [02-cai-dat.md](./02-cai-dat.md) — Cau hinh Gateway token khi cai dat
+- [04-setup-wizard.md](./04-setup-wizard.md) — Setup wizard sau khi đăng nhập lần đầu
+- [02-cai-dat.md](./02-cai-dat.md) — Cấu hình Gateway token khi cài đặt

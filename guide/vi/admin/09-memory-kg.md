@@ -1,123 +1,123 @@
-# Bo Nho va Do Thi Tri Thuc
+# Bộ Nhớ và Đồ Thị Tri Thức
 
-**Route Bo Nho:** `/memory`
-**Route Do Thi Tri Thuc:** `/knowledge-graph`
-**Nhom Sidebar:** Du Lieu
-**Quyen truy cap:** Operator+
-
----
-
-## Tong Quan
-
-GoClaw cung cap hai co che luu tru tri thuc dai han cho agents:
-
-- **Bo nho (Memory)** — luu tru tai lieu van ban co cau truc, ho tro tim kiem ngu nghia qua vector embeddings
-- **Do thi tri thuc (Knowledge Graph)** — mo hinh hoa moi quan he giua cac thuc the, to chuc theo agent va phien lam viec
+**Route Bộ Nhớ:** `/memory`
+**Route Đồ Thị Tri Thức:** `/knowledge-graph`
+**Nhóm Sidebar:** Dữ Liệu
+**Quyền truy cập:** Operator+
 
 ---
 
-## Bo Nho (Memory)
+## Tổng Quan
 
-### Giao Dien
+GoClaw cung cấp hai cơ chế lưu trữ tri thức dài hạn cho agents:
+
+- **Bộ nhớ (Memory)** — lưu trữ tài liệu văn bản có cấu trúc, hỗ trợ tìm kiếm ngữ nghĩa qua vector embeddings
+- **Đồ thị tri thức (Knowledge Graph)** — mô hình hóa mối quan hệ giữa các thực thể, tổ chức theo agent và phiên làm việc
+
+---
+
+## Bộ Nhớ (Memory)
+
+### Giao Diện
 
 **Route:** `/memory`
 
-Trang hien thi bang tai lieu bo nho voi cac cot: duong dan, agent, pham vi (ca nhan/toan cau), hash, ngay cap nhat. Huy hieu trang thai nhung vector hien thi o tren cung.
+Trang hiển thị bảng tài liệu bộ nhớ với các cột: đường dẫn, agent, phạm vi (cá nhân/toàn cục), mã băm, ngày cập nhật. Huy hiệu trạng thái nhúng vector hiển thị ở trên cùng.
 
-### Quan Ly Tai Lieu
+### Quản Lý Tài Liệu
 
-**Tao tai lieu moi**
-1. Nhan nut "Tao tai lieu bo nho"
-2. Dien vao hop thoai:
-   - **Agent** — chon agent so huu tai lieu
-   - **Che do pham vi** — Toan cuc / Hien co / Tuy chinh
-   - **Duong dan** — dinh danh tai lieu (vi du: `user/preferences`)
-   - **Noi dung** — noi dung van ban
-   - **Tu dong lap chi muc** — bat de nhung vector ngay sau khi tao
-3. Nhan **Tao**
+**Tạo tài liệu mới**
+1. Nhấn nút "Tạo tài liệu bộ nhớ"
+2. Điền vào hộp thoại:
+   - **Agent** — chọn agent sở hữu tài liệu
+   - **Chế độ phạm vi** — Toàn cục / Hiện có / Tùy chỉnh
+   - **Đường dẫn** — định danh tài liệu (ví dụ: `user/preferences`)
+   - **Nội dung** — nội dung văn bản
+   - **Tự động lập chỉ mục** — bật để nhúng vector ngay sau khi tạo
+3. Nhấn **Tạo**
 
-**Xem va chinh sua**
-- Nhan vao dong tai lieu de mo hop thoai xem
-- Tab **Noi dung**: chinh sua noi dung, hien thi duong dan va metadata
-- Tab **Chunks**: xem cac doan duoc lap chi muc voi pham vi dong va trang thai nhung
+**Xem và chỉnh sửa**
+- Nhấn vào dòng tài liệu để mở hộp thoại xem
+- Tab **Nội dung**: chỉnh sửa nội dung, hiển thị đường dẫn và metadata
+- Tab **Đoạn trích**: xem các đoạn được lập chỉ mục với phạm vi dòng và trạng thái nhúng
 
-**Xoa tai lieu**
-- Nhan nut xoa tren dong, xac nhan trong hop thoai
+**Xóa tài liệu**
+- Nhấn nút xóa trên dòng, xác nhận trong hộp thoại
 
-### Lap Chi Muc (Indexing)
+### Lập Chỉ Mục (Indexing)
 
-- **Lap chi muc lai mot tai lieu** — nhung lai vector cho mot tai lieu cu the
-- **Lap chi muc tat ca** — nhung lai hang loat toan bo tai lieu (dung khi doi provider embeddings)
+- **Lập chỉ mục lại một tài liệu** — nhúng lại vector cho một tài liệu cụ thể
+- **Lập chỉ mục tất cả** — nhúng lại hàng loạt toàn bộ tài liệu (dùng khi đổi provider embeddings)
 
-### Tim Kiem Ngu Nghia
+### Tìm Kiếm Ngữ Nghĩa
 
-1. Nhan "Tim kiem bo nho"
-2. Nhap cau truy van (bat buoc)
-3. Tuy chon loc theo ID nguoi dung
-4. Ket qua hien thi: duong dan, pham vi dong, thanh diem tuong dong, doan trich
+1. Nhấn "Tìm kiếm bộ nhớ"
+2. Nhập câu truy vấn (bắt buộc)
+3. Tùy chọn lọc theo ID người dùng
+4. Kết quả hiển thị: đường dẫn, phạm vi dòng, thanh điểm tương đồng, đoạn trích
 
-### Bo Loc
+### Bộ Lọc
 
-- **Loc theo agent** — hien thi tai lieu cua agent cu the hoac xem toan cau
-- **Loc theo pham vi nguoi dung** — loc theo nguoi dung so huu tai lieu
+- **Lọc theo agent** — hiển thị tài liệu của agent cụ thể hoặc xem toàn cục
+- **Lọc theo phạm vi người dùng** — lọc theo người dùng sở hữu tài liệu
 
 ---
 
-## Do Thi Tri Thuc (Knowledge Graph)
+## Đồ Thị Tri Thức (Knowledge Graph)
 
-### Giao Dien
+### Giao Diện
 
 **Route:** `/knowledge-graph`
 
-Trinh xem thuc the do thi tri thuc theo tung agent va phien. Gom bo chon agent, bo chon pham vi (tu cac phien hien co), huy hieu trang thai nhung.
+Trình xem thực thể đồ thị tri thức theo từng agent và phiên. Gồm bộ chọn agent, bộ chọn phạm vi (từ các phiên hiện có), huy hiệu trạng thái nhúng.
 
-### Su Dung
+### Sử Dụng
 
-1. **Chon agent** — chon agent can xem do thi tri thuc
-2. **Loc theo pham vi** — loc theo nguoi dung hoac nhom cu the
-3. **Xem thuc the** — duyet danh sach cac thuc the KG da duoc agent nhan dien
+1. **Chọn agent** — chọn agent cần xem đồ thị tri thức
+2. **Lọc theo phạm vi** — lọc theo người dùng hoặc nhóm cụ thể
+3. **Xem thực thể** — duyệt danh sách các thực thể KG đã được agent nhận diện
 
-### Khai Niem
+### Khái Niệm
 
-- **Thuc the (Entity)** — doi tuong ma agent nhan biet (nguoi, to chuc, khai niem, v.v.)
-- **Pham vi (Scope)** — nguoi dung hoac nhom so huu thuc the
-- **Do thi (Graph)** — mang luoi moi quan he giua cac thuc the
+- **Thực thể (Entity)** — đối tượng mà agent nhận biết (người, tổ chức, khái niệm, v.v.)
+- **Phạm vi (Scope)** — người dùng hoặc nhóm sở hữu thực thể
+- **Đồ thị (Graph)** — mạng lưới mối quan hệ giữa các thực thể
 
-> **Luu y:** Knowledge Graph chi co san trong Standard edition. Desktop (Lite) khong ho tro tinh nang nay.
+> **Lưu ý:** Knowledge Graph chỉ có sẵn trong Standard edition. Desktop (Lite) không hỗ trợ tính năng này.
 
 ---
 
-## Vi Du Luong Lam Viec
+## Ví Dụ Luồng Làm Việc
 
-**Luu thong tin nguoi dung vao bo nho:**
+**Lưu thông tin người dùng vào bộ nhớ:**
 
-Agent tu dong luu khi detect thong tin quan trong. Quan tri vien cung co the tao thu cong:
+Agent tự động lưu khi detect thông tin quan trọng. Quản trị viên cũng có thể tạo thủ công:
 
 ```
-Duong dan: users/nguyen-van-a/preferences
-Noi dung:
-- Ngon ngu uu tien: Tieng Viet
-- Mui gio: Asia/Ho_Chi_Minh
-- Style tra loi: ngan gon, co danh sach
+Đường dẫn: users/nguyen-van-a/preferences
+Nội dung:
+- Ngôn ngữ ưu tiên: Tiếng Việt
+- Múi giờ: Asia/Ho_Chi_Minh
+- Style trả lời: ngắn gọn, có danh sách
 ```
 
-**Tim kiem truoc khi tra loi:**
+**Tìm kiếm trước khi trả lời:**
 
-Agent dung semantic search de lay tai lieu lien quan truoc khi tao phan hoi, dam bao nhat quan voi thong tin da biet ve nguoi dung.
-
----
-
-## Luu Y
-
-- Vector embeddings yeu cau cau hinh embedding provider (vi du: OpenAI `text-embedding-3-small`)
-- Neu chua cau hinh embeddings, bo nho van hoat dong nhung khong co kha nang tim kiem ngu nghia
-- Tai lieu co pham vi "Toan cuc" duoc chia se giua tat ca nguoi dung cua agent do
-- Tai lieu co pham vi "Ca nhan" chi thuoc ve nguoi dung cu the
-- Knowledge Graph phu thuoc vao kha nang nhan dang thuc the cua LLM — chat luong phu thuoc vao provider
+Agent dùng semantic search để lấy tài liệu liên quan trước khi tạo phản hồi, đảm bảo nhất quán với thông tin đã biết về người dùng.
 
 ---
 
-## Xem Them
+## Lưu Ý
 
-- [Cau hinh providers](../admin/02-providers.md)
-- [Cau hinh tham chieu — Section agents.defaults](../reference/03-cau-hinh.md)
+- Vector embeddings yêu cầu cấu hình embedding provider (ví dụ: OpenAI `text-embedding-3-small`)
+- Nếu chưa cấu hình embeddings, bộ nhớ vẫn hoạt động nhưng không có khả năng tìm kiếm ngữ nghĩa
+- Tài liệu có phạm vi "Toàn cục" được chia sẻ giữa tất cả người dùng của agent đó
+- Tài liệu có phạm vi "Cá nhân" chỉ thuộc về người dùng cụ thể
+- Knowledge Graph phụ thuộc vào khả năng nhận dạng thực thể của LLM — chất lượng phụ thuộc vào provider
+
+---
+
+## Xem Thêm
+
+- [Cấu hình providers](../admin/02-providers.md)
+- [Cấu hình tham chiếu — Section agents.defaults](../reference/03-cau-hinh.md)

@@ -1,134 +1,134 @@
-# Cron va Lich Trinh Tu Dong
+# Cron và Lịch Trình Tự Động
 
-## Tong Quan
+## Tổng Quan
 
-Cron cho phep agent tu dong chay theo thoi gian dat truoc — khong can gui tin nhan thu cong. Moi cron job kich hoat mot agent turn voi mot prompt cu the, chay trong lane `cron` rieng biet (toi da 30 luong song song).
+Cron cho phép agent tự động chạy theo thời gian đặt trước — không cần gửi tin nhắn thủ công. Mỗi cron job kích hoạt một agent turn với một prompt cụ thể, chạy trong lane `cron` riêng biệt (tối đa 30 luồng song song).
 
-**Route danh sach:** `/cron` — Da dang nhap
-**Route chi tiet:** `/cron/:id` — Da dang nhap
+**Route danh sách:** `/cron` — Đã đăng nhập
+**Route chi tiết:** `/cron/:id` — Đã đăng nhập
 
 ---
 
-## Huong Dan
+## Hướng Dẫn
 
-### 3 Loai Bieu Thuc Lich
+### 3 Loại Biểu Thức Lịch
 
-| Loai | Tham So | Vi Du | Hanh Vi |
+| Loại | Tham Số | Ví Dụ | Hành Vi |
 |------|---------|-------|---------|
-| `at` | Thoi diem epoch ms | Ngay mai 15:00 | Chay 1 lan, tu xoa sau khi chay |
-| `every` | Khoang cach ms | `1800000` (30 phut) | Lap lai co dinh |
-| `cron` | Bieu thuc 5 truong | `"0 9 * * 1-5"` | Lich linh hoat |
+| `at` | Thời điểm epoch ms | Ngày mai 15:00 | Chạy 1 lần, tự xóa sau khi chạy |
+| `every` | Khoảng cách ms | `1800000` (30 phút) | Lặp lại cố định |
+| `cron` | Biểu thức 5 trường | `"0 9 * * 1-5"` | Lịch linh hoạt |
 
-**Cron expression 5 truong:** `phut gio ngay-thang thang ngay-trong-tuan`
+**Cron expression 5 trường:** `phút giờ ngày-tháng tháng ngày-trong-tuần`
 
-Vi du hay dung:
-- `"0 9 * * 1-5"` — 9:00 sang cac ngay trong tuan
-- `"0 */6 * * *"` — moi 6 tieng
-- `"30 8 * * 0"` — Chu nhat 8:30 sang
+Ví dụ hay dùng:
+- `"0 9 * * 1-5"` — 9:00 sáng các ngày trong tuần
+- `"0 */6 * * *"` — mỗi 6 tiếng
+- `"30 8 * * 0"` — Chủ nhật 8:30 sáng
 
-### Tao Cron Job
+### Tạo Cron Job
 
-1. Vao **Cron > New Job**
-2. Dien cac truong:
-   - **Name**: ten mo ta (bat buoc, tu dong tao slug)
-   - **Agent**: chon agent se chay
-   - **Prompt/Message**: noi dung tin nhan gui cho agent (bat buoc)
-   - **Schedule**: chon loai lich va nhap gia tri
-     - `every`: chu ky tinh bang giay (toi thieu 1)
-     - `cron`: bieu thuc cron (vd `0 * * * *`)
-     - `at`: mot lan, mac dinh = hien tai + 1 phut
-3. Nhan **Tao** — job bat dau hoat dong ngay
+1. Vào **Cron > Tác vụ mới**
+2. Điền các trường:
+   - **Name**: tên mô tả (bắt buộc, tự động tạo slug)
+   - **Agent**: chọn agent sẽ chạy
+   - **Prompt/Message**: nội dung tin nhắn gửi cho agent (bắt buộc)
+   - **Schedule**: chọn loại lịch và nhập giá trị
+     - `every`: chu kỳ tính bằng giây (tối thiểu 1)
+     - `cron`: biểu thức cron (vd `0 * * * *`)
+     - `at`: một lần, mặc định = hiện tại + 1 phút
+3. Nhấn **Tạo** — job bắt đầu hoạt động ngay
 
-### Quan Ly Jobs
+### Quản Lý Jobs
 
-**Enable/Disable:** Click toggle tren row hoac trong chi tiet job. Job tat se bi bo qua trong vong kiem tra dinh ky.
+**Enable/Disable:** Click toggle trên row hoặc trong chi tiết job. Job tắt sẽ bị bỏ qua trong vòng kiểm tra định kỳ.
 
-**Xoa:** Click **Delete** tren row, xac nhan truoc khi xoa. Job `at` tu dong xoa sau khi chay xong.
+**Xóa:** Click **Xóa** trên row, xác nhận trước khi xóa. Job `at` tự động xóa sau khi chạy xong.
 
-**Manual Trigger:** Vao chi tiet job > nhan **Chay Ngay** — dung de kiem tra truoc khi dat lich chinh thuc.
+**Manual Trigger:** Vào chi tiết job > nhấn **Chạy ngay** — dùng để kiểm tra trước khi đặt lịch chính thức.
 
-**Lich Su Chay:** Vao chi tiet job > xem **Run Log** — thoi diem chay, thoi gian thuc hien, trang thai, output va thong bao loi. He thong luu toi da 200 ban ghi.
+**Lịch Sử Chạy:** Vào chi tiết job > xem **Lịch sử chạy** — thời điểm chạy, thời gian thực hiện, trạng thái, output và thông báo lỗi. Hệ thống lưu tối đa 200 bản ghi.
 
-### Cai Dat Nang Cao (Chi Tiet Job)
+### Cài Đặt Nâng Cao (Chi Tiết Job)
 
-- **Mui gio**: IANA timezone (mac dinh UTC)
-- **Giao hang**: Gui den Kenh (switch) — chon Kenh + Nguoi nhan; Danh thuc Heartbeat (switch)
-- **Vong doi**: Xoa Sau Khi Chay (switch); Khong Trang Thai (switch)
+- **Múi giờ**: IANA timezone (mặc định UTC)
+- **Giao hàng**: Gửi đến Kênh (switch) — chọn Kênh + Người nhận; Kích hoạt Heartbeat (switch)
+- **Vòng đời**: Xóa Sau Khi Chạy (switch); Không Trạng Thái (switch)
 
 ---
 
-## Giao Dien (UI)
+## Giao Diện (UI)
 
-### Trang Danh Sach (`/cron`)
+### Trang Danh Sách (`/cron`)
 
-**Hien thi:** Danh sach phan trang tat ca jobs co tim kiem: trang thai, lich trinh, lan chay ke tiep, lan chay gan nhat.
+**Hiển thị:** Danh sách phân trang tất cả jobs có tìm kiếm: trạng thái, lịch trình, lần chạy kế tiếp, lần chạy gần nhất.
 
-**Thao tac:** Tao job | Chay ngay | Xoa | Xem chi tiet | Lam moi
+**Thao tác:** Tạo job | Chạy ngay | Xóa | Xem chi tiết | Làm mới
 
-**Hop thoai Tao Job:**
-- Truong: Ten (bat buoc), Agent ID, Loai lich (nhom nut: every/cron/at), Tin nhan (bat buoc)
-- Thao tac: **Tao** | **Huy**
+**Hộp thoại Tạo Job:**
+- Trường: Tên (bắt buộc), Agent ID, Loại lịch (nhóm nút: every/cron/at), Tin nhắn (bắt buộc)
+- Thao tác: **Tạo** | **Hủy**
 
-### Trang Chi Tiet (`/cron/:id`)
+### Trang Chi Tiết (`/cron/:id`)
 
-**Hien thi:** Lich, payload, agent dich, lich su chay, trang thai bat/tat.
+**Hiển thị:** Lịch, payload, agent đích, lịch sử chạy, trạng thái bật/tắt.
 
-**Thao tac:** Chay ngay | Bat/tat | Cap nhat cai dat | Xoa | Xem nhat ky chay
+**Thao tác:** Chạy ngay | Bật/tắt | Cập nhật cài đặt | Xóa | Xem nhật ký chạy
 
-**Hop thoai Nhat Ky Chay:** Danh sach cuon — thoi gian, huy hieu trang thai (xanh/do), tom tat, loi. Trang thai trong: "Khong co lich su chay".
+**Hộp thoại Nhật Ký Chạy:** Danh sách cuộn — thời gian, huy hiệu trạng thái (xanh/đỏ), tóm tắt, lỗi. Trạng thái trống: "Chưa có lịch sử chạy nào."
 
-**Hop thoai Cai Dat Nang Cao:** Mui gio, Giao hang, Vong doi. **Luu** | **Huy**
+**Hộp thoại Cài Đặt Nâng Cao:** Múi giờ, Giao hàng, Vòng đời. **Lưu** | **Hủy**
 
 ---
 
 ## Lane-Based Concurrency
 
-| Lane | Concurrency Mac Dinh | Override Env |
+| Lane | Concurrency Mặc Định | Override Env |
 |------|:-------------------:|--------------|
 | `main` | 30 | `GOCLAW_LANE_MAIN` |
 | `subagent` | 50 | `GOCLAW_LANE_SUBAGENT` |
 | `team` | 100 | `GOCLAW_LANE_TEAM` |
 | `cron` | 30 | `GOCLAW_LANE_CRON` |
 
-Cron jobs khong tranh chap tai nguyen voi chat sessions. Cac jobs cung session xep hang tuan tu tranh race condition.
+Cron jobs không tranh chấp tài nguyên với chat sessions. Các jobs cùng session xếp hàng tuần tự tránh race condition.
 
 ---
 
-## Retry Tu Dong
+## Retry Tự Động
 
-| Tham So | Gia Tri |
+| Tham Số | Giá Trị |
 |---------|--------|
-| So lan thu toi da | 3 |
-| Delay ban dau | 2 giay |
-| Delay toi da | 30 giay |
+| Số lần thử tối đa | 3 |
+| Delay ban đầu | 2 giây |
+| Delay tối đa | 30 giây |
 
-Cong thuc: `delay = min(2 x 2^lan, 30)` +/- 25% jitter.
+Công thức: `delay = min(2 x 2^lần, 30)` +/- 25% jitter.
 
 ---
 
-## Vi Du Thuc Te
+## Ví Dụ Thực Tế
 
-**Bao cao hang ngay:**
-- Loai: `cron`, Bieu thuc: `"0 8 * * 1-5"`
+**Báo cáo hàng ngày:**
+- Loại: `cron`, Biểu thức: `"0 8 * * 1-5"`
 - Agent: Analyst Agent
-- Prompt: *"Tao bao cao hoat dong he thong 24 gio qua va gui tom tat qua kenh #reports"*
+- Prompt: *"Tạo báo cáo hoạt động hệ thống 24 giờ qua và gửi tóm tắt qua kênh #reports"*
 
-**Kiem tra dinh ky:**
-- Loai: `every`, Khoang cach: `1800000` (30 phut)
+**Kiểm tra định kỳ:**
+- Loại: `every`, Khoảng cách: `1800000` (30 phút)
 - Agent: Monitor Agent
-- Prompt: *"Kiem tra trang thai cac service chinh, bao cao neu phat hien bat thuong"*
+- Prompt: *"Kiểm tra trạng thái các service chính, báo cáo nếu phát hiện bất thường"*
 
 ---
 
-## Luu Y
+## Lưu Ý
 
-- Lane `cron` toi da 30 jobs dong thoi
-- Job `at` tu dong bi xoa sau khi chay — khong can don dep thu cong
-- Dung **Chay Ngay** de test truoc khi dat lich chinh thuc
+- Lane `cron` tối đa 30 jobs đồng thời
+- Job `at` tự động bị xóa sau khi chạy — không cần dọn dẹp thủ công
+- Dùng **Chạy ngay** để test trước khi đặt lịch chính thức
 
 ---
 
-## Xem Them
+## Xem Thêm
 
-- [guide/vi/admin/06-theo-doi.md](06-theo-doi.md) — Xem lich su chay va traces
-- [guide/vi/admin/03-tools-va-mcp.md](03-tools-va-mcp.md) — Tool `cron` de agent tu quan ly jobs
+- [guide/vi/admin/06-theo-doi.md](06-theo-doi.md) — Xem lịch sử chạy và traces
+- [guide/vi/admin/03-tools-va-mcp.md](03-tools-va-mcp.md) — Tool `cron` để agent tự quản lý jobs

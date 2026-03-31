@@ -1,120 +1,120 @@
-# Tong Quan ve Agents
+# Tổng Quan về Agents
 
-## Tong quan
+## Tổng quan
 
-Agent la mot AI assistant duoc cau hinh voi ca tinh, kien thuc, va cac cong cu cu the. GoClaw ho tro nhieu agent chay song song, moi agent co workspace rieng biet va vong lap xu ly doc lap.
-
----
-
-## Agent la gi
-
-Agent la mot thuc the AI doc lap duoc cau hinh voi:
-
-- **Ca tinh va gioi thieu** (SOUL.md, IDENTITY.md): Giong noi, phong cach, ten, bieu tuong
-- **Kien thuc nen tang** (AGENTS.md, TOOLS.md): Cach van hanh, cong cu co san
-- **Ho so nguoi dung** (USER.md): Ten, mui gio, so thich cua nguoi dung
-- **Skills va tools**: Kha nang mo rong de thuc hien cong viec cu the
-
-Moi agent chay vong lap **Think -> Act -> Observe** (toi da 20 vong) cho den khi tao ra phan hoi cuoi cung.
+Agent là một AI assistant được cấu hình với cá tính, kiến thức, và các công cụ cụ thể. GoClaw hỗ trợ nhiều agent chạy song song, mỗi agent có workspace riêng biệt và vòng lặp xử lý độc lập.
 
 ---
 
-## Hai loai agent
+## Agent là gì
 
-### Open Agent (Agent Mo)
+Agent là một thực thể AI độc lập được cấu hình với:
 
-- Moi nguoi dung co **bo context rieng hoan toan** (6 file: AGENTS.md, SOUL.md, TOOLS.md, IDENTITY.md, USER.md, BOOTSTRAP.md).
-- Ca tinh va ky nang co the duoc tuy chinh rieng cho tung nguoi.
-- Phu hop khi moi nguoi can mot AI assistant ca nhan hoa khac nhau.
+- **Cá tính và giới thiệu** (SOUL.md, IDENTITY.md): Giọng nói, phong cách, tên, biểu tượng
+- **Kiến thức nền tảng** (AGENTS.md, TOOLS.md): Cách vận hành, công cụ có sẵn
+- **Hồ sơ người dùng** (USER.md): Tên, múi giờ, sở thích của người dùng
+- **Skills và tools**: Khả năng mở rộng để thực hiện công việc cụ thể
 
-### Predefined Agent (Agent Dinh Nghia San)
+Mỗi agent chạy vòng lặp **Think -> Act -> Observe** (tối đa 20 vòng) cho đến khi tạo ra phản hồi cuối cùng.
 
-- **Ca tinh chia se** cho tat ca nguoi dung (SOUL.md, IDENTITY.md, AGENTS.md o cap agent).
-- Moi nguoi dung co USER.md rieng de agent nho thong tin ca nhan.
-- USER_PREDEFINED.md cung cap quy tac xu ly nguoi dung chung.
-- Phu hop khi can mot AI assistant nhat quan, theo tieu chuan (vi du: bot ho tro khach hang).
+---
 
-| Dac diem | Open | Predefined |
+## Hai loại agent
+
+### Open Agent (Agent Mở)
+
+- Mỗi người dùng có **bộ context riêng hoàn toàn** (6 file: AGENTS.md, SOUL.md, TOOLS.md, IDENTITY.md, USER.md, BOOTSTRAP.md).
+- Cá tính và kỹ năng có thể được tùy chỉnh riêng cho từng người.
+- Phù hợp khi mỗi người cần một AI assistant cá nhân hóa khác nhau.
+
+### Predefined Agent (Agent Định Nghĩa Sẵn)
+
+- **Cá tính chia sẻ** cho tất cả người dùng (SOUL.md, IDENTITY.md, AGENTS.md ở cấp agent).
+- Mỗi người dùng có USER.md riêng để agent nhớ thông tin cá nhân.
+- USER_PREDEFINED.md cung cấp quy tắc xử lý người dùng chung.
+- Phù hợp khi cần một AI assistant nhất quán, theo tiêu chuẩn (ví dụ: bot hỗ trợ khách hàng).
+
+| Đặc điểm | Mở | Định sẵn |
 |----------|------|-----------|
-| Context | Hoan toan rieng biet | Ca tinh chung, profile rieng |
-| Tuy chinh | Toan phan | Chi USER.md |
+| Context | Hoàn toàn riêng biệt | Cá tính chung, profile riêng |
+| Tùy chỉnh | Toàn phần | Chỉ USER.md |
 | Use case | Personal assistant | Shared assistant |
 
 ---
 
-## Chon agent trong Chat
+## Chọn agent trong Chat
 
-- Sidebar chat co dropdown **AgentSelector** — chon agent truoc khi tao session moi.
-- Agent mac dinh la `default` neu khong chon.
-- URL session key chua thong tin agent: `agent:{agentId}:...` — chuyen session la chuyen agent.
-- Tren cac kenh ngoai (Telegram, Discord, v.v.), agent duoc gan luc cau hinh kenh; nguoi dung khong can chon.
+- Sidebar chat có dropdown **AgentSelector** — chọn agent trước khi tạo session mới.
+- Agent mặc định là `default` nếu không chọn.
+- URL session key chứa thông tin agent: `agent:{agentId}:...` — chuyển session là chuyển agent.
+- Trên các kênh ngoài (Telegram, Discord, v.v.), agent được gắn lúc cấu hình kênh; người dùng không cần chọn.
 
 ---
 
-## Giao dien — Trang Agents
+## Giao diện — Trang Agents
 
 Route: `/agents`
-Nhom Sidebar: Core
-Quyen truy cap: Da dang nhap
+Nhóm Sidebar: Core
+Quyền truy cập: Đã đăng nhập
 
-Hien thi danh sach phan trang tat ca agents (dang the hoac danh sach), tim kiem va loc theo nguoi tao.
+Hiển thị danh sách phân trang tất cả agents (dạng thẻ hoặc danh sách), tìm kiếm và lọc theo người tạo.
 
-**Thao tac:**
-- **Tao agent** — mo hop thoai tao moi
-- **Xoa agent** — xac nhan voi o nhap ten
-- **Trieu hoi lai** — khoi tao lai agent (chay lai qua trinh sinh file context)
-- **Chuyen (Import/Export)** — dieu huong den trang import-export
-- **Xem chi tiet** — nhan de dieu huong den `/agents/:id`
+**Thao tác:**
+- **Tạo agent** — mở hộp thoại tạo mới
+- **Xóa agent** — xác nhận với ô nhập tên
+- **Triệu hồi lại** — khởi tạo lại agent (chạy lại quá trình sinh file context)
+- **Chuyển (Import/Export)** — điều hướng đến trang import-export
+- **Xem chi tiết** — nhấn để điều hướng đến `/agents/:id`
 
-**Hop thoai Tao Agent:**
+**Hộp thoại Tạo Agent:**
 
-| Truong | Mo ta |
+| Trường | Mô tả |
 |--------|-------|
-| Emoji | Bieu tuong dai dien |
-| Ten | Ten hien thi |
-| Agent Key | Slug duy nhat (tu dong sinh tu ten, vi du: `my-agent`) |
-| Provider | Chon provider da them |
-| Model | Chon model hoac nhap tay + Xac minh |
-| Loai | `predefined` hoac `open` |
-| Tinh cach | Mo ta vai tro agent — dung de sinh SOUL.md tu dong |
-| Tu tien hoa | Cho phep agent tu cap nhat SOUL.md |
+| Biểu tượng | Emoji đại diện |
+| Tên hiển thị | Tên hiển thị |
+| Khóa agent | Slug duy nhất (tự động sinh từ tên, ví dụ: `my-agent`) |
+| Provider | Chọn provider đã thêm |
+| Model | Chọn model hoặc nhập tay + Xác minh |
+| Loại | `predefined` hoặc `open` |
+| Cá tính agent | Mô tả vai trò agent — dùng để sinh SOUL.md tự động |
+| Tự tiến hóa | Cho phép agent tự cập nhật SOUL.md |
 
-Nut **Kiem tra & Tao** kiem tra ket noi model truoc khi tao. Neu model da verify, nut chuyen sang **Tao**.
+Nút **Kiểm tra & Tạo** kiểm tra kết nối model trước khi tạo. Nếu model đã verify, nút chuyển sang **Tạo**.
 
-**Modal Trieu Hoi:** Hien thi tien trinh file theo thoi gian thuc khi agent duoc khoi tao lan dau.
-- Thanh cong: **Tiep tuc**
-- That bai: **Thu lai** hoac **Dong**
+**Modal Triệu Hồi:** Hiển thị tiến trình file theo thời gian thực khi agent được khởi tạo lần đầu.
+- Thành công: **Tiếp tục**
+- Thất bại: **Thử lại** hoặc **Đóng**
 
 ---
 
-## Vi du — Tao agent ca nhan
+## Ví dụ — Tạo agent cá nhân
 
 ```
-/agents -> + New Agent
-  Emoji: "A"
-  Ten: "Assistant"
-  Agent Key: assistant (tu dong)
+/agents -> + Tạo agent
+  Biểu tượng: "A"
+  Tên hiển thị: "Assistant"
+  Khóa agent: assistant (tự động)
   Provider: anthropic
-  Model: claude-sonnet-4-5-20250929 -> Kiem tra OK
-  Loai: open
-  Tinh cach: "Tro ly ca nhan, than thien, ngan gon"
-  -> Tao -> Modal Trieu Hoi -> Tiep tuc
-  -> Agent "Assistant" xuat hien trong danh sach
+  Model: claude-sonnet-4-5-20250929 -> Kiểm tra OK
+  Loại: open
+  Cá tính: "Trợ lý cá nhân, thân thiện, ngắn gọn"
+  -> Tạo -> Modal Triệu Hồi -> Tiếp tục
+  -> Agent "Assistant" xuất hiện trong danh sách
 ```
 
 ---
 
-## Luu y
+## Lưu ý
 
-- Agent Key la dinh danh khi thuc thi — khong the doi sau khi tao.
-- Loai agent (open/predefined) anh huong den cau truc workspace — khong the doi sau khi tao.
-- Moi agent co namespace session rieng biet tren kenh `web:direct`.
-- Xoa agent se xoa toan bo session, memory, va context files lien quan.
+- Khóa agent là định danh khi thực thi — không thể đổi sau khi tạo.
+- Loại agent (open/predefined) ảnh hưởng đến cấu trúc workspace — không thể đổi sau khi tạo.
+- Mỗi agent có namespace session riêng biệt trên kênh `web:direct`.
+- Xóa agent sẽ xóa toàn bộ session, memory, và context files liên quan.
 
 ---
 
-## Xem them
+## Xem thêm
 
-- [02-cau-hinh-agent.md](./02-cau-hinh-agent.md) — Cau hinh model, behavior, sandbox
-- [03-skills.md](./03-skills.md) — Skills va tools
-- [../chat-and-sessions/01-chat-co-ban.md](../chat-and-sessions/01-chat-co-ban.md) — Chat voi agent
+- [02-cau-hinh-agent.md](./02-cau-hinh-agent.md) — Cấu hình model, behavior, sandbox
+- [03-skills.md](./03-skills.md) — Skills và tools
+- [../chat-and-sessions/01-chat-co-ban.md](../chat-and-sessions/01-chat-co-ban.md) — Chat với agent

@@ -1,111 +1,111 @@
-# Nodes (Ghep Noi Thiet Bi)
+# Nodes (Ghép Nối Thiết Bị)
 
 **Route:** `/nodes`
-**Nhom Sidebar:** Ket Noi
-**Quyen truy cap:** Admin
+**Nhóm Sidebar:** Kết Nối
+**Quyền truy cập:** Admin
 
 ---
 
-## Tong Quan
+## Tổng Quan
 
-Nodes quan ly viec ghep noi (pairing) cac thiet bi vat ly hoac ung dung client voi he thong GoClaw. Khi mot thiet bi duoc ghep, no co the giao tiep voi agents qua channel cu the ma khong can xac thuc lai tung lan.
+Nodes quản lý việc ghép nối (pairing) các thiết bị vật lý hoặc ứng dụng client với hệ thống GoClaw. Khi một thiết bị được ghép, nó có thể giao tiếp với agents qua channel cụ thể mà không cần xác thực lại từng lần.
 
-Co che nay thich hop cho:
-- Thiet bi IoT gui tin nhan dinh ky
-- Ung dung mobile ket noi voi agent cu the
-- Trien khai da instances voi cac thiet bi rieng biet
+Cơ chế này thích hợp cho:
+- Thiết bị IoT gửi tin nhắn định kỳ
+- Ứng dụng mobile kết nối với agent cụ thể
+- Triển khai đa instances với các thiết bị riêng biệt
 
 ---
 
-## Giao Dien (UI)
+## Giao Diện (UI)
 
 **Route:** `/nodes`
 
-Trang chia thanh hai phan chinh:
+Trang chia thành hai phần chính:
 
-**Yeu cau ghep noi dang cho** — danh sach cac thiet bi da gui yeu cau pairing, cho admin phe duyet hoac tu choi.
+**Yêu cầu ghép nối đang chờ** — danh sách các thiết bị đã gửi yêu cầu pairing, chờ admin phê duyệt hoặc từ chối.
 
-**Thiet bi da ghep** — bang cac thiet bi dang hoat dong, hien thi: kenh (channel), sender ID, ngay ghep, ghep boi (admin nao da duyet).
-
----
-
-## Huong Dan
-
-### Quy Trinh Ghep Thiet Bi
-
-1. **Thiet bi gui yeu cau** — thiet bi goi `device.pair.request` qua WebSocket voi ma ghep noi
-2. **Hien thi trong "Yeu cau dang cho"** — admin thay yeu cau moi tren trang `/nodes`
-3. **Admin phe duyet** — nhan nut phe duyet, xac nhan thong tin
-4. **Thiet bi nhan xac nhan** — thiet bi chuyen sang trang thai da xac thuc
-
-### Phe Duyet Yeu Cau Ghep
-
-1. Tim yeu cau trong phan "Yeu cau ghep noi dang cho"
-2. Nhan **Phe duyet**
-3. Kiem tra thong tin trong hop thoai: kenh, sender ID, ma ghep noi
-4. Nhan **Phe duyet** de xac nhan
-
-### Tu Choi Yeu Cau Ghep
-
-1. Tim yeu cau can tu choi
-2. Nhan **Tu choi**
-3. Xac nhan trong hop thoai (hanh dong nguy hiem)
-4. Nhan **Tu choi** — yeu cau bi xoa
-
-### Thu Hoi Thiet Bi Da Ghep
-
-1. Tim thiet bi trong bang "Thiet bi da ghep"
-2. Nhan **Thu hoi**
-3. Xac nhan trong hop thoai — hien thi kenh va sender ID
-4. Nhan **Thu hoi** — kich hoat su kien `EventPairingRevoked`, ngat ket noi phien phia server ngay lap tuc
-
-### Lam Moi
-
-Nhan **Lam moi** de cap nhat danh sach tu server.
+**Thiết bị đã ghép** — bảng các thiết bị đang hoạt động, hiển thị: kênh (channel), sender ID, ngày ghép, ghép bởi (admin nào đã duyệt).
 
 ---
 
-## Trien Khai Da Instances
+## Hướng Dẫn
 
-Trong moi truong co nhieu instance GoClaw chay song song (horizontal scaling), moi instance can biet ve cac thiet bi da ghep de xu ly tin nhan dung:
+### Quy Trình Ghép Thiết Bị
 
-- **Dong bo trang thai pairing** — thong tin ghep noi luu trong database chung (PostgreSQL), tat ca instances deu co the tra cuu
-- **Sender ID** — dinh danh duy nhat cua thiet bi, dung de dinh tuyen tin nhan dung instance
-- **Thu hoi tu xa** — khi thu hoi tren bat ky instance nao, su kien broadcast den tat ca instances de ngat ket noi
+1. **Thiết bị gửi yêu cầu** — thiết bị gọi `device.pair.request` qua WebSocket với mã ghép nối
+2. **Hiển thị trong "Yêu cầu đang chờ"** — admin thấy yêu cầu mới trên trang `/nodes`
+3. **Admin phê duyệt** — nhấn nút phê duyệt, xác nhận thông tin
+4. **Thiết bị nhận xác nhận** — thiết bị chuyển sang trạng thái đã xác thực
 
-### Cac Truong Hop Can Luu Y
+### Phê Duyệt Yêu Cầu Ghép
 
-| Tinh huong | Xu ly |
+1. Tìm yêu cầu trong phần "Yêu cầu đang chờ"
+2. Nhấn **Phê duyệt**
+3. Kiểm tra thông tin trong hộp thoại: kênh, sender ID, mã ghép nối
+4. Nhấn **Phê duyệt** để xác nhận
+
+### Từ Chối Yêu Cầu Ghép
+
+1. Tìm yêu cầu cần từ chối
+2. Nhấn **Từ chối**
+3. Xác nhận trong hộp thoại (hành động nguy hiểm)
+4. Nhấn **Từ chối** — yêu cầu bị xóa
+
+### Thu Hồi Thiết Bị Đã Ghép
+
+1. Tìm thiết bị trong bảng "Thiết bị đã ghép"
+2. Nhấn **Thu hồi**
+3. Xác nhận trong hộp thoại — hiển thị kênh và sender ID
+4. Nhấn **Thu hồi** — kích hoạt sự kiện `EventPairingRevoked`, ngắt kết nối phiên phía server ngay lập tức
+
+### Làm Mới
+
+Nhấn **Làm mới** để cập nhật danh sách từ server.
+
+---
+
+## Triển Khai Đa Instances
+
+Trong môi trường có nhiều instance GoClaw chạy song song (horizontal scaling), mỗi instance cần biết về các thiết bị đã ghép để xử lý tin nhắn đúng:
+
+- **Đồng bộ trạng thái pairing** — thông tin ghép nối lưu trong database chung (PostgreSQL), tất cả instances đều có thể tra cứu
+- **Sender ID** — định danh duy nhất của thiết bị, dùng để định tuyến tin nhắn đúng instance
+- **Thu hồi từ xa** — khi thu hồi trên bất kỳ instance nào, sự kiện broadcast đến tất cả instances để ngắt kết nối
+
+### Các Trường Hợp Cần Lưu Ý
+
+| Tình huống | Xử lý |
 |-----------|-------|
-| Thiet bi doi IP | Pairing van hop le — dinh danh dua tren sender ID, khong phai IP |
-| Instance bi restart | Thiet bi tu dong reconnect va pairing duoc khoi phuc tu DB |
-| Thu hoi khi thiet bi offline | Thu hoi ghi vao DB, co hieu luc khi thiet bi ket noi lai |
-| Nhieu thiet bi cung sender ID | Khong cho phep — moi sender ID chi ghep mot lan |
+| Thiết bị đổi IP | Pairing vẫn hợp lệ — định danh dựa trên sender ID, không phải IP |
+| Instance bị restart | Thiết bị tự động reconnect và pairing được khôi phục từ DB |
+| Thu hồi khi thiết bị offline | Thu hồi ghi vào DB, có hiệu lực khi thiết bị kết nối lại |
+| Nhiều thiết bị cùng sender ID | Không cho phép — mỗi sender ID chỉ ghép một lần |
 
 ---
 
-## Vi Du
+## Ví Dụ
 
-**Ghep may tinh bang (tablet) voi agent ho tro khach hang:**
+**Ghép máy tính bảng (tablet) với agent hỗ trợ khách hàng:**
 
-1. App tren tablet goi `device.pair.request` voi kenh `web` va sender ID `tablet-reception-01`
-2. Admin mo `/nodes`, thay yeu cau tu `tablet-reception-01`
-3. Xac nhan day la thiet bi hop le → Phe duyet
-4. Tablet duoc ghep, tu do co the gui tin nhan ma khong can token
-
----
-
-## Luu Y
-
-- Thu hoi (`revoke`) ngat ket noi ngay lap tuc phia server — thiet bi se nhan loi WebSocket va can xin ghep lai
-- `EventPairingRevoked` co the duoc lang nghe boi cac he thong khac de phan ung theo
-- Pairing codes co thoi han — kiem tra cau hinh `gateway.pairing_code_ttl` neu yeu cau tu dong het han
-- Nodes chi hien thi trong Standard edition co multi-channel; Desktop (Lite) khong co channels nen khong su dung trang nay
+1. App trên tablet gọi `device.pair.request` với kênh `web` và sender ID `tablet-reception-01`
+2. Admin mở `/nodes`, thấy yêu cầu từ `tablet-reception-01`
+3. Xác nhận đây là thiết bị hợp lệ → Phê duyệt
+4. Tablet được ghép, từ đó có thể gửi tin nhắn mà không cần token
 
 ---
 
-## Xem Them
+## Lưu Ý
 
-- [Cau hinh kenh ket noi](../admin/03-channels.md)
+- Thu hồi (`revoke`) ngắt kết nối ngay lập tức phía server — thiết bị sẽ nhận lỗi WebSocket và cần xin ghép lại
+- `EventPairingRevoked` có thể được lắng nghe bởi các hệ thống khác để phản ứng theo
+- Pairing codes có thời hạn — kiểm tra cấu hình `gateway.pairing_code_ttl` nếu yêu cầu tự động hết hạn
+- Nodes chỉ hiển thị trong Standard edition có multi-channel; Desktop (Lite) không có channels nên không sử dụng trang này
+
+---
+
+## Xem Thêm
+
+- [Cấu hình kênh kết nối](../admin/03-channels.md)
 - [WebSocket RPC — Pairing methods](../reference/02-websocket-rpc.md)
-- [Bao mat va phan quyen](../admin/05-security.md)
+- [Bảo mật và phân quyền](../admin/05-security.md)

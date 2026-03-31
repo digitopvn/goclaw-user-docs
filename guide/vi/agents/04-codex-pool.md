@@ -1,113 +1,113 @@
 # Codex Pool
 
-## Tong quan
+## Tổng quan
 
-Codex Pool la tinh nang quan ly pool dinh tuyen ChatGPT OAuth cho mot agent cu the. Thay vi dung mot ChatGPT OAuth provider duy nhat, Codex Pool cho phep cau hinh nhieu provider va dinh tuyen request theo chien luoc (round-robin, primary-first, v.v.) de tang tinh san sang va giam nguy co het han muc.
+Codex Pool là tính năng quản lý pool định tuyến ChatGPT OAuth cho một agent cụ thể. Thay vì dùng một ChatGPT OAuth provider duy nhất, Codex Pool cho phép cấu hình nhiều provider và định tuyến request theo chiến lược (round-robin, primary-first, v.v.) để tăng tính sẵn sàng và giảm nguy cơ hết hạn mức.
 
 Route: `/agents/:id/codex-pool`
-Nhom Sidebar: Core (trang con cua Agent)
-Quyen truy cap: Admin
+Nhóm Sidebar: Core (trang con của Agent)
+Quyền truy cập: Admin
 
 ---
 
-## Codex Pool la gi
+## Codex Pool là gì
 
-ChatGPT OAuth la phuong thuc xac thuc de truy cap ChatGPT qua luong OAuth thay vi API key thong thuong. Khi mot agent su dung ChatGPT OAuth:
+ChatGPT OAuth là phương thức xác thực để truy cập ChatGPT qua luồng OAuth thay vì API key thông thường. Khi một agent sử dụng ChatGPT OAuth:
 
-- Co the cau hinh nhieu tai khoan / provider ChatGPT OAuth.
-- Codex Pool phan phoi request den cac provider theo chien luoc.
-- Neu mot provider gap loi hoac het han muc, pool tu dong chuyen sang provider khac (fallback).
-- He thong theo doi suc khoe tung provider trong pool theo thoi gian thuc.
+- Có thể cấu hình nhiều tài khoản / provider ChatGPT OAuth.
+- Codex Pool phân phối request đến các provider theo chiến lược.
+- Nếu một provider gặp lỗi hoặc hết hạn mức, pool tự động chuyển sang provider khác (fallback).
+- Hệ thống theo dõi sức khỏe từng provider trong pool theo thời gian thực.
 
 ---
 
-## Giao dien
+## Giao diện
 
-Trang gom hai phan chinh:
+Trang gồm hai phần chính:
 
-### Bang hoat dong pool
+### Bảng hoạt động pool
 
-Hien thi thong ke theo tung provider trong pool:
+Hiển thị thống kê theo từng provider trong pool:
 
-| Cot | Mo ta |
+| Cột | Mô tả |
 |-----|-------|
-| Provider | Ten ChatGPT OAuth provider |
-| So yeu cau | Tong request da xu ly |
-| Ty le thanh cong | Phan tram request thanh cong |
-| Diem suc khoe | Diem danh gia suc khoe hien tai (0-100) |
-| So lan chuyen du phong | So lan pool da chuyen sang provider nay do fallback |
-| Timeline | Bieu do hoat dong theo thoi gian |
+| Provider | Tên ChatGPT OAuth provider |
+| Số yêu cầu | Tổng request đã xử lý |
+| Tỷ lệ thành công | Phần trăm request thành công |
+| Điểm sức khỏe | Điểm đánh giá sức khỏe hiện tại (0-100) |
+| Số lần chuyển dự phòng | Số lần pool đã chuyển sang provider này do fallback |
+| Timeline | Biểu đồ hoạt động theo thời gian |
 
-### Cau hinh dinh tuyen
+### Cấu hình định tuyến
 
-Cac thiet lap chien luoc phan phoi request.
+Các thiết lập chiến lược phân phối request.
 
 ---
 
-## Huong dan cau hinh
+## Hướng dẫn cấu hình
 
-### Them provider vao pool
+### Thêm provider vào pool
 
-1. Vao `/agents/:id` -> nhan **Quan ly Codex Pool** -> `/agents/:id/codex-pool`.
-2. Nhan **Them provider**.
-3. Chon ChatGPT OAuth provider tu danh sach da dang ky.
-4. Nhan **Luu cau hinh dinh tuyen**.
+1. Vào `/agents/:id` -> nhấn **Quản lý Codex Pool** -> `/agents/:id/codex-pool`.
+2. Nhấn **Thêm provider**.
+3. Chọn ChatGPT OAuth provider từ danh sách đã đăng ký.
+4. Nhấn **Lưu cấu hình định tuyến**.
 
-### Chon chien luoc dinh tuyen
+### Chọn chiến lược định tuyến
 
-| Chien luoc | Mo ta |
+| Chiến lược | Mô tả |
 |------------|-------|
-| `round-robin` | Phan phoi deu den tat ca provider theo vong |
-| `primary-first` | Uu tien provider chinh, chi dung provider phu khi chinh gap loi |
+| `round-robin` | Phân phối đều đến tất cả provider theo vòng |
+| `primary-first` | Ưu tiên provider chính, chỉ dùng provider phụ khi chính gặp lỗi |
 
-Sau khi chon chien luoc, nhan **Luu cau hinh dinh tuyen** de ap dung.
+Sau khi chọn chiến lược, nhấn **Lưu cấu hình định tuyến** để áp dụng.
 
-### Xoa provider khoi pool
+### Xóa provider khỏi pool
 
-1. Tim provider trong bang hoat dong.
-2. Nhan **Xoa** ben cai provider do.
-3. Pool tu dong cap nhat, request moi khong con duoc gui den provider da xoa.
+1. Tìm provider trong bảng hoạt động.
+2. Nhấn **Xóa** bên cạnh provider đó.
+3. Pool tự động cập nhật, request mới không còn được gửi đến provider đã xóa.
 
-### Lam moi du lieu
+### Làm mới dữ liệu
 
-Nhan **Lam moi** de cap nhat bang hoat dong va du lieu han muc ve trang thai hien tai.
+Nhấn **Làm mới** để cập nhật bảng hoạt động và dữ liệu hạn mức về trạng thái hiện tại.
 
-### Xem lien ket provider (chi admin)
+### Xem liên kết provider (chỉ admin)
 
-Admin co the xem thong tin lien ket OAuth chi tiet cua tung provider trong pool.
+Admin có thể xem thông tin liên kết OAuth chi tiết của từng provider trong pool.
 
 ---
 
-## Vi du — Cau hinh pool voi 2 provider
+## Ví dụ — Cấu hình pool với 2 provider
 
 ```
 /agents/my-agent/codex-pool
-  -> Them provider: chatgpt-oauth-account-1
-  -> Them provider: chatgpt-oauth-account-2
-  -> Chien luoc: round-robin
-  -> Luu cau hinh dinh tuyen
+  -> Thêm provider: chatgpt-oauth-account-1
+  -> Thêm provider: chatgpt-oauth-account-2
+  -> Chiến lược: round-robin
+  -> Lưu cấu hình định tuyến
 
-Ket qua:
+Kết quả:
   Request 1 -> account-1
   Request 2 -> account-2
   Request 3 -> account-1
   ...
-  Neu account-1 loi -> tu dong chuyen het sang account-2
+  Nếu account-1 lỗi -> tự động chuyển hết sang account-2
 ```
 
 ---
 
-## Luu y
+## Lưu ý
 
-- Codex Pool chi ap dung cho agent su dung ChatGPT OAuth provider — khong anh huong den cac provider khac (Anthropic, OpenAI API key, v.v.).
-- Provider phai duoc dang ky trong `/providers` truoc khi them vao pool.
-- Diem suc khoe tinh toan dua tren ty le thanh cong, do tre, va so lan fallback gan day.
-- Khi tat ca provider trong pool gap loi, agent tra ve loi cho nguoi dung thay vi treo vo han.
-- Tinh nang nay phu hop cho moi truong dung nhieu tai khoan ChatGPT de tranh gioi han ban mien phi.
+- Codex Pool chỉ áp dụng cho agent sử dụng ChatGPT OAuth provider — không ảnh hưởng đến các provider khác (Anthropic, OpenAI API key, v.v.).
+- Provider phải được đăng ký trong `/providers` trước khi thêm vào pool.
+- Điểm sức khỏe tính toán dựa trên tỷ lệ thành công, độ trễ, và số lần fallback gần đây.
+- Khi tất cả provider trong pool gặp lỗi, agent trả về lỗi cho người dùng thay vì treo vô hạn.
+- Tính năng này phù hợp cho môi trường dùng nhiều tài khoản ChatGPT để tránh giới hạn bản miễn phí.
 
 ---
 
-## Xem them
+## Xem thêm
 
-- [02-cau-hinh-agent.md](./02-cau-hinh-agent.md) — Cau hinh tong quat agent, bao gom muc "Dinh tuyen ChatGPT OAuth"
-- [01-tong-quan-agents.md](./01-tong-quan-agents.md) — Tong quan ve agents
+- [02-cau-hinh-agent.md](./02-cau-hinh-agent.md) — Cấu hình tổng quát agent, bao gồm mục "Định tuyến ChatGPT OAuth"
+- [01-tong-quan-agents.md](./01-tong-quan-agents.md) — Tổng quan về agents

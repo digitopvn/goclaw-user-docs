@@ -1,150 +1,150 @@
-# Skills (Ky Nang)
+# Skills (Kỹ Năng)
 
-## Tong quan
+## Tổng quan
 
-Skills la cac module kien thuc hoac huong dan duoc nhung vao system prompt, giup agent biet cach su dung cong cu hoac xu ly linh vuc cu the. Khac voi tools (thuc thi hanh dong), skills la kien thuc — agent doc skills de biet cach lam viec.
+Skills là các module kiến thức hoặc hướng dẫn được nhúng vào system prompt, giúp agent biết cách sử dụng công cụ hoặc xử lý lĩnh vực cụ thể. Khác với tools (thực thi hành động), skills là kiến thức — agent đọc skills để biết cách làm việc.
 
 ---
 
-## Skills la gi
+## Skills là gì
 
-Skills la file ZIP chua:
-- Huong dan su dung cong cu (vi du: cach dung `pdf`, `xlsx`, `docx`)
-- Quy trinh xu ly tac vu cu the
-- Tai lieu tham khao noi bo
+Skills là file ZIP chứa:
+- Hướng dẫn sử dụng công cụ (ví dụ: cách dùng `pdf`, `xlsx`, `docx`)
+- Quy trình xử lý tác vụ cụ thể
+- Tài liệu tham khảo nội bộ
 
-**Vi du skills co san:**
+**Ví dụ skills có sẵn:**
 
-| Skill | Chuc nang |
+| Skill | Chức năng |
 |-------|-----------|
-| `pdf` | Doc, tao, gop, tach file PDF |
-| `xlsx` | Doc, tao, chinh sua spreadsheet |
-| `docx` | Doc, tao, chinh sua file Word |
-| `pptx` | Doc, tao, chinh sua bai thuyet trinh |
-| `skill-creator` | Tao skill moi |
+| `pdf` | Đọc, tạo, gộp, tách file PDF |
+| `xlsx` | Đọc, tạo, chỉnh sửa spreadsheet |
+| `docx` | Đọc, tạo, chỉnh sửa file Word |
+| `pptx` | Đọc, tạo, chỉnh sửa bài thuyết trình |
+| `skill-creator` | Tạo skill mới |
 
-**Cach agent tim kiem skills:**
+**Cách agent tìm kiếm skills:**
 
-| Dieu kien | Hanh vi |
+| Điều kiện | Hành vi |
 |-----------|---------|
-| <= 20 skills va tong token <= 3,500 | Danh sach skills duoc nhung truc tiep vao system prompt (inline mode) |
-| Nhieu hon nguong tren | Agent dung tool `skill_search` de tim kiem theo keyword (BM25 + vector search) |
+| <= 20 skills và tổng token <= 3.500 | Danh sách skills được nhúng trực tiếp vào system prompt (inline mode) |
+| Nhiều hơn ngưỡng trên | Agent dùng tool `skill_search` để tìm kiếm theo keyword (BM25 + vector search) |
 
 ---
 
-## Pham vi hien thi (Visibility)
+## Phạm vi hiển thị (Visibility)
 
-| Muc | Quyen truy cap |
+| Mức | Quyền truy cập |
 |-----|----------------|
-| `public` | Tat ca agent va nguoi dung |
-| `private` | Chi chu so huu |
-| `internal` | Phai duoc cap quyen ro rang |
+| `public` | Tất cả agent và người dùng |
+| `private` | Chỉ chủ sở hữu |
+| `internal` | Phải được cấp quyền rõ ràng |
 
 ---
 
-## Giao dien — Trang Skills
+## Giao diện — Trang Skills
 
 Route: `/skills`
-Nhom Sidebar: Kha Nang
-Quyen truy cap: Da dang nhap
+Nhóm Sidebar: Kỹ Năng
+Quyền truy cập: Đã đăng nhập
 
-Hien thi bang hai tab:
-- **Core**: Skills he thong (built-in)
-- **Tuy chinh**: Skills do nguoi dung tai len
+Hiển thị bảng hai tab:
+- **Hệ thống**: Skills hệ thống (built-in)
+- **Tùy chỉnh**: Skills do người dùng tải lên
 
-Cac cot: ten, mo ta, tac gia, trang thai, kha nang hien thi, thao tac.
+Các cột: tên, mô tả, tác giả, trạng thái, khả năng hiển thị, thao tác.
 
-Bang **Thieu dependencies** hien o tren cung neu co skill chua du dieu kien chay.
+Bảng **Thiếu dependencies** hiện ở trên cùng nếu có skill chưa đủ điều kiện chạy.
 
-**Thao tac:**
-- **Tai len skill** — keo tha file `.zip` vao vung tai len
-- **Chinh sua metadata** — ten, mo ta, kha nang hien thi, the
-- **Xoa skill** — xac nhan
-- **Bat/tat** — switch moi skill
-- **Chuyen doi kha nang hien thi** — nhan badge de chuyen `public` -> `internal` -> `private`
-- **Quet lai dependencies** — quet tat ca skills
-- **Cai dat dependency don le** — cai dat tung goi
-- **Ghi de theo to chuc** — bat/tat skill cho to chuc hien tai (Toggle / Dat lai)
-
----
-
-## Huong dan — Tai len skill moi
-
-1. Vao `/skills`, nhan **Tai len skill**.
-2. Keo tha file `.zip` vao vung tai len (hoac nhan de chon file).
-3. He thong xac thuc tung file: **dang xac thuc** -> **hop le / khong hop le** -> **dang tai** -> **thanh cong / loi**.
-4. Nhan **Tai len [N]** de bat dau tai len cac file da xac thuc.
-5. Sau khi hoan thanh, nhan **Xong**.
-6. Nhan **X** moi file de xoa khoi hang doi truoc khi tai.
+**Thao tác:**
+- **Tải lên skill** — kéo thả file `.zip` vào vùng tải lên
+- **Chỉnh sửa metadata** — tên, mô tả, khả năng hiển thị, thẻ
+- **Xóa skill** — xác nhận
+- **Bật/tắt** — switch mỗi skill
+- **Chuyển đổi khả năng hiển thị** — nhấn badge để chuyển `public` -> `internal` -> `private`
+- **Quét lại dependencies** — quét tất cả skills
+- **Cài đặt dependency đơn lẻ** — cài đặt từng gói
+- **Ghi đè theo tổ chức** — bật/tắt skill cho tổ chức hiện tại (Toggle / Đặt lại)
 
 ---
 
-## Giao dien — Chi tiet Skill
+## Hướng dẫn — Tải lên skill mới
+
+1. Vào `/skills`, nhấn **Tải lên skill**.
+2. Kéo thả file `.zip` vào vùng tải lên (hoặc nhấn để chọn file).
+3. Hệ thống xác thực từng file: **đang xác thực** -> **hợp lệ / không hợp lệ** -> **đang tải** -> **thành công / lỗi**.
+4. Nhấn **Tải lên [N]** để bắt đầu tải lên các file đã xác thực.
+5. Sau khi hoàn thành, nhấn **Xong**.
+6. Nhấn **X** mỗi file để xóa khỏi hàng đợi trước khi tải.
+
+---
+
+## Giao diện — Chi tiết Skill
 
 Route: `/skills/:id`
-Nhom Sidebar: Kha Nang
-Quyen truy cap: Da dang nhap
+Nhóm Sidebar: Kỹ Năng
+Quyền truy cập: Đã đăng nhập
 
-Mo duoi dang hop thoai tu trang `/skills`.
+Mở dưới dạng hộp thoại từ trang `/skills`.
 
 **Hai tab:**
 
-| Tab | Noi dung |
+| Tab | Nội dung |
 |-----|----------|
-| Noi dung | README markdown cua skill |
-| Files | Chon phien ban, cay file, trinh xem noi dung voi to sang cu phap |
+| Nội dung | README markdown của skill |
+| Tệp | Chọn phiên bản, cây file, trình xem nội dung với tô sáng cú pháp |
 
-**Thao tac:**
-- **Xem phien ban** — danh sach tat ca phien ban da phat hanh
-- **Duyet files** — danh sach file trong thu muc skill
-- **Doc noi dung file** — hien thi trong trinh xem voi to sang cu phap
-- **Ghim phien ban cho agent** — cap skill cho agent theo phien ban cu the
-- **Sao chep** — sao chep noi dung file
+**Thao tác:**
+- **Xem phiên bản** — danh sách tất cả phiên bản đã phát hành
+- **Duyệt files** — danh sách file trong thư mục skill
+- **Đọc nội dung file** — hiển thị trong trình xem với tô sáng cú pháp
+- **Ghim phiên bản cho agent** — cấp skill cho agent theo phiên bản cụ thể
+- **Sao chép** — sao chép nội dung file
 
 ---
 
-## Tools — Cong cu Agent Co The Dung
+## Tools — Công cụ Agent Có Thể Dùng
 
-Tools la chuc nang thuc thi (khac skills la kien thuc). Agent chon tool phu hop va goi trong qua trinh xu ly.
+Tools là chức năng thực thi (khác skills là kiến thức). Agent chọn tool phù hợp và gọi trong quá trình xử lý.
 
-| Nhom tool | Vi du |
+| Nhóm tool | Ví dụ |
 |-----------|-------|
 | Filesystem | `read_file`, `write_file`, `list_files` |
 | Web | `web_search`, `browser_act`, `browser_screenshot` |
-| Code execution | `exec` (chay Python, Node.js trong sandbox Docker) |
+| Code execution | `exec` (chạy Python, Node.js trong sandbox Docker) |
 | Memory | `memory_search`, `memory_write` |
-| TTS | `tts_convert` (van ban sang giong noi) |
-| Subagent | Goi agent khac xu ly tac vu con |
-| MCP tools | Cong cu tu MCP server ben ngoai |
+| TTS | `tts_convert` (văn bản sang giọng nói) |
+| Subagent | Gọi agent khác xử lý tác vụ con |
+| MCP tools | Công cụ từ MCP server bên ngoài |
 
-Moi request co the co danh sach tools duoc phep rieng (vi du: Telegram forum topic co the gioi han tools).
+Mỗi request có thể có danh sách tools được phép riêng (ví dụ: Telegram forum topic có thể giới hạn tools).
 
 ---
 
-## Vi du — Them skill pdf cho agent
+## Ví dụ — Thêm skill pdf cho agent
 
 ```
-/skills -> Tai len skill -> keo tha pdf.zip
-  -> Xac thuc: hop le
-  -> Tai len -> Thanh cong
-/skills -> nhan "pdf" -> Chi tiet -> Ghim phien ban
-  -> Chon agent: "Assistant", phien ban: latest
-  -> Xac nhan
+/skills -> Tải lên skill -> kéo thả pdf.zip
+  -> Xác thực: hợp lệ
+  -> Tải lên -> Thành công
+/skills -> nhấn "pdf" -> Chi tiết -> Ghim phiên bản
+  -> Chọn agent: "Assistant", phiên bản: latest
+  -> Xác nhận
 ```
 
 ---
 
-## Luu y
+## Lưu ý
 
-- Skills chi la kien thuc — agent van can co tools tuong ung moi thuc hien duoc (vi du: skill `pdf` can tool `exec` hoac `read_file`).
-- Skills `private` chi chu so huu thay — phu hop cho kien thuc noi bo cua tung nguoi.
-- Xoa skill dang duoc su dung boi agent khong tu dong vo hieu hoa agent — agent chi khong tim thay skill khi can.
-- Phien ban skill duoc ghim cho agent: neu khong ghim phien ban cu the, agent dung phien ban moi nhat.
+- Skills chỉ là kiến thức — agent vẫn cần có tools tương ứng mới thực hiện được (ví dụ: skill `pdf` cần tool `exec` hoặc `read_file`).
+- Skills `private` chỉ chủ sở hữu thấy — phù hợp cho kiến thức nội bộ của từng người.
+- Xóa skill đang được sử dụng bởi agent không tự động vô hiệu hóa agent — agent chỉ không tìm thấy skill khi cần.
+- Phiên bản skill được ghim cho agent: nếu không ghim phiên bản cụ thể, agent dùng phiên bản mới nhất.
 
 ---
 
-## Xem them
+## Xem thêm
 
-- [01-tong-quan-agents.md](./01-tong-quan-agents.md) — Khai niem agent va skills
-- [02-cau-hinh-agent.md](./02-cau-hinh-agent.md) — Cau hinh agent nang cao
+- [01-tong-quan-agents.md](./01-tong-quan-agents.md) — Khái niệm agent và skills
+- [02-cau-hinh-agent.md](./02-cau-hinh-agent.md) — Cấu hình agent nâng cao
 - [04-codex-pool.md](./04-codex-pool.md) — Codex Pool cho ChatGPT OAuth routing

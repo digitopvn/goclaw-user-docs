@@ -1,151 +1,151 @@
-# File va Media
+# File và Media
 
-## Tong Quan
+## Tổng Quan
 
-GoClaw ho tro upload, phan tich, tao va quan ly file media trong chat. Agent xu ly file thong qua cac built-in tools chuyen biet theo tung dinh dang.
+GoClaw hỗ trợ upload, phân tích, tạo và quản lý file media trong chat. Agent xử lý file thông qua các built-in tools chuyên biệt theo từng định dạng.
 
-**Route quan ly luu tru:** `/storage`
-**Quyen truy cap:** Admin
+**Route quản lý lưu trữ:** `/storage`
+**Quyền truy cập:** Admin
 
 ---
 
-## Huong Dan Su Dung
+## Hướng Dẫn Sử Dụng
 
 ### Upload File Trong Chat
 
-Hai cach gui file cho agent:
-- **Keo tha (drag & drop)** — keo file vao cua so chat
-- **Click upload** — bam nut dinh kem (clip icon) trong thanh nhap lieu
+Hai cách gửi file cho agent:
+- **Kéo thả (drag & drop)** — kéo file vào cửa sổ chat
+- **Click upload** — bấm nút đính kèm tệp (clip icon) trong thanh nhập liệu
 
-File duoc dinh kem vao tin nhan, agent nhan va xu ly cung voi noi dung text.
+File được đính kèm vào tin nhắn, agent nhận và xử lý cùng với nội dung text.
 
-### Dinh Dang Ho Tro
+### Định Dạng Hỗ Trợ
 
-| Loai | Dinh Dang |
+| Loại | Định Dạng |
 |------|-----------|
-| Hinh anh | JPEG, PNG, GIF, WebP, BMP, TIFF |
+| Hình ảnh | JPEG, PNG, GIF, WebP, BMP, TIFF |
 | Video | MP4, AVI, MOV, MKV, WebM |
 | Audio | MP3, WAV, OGG, FLAC, AAC, M4A |
-| Document | PDF, DOCX, XLSX, PPTX |
-| Text / Code | TXT, MD, JSON, CSV, va cac file text khac |
+| Tài liệu | PDF, DOCX, XLSX, PPTX |
+| Text / Code | TXT, MD, JSON, CSV, và các file text khác |
 
-### Xu Ly Document
+### Xử Lý Tài Liệu
 
-Agent dung tool `read_document` de phan tich:
-- **PDF** — trich xuat text tung trang
-- **DOCX** — doc noi dung Word
-- **XLSX / PPTX** — doc du lieu bang tinh / slide
+Agent dùng tool `read_document` để phân tích:
+- **PDF** — trích xuất text từng trang
+- **DOCX** — đọc nội dung Word
+- **XLSX / PPTX** — đọc dữ liệu bảng tính / slide
 
-Agent co the tom tat, tra loi cau hoi, hoac trich xuat thong tin cu the tu tai lieu.
+Agent có thể tóm tắt, trả lời câu hỏi, hoặc trích xuất thông tin cụ thể từ tài liệu.
 
-> Luu y: `read_file` khong doc duoc file binary. Agent tu dong chon dung tool theo dinh dang.
+> Lưu ý: `read_file` không đọc được file binary. Agent tự động chọn đúng tool theo định dạng.
 
-### Phan Tich Hinh Anh
+### Phân Tích Hình Ảnh
 
-Agent phan tich hinh anh qua vision cua LLM:
-- Mo ta chi tiet noi dung hinh
-- Nhan dien van ban trong anh (OCR)
-- Phan tich bieu do, so do
-- So sanh nhieu hinh
+Agent phân tích hình ảnh qua vision của LLM:
+- Mô tả chi tiết nội dung hình
+- Nhận diện văn bản trong ảnh (OCR)
+- Phân tích biểu đồ, sơ đồ
+- So sánh nhiều hình
 
-Chi can gui hinh vao chat va dat cau hoi.
+Chỉ cần gửi hình vào chat và đặt câu hỏi.
 
-### Audio va Voice
+### Audio và Voice
 
-**Voice message (STT):** Khi gui voice qua Telegram / Discord, he thong tu dong:
-1. Nhan file audio
-2. Chay Speech-to-Text (STT)
-3. Chuyen ket qua thanh text
-4. Agent xu ly nhu tin nhan thuong
+**Voice message (STT):** Khi gửi voice qua Telegram / Discord, hệ thống tự động:
+1. Nhận file audio
+2. Chạy Speech-to-Text (STT)
+3. Chuyển kết quả thành text
+4. Agent xử lý như tin nhắn thường
 
-**Upload file audio:** Agent trich xuat noi dung qua tool `read_audio`.
+**Upload file audio:** Agent trích xuất nội dung qua tool `read_audio`.
 
-### Tao Hinh Anh
+### Tạo Hình Ảnh
 
-Agent tao hinh tu mo ta text qua tool `create_image`.
+Agent tạo hình từ mô tả text qua tool `create_image`.
 
-Providers ho tro (theo thu tu uu tien):
+Providers hỗ trợ (theo thứ tự ưu tiên):
 1. OpenRouter (Gemini 2.5 Flash Image)
 2. Gemini
 3. OpenAI (DALL-E 3)
 4. MiniMax
 5. DashScope (Wan 2.6)
 
-Vi du: *"Tao hinh anh mot chu meo ngoi tren ban phim, phong cach anime, nen mau xanh"*
+Ví dụ: *"Tạo hình ảnh một chú mèo ngồi trên bàn phím, phong cách anime, nền màu xanh"*
 
 ### Text-to-Speech (TTS)
 
-Agent chuyen doi text thanh giong noi qua tool `tts`.
+Agent chuyển đổi text thành giọng nói qua tool `tts`.
 
-| Provider | Ghi Chu |
+| Provider | Ghi Chú |
 |----------|---------|
-| OpenAI | Nhieu giong, chat luong cao |
-| ElevenLabs | Giong tu nhien, ho tro clone giong |
-| Edge TTS | Microsoft Edge, mien phi |
-| MiniMax | Ho tro tieng Viet |
+| OpenAI | Nhiều giọng, chất lượng cao |
+| ElevenLabs | Giọng tự nhiên, hỗ trợ clone giọng |
+| Edge TTS | Microsoft Edge, miễn phí |
+| MiniMax | Hỗ trợ tiếng Việt |
 
-Vi du: *"Doc to doan van nay bang giong nu"*
+Ví dụ: *"Đọc to đoạn văn này bằng giọng nữ"*
 
-### Tao Video
+### Tạo Video
 
-Agent tao video ngan tu text hoac hinh anh qua tool `create_video`.
-Provider ho tro: MiniMax Video.
+Agent tạo video ngắn từ text hoặc hình ảnh qua tool `create_video`.
+Provider hỗ trợ: MiniMax Video.
 
-Vi du: *"Tao video 5 giay: mot bai bien lua hoang hon, song vao bo"*
-
----
-
-## Giao Dien (UI) — Trang Luu Tru (`/storage`)
-
-**Hien thi:** Trinh duyet file voi cay thu muc mo rong duoc (trai) va trinh xem noi dung file (phai). Hien thi tong dung luong o tren cung.
-
-**Thao tac:**
-- **Duyet cay thu muc** — tai lazy cac thu muc con khi mo rong
-- **Xem noi dung file** — van ban hien thi trong trinh xem; anh hien thi xem truoc
-- **Tai len file** — hop thoai, tai vao thu muc hien tai
-- **Tai xuong file** — tai ve may tinh
-- **Xoa file/thu muc** — xac nhan (canh bao: toan bo noi dung se bi xoa, khong the hoan tac)
-- **Di chuyen file** — keo tha giua cac thu muc
-- **Lam moi**
-
-**Hop thoai Tai Len:**
-- Vung keo tha file, hien thi duong dan thu muc hien tai
-- Thao tac: **Tai len** | **Huy**
+Ví dụ: *"Tạo video 5 giây: một bãi biển lúa hoàng hôn, sóng vào bờ"*
 
 ---
 
-## Quan Ly File Luu Tru
+## Giao Diện (UI) — Trang Lưu Trữ (`/storage`)
 
-**Vi tri luu tru:**
-- Standard edition — `data/` tren server, phan tach theo tenant
+**Hiển thị:** Trình duyệt file với cây thư mục mở rộng được (trái) và trình xem nội dung file (phải). Hiển thị tổng dung lượng ở trên cùng.
+
+**Thao tác:**
+- **Duyệt cây thư mục** — tải lazy các thư mục con khi mở rộng
+- **Xem nội dung file** — văn bản hiển thị trong trình xem; ảnh hiển thị xem trước
+- **Tải lên file** — hộp thoại, tải vào thư mục hiện tại
+- **Tải xuống file** — tải về máy tính
+- **Xóa file/thư mục** — xác nhận (cảnh báo: toàn bộ nội dung sẽ bị xóa, không thể hoàn tác)
+- **Di chuyển file** — kéo thả giữa các thư mục
+- **Làm mới**
+
+**Hộp thoại Tải Lên:**
+- Vùng kéo thả file, hiển thị đường dẫn thư mục hiện tại
+- Thao tác: **Tải lên** | **Hủy**
+
+---
+
+## Quản Lý File Lưu Trữ
+
+**Vị trí lưu trữ:**
+- Standard edition — `data/` trên server, phân tách theo tenant
 - Lite edition — `~/.goclaw/workspace/`
 
-**Truy cap file qua API:**
+**Truy cập file qua API:**
 ```
 GET /v1/files/{path}?ft={token}
 ```
-Token co thoi han ngan, dam bao chi nguoi co quyen moi xem duoc.
+Token có thời hạn ngắn, đảm bảo chỉ người có quyền mới xem được.
 
-**Gioi han:**
+**Giới hạn:**
 
-| Gioi Han | Gia Tri |
+| Giới Hạn | Giá Trị |
 |---------|--------|
-| Kich thuoc file toi da | 10 MB |
-| So file toi da / workspace | 100 file |
+| Kích thước file tối đa | 10 MB |
+| Số file tối đa / workspace | 100 file |
 
-**File trong team workspace:** File tao ra khi lam task duoc tu dong luu vao `attachments/` cua team workspace va gan voi task dang thuc thi.
-
----
-
-## Luu Y
-
-- Tool `read_file` chi doc file text — dung `read_document` cho PDF/DOCX/XLSX/PPTX
-- File duoc tao ra boi agent (anh, audio, video) luu vao workspace va gui toi user
-- Quan ly luu tru toan bo (`/storage`) chi danh cho Admin
+**File trong không gian làm việc nhóm:** File tạo ra khi làm task được tự động lưu vào `attachments/` của team workspace và gắn với task đang thực thi.
 
 ---
 
-## Xem Them
+## Lưu Ý
 
-- [guide/vi/teams/01-doi-nhom.md](../teams/01-doi-nhom.md) — Team workspace
-- [guide/vi/admin/03-tools-va-mcp.md](../admin/03-tools-va-mcp.md) — He thong tools day du
+- Tool `read_file` chỉ đọc file text — dùng `read_document` cho PDF/DOCX/XLSX/PPTX
+- File được tạo ra bởi agent (ảnh, audio, video) lưu vào workspace và gửi tới user
+- Quản lý lưu trữ toàn bộ (`/storage`) chỉ dành cho Admin
+
+---
+
+## Xem Thêm
+
+- [guide/vi/teams/01-doi-nhom.md](../teams/01-doi-nhom.md) — Không gian làm việc nhóm
+- [guide/vi/admin/03-tools-va-mcp.md](../admin/03-tools-va-mcp.md) — Hệ thống tools đầy đủ

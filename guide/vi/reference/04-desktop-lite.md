@@ -1,50 +1,50 @@
-# Phien Ban Desktop (Lite)
+# Phiên Bản Desktop (Lite)
 
-GoClaw Desktop la phien ban binary don gian danh cho ca nhan va nhom nho, khong yeu cau dependency ben ngoai.
+GoClaw Desktop là phiên bản binary đơn giản dành cho cá nhân và nhóm nhỏ, không yêu cầu dependency bên ngoài.
 
 ---
 
-## Tong Quan
+## Tổng Quan
 
-Desktop Edition (cung goi la "Lite") la mot binary duy nhat nhung ca gateway server lan giao dien React frontend, su dung SQLite thay vi PostgreSQL. Thich hop cho:
+Desktop Edition (cũng gọi là "Lite") là một binary duy nhất nhúng cả gateway server lẫn giao diện React frontend, sử dụng SQLite thay vì PostgreSQL. Thích hợp cho:
 
-- Su dung ca nhan tren may tinh noi bo
-- Nhom nho khong muon quan ly infrastructure
-- Thu nghiem nhanh truoc khi trien khai Standard edition
+- Sử dụng cá nhân trên máy tính nội bộ
+- Nhóm nhỏ không muốn quản lý infrastructure
+- Thử nghiệm nhanh trước khi triển khai Standard edition
 
-**Build tag:** `//go:build sqliteonly` — binary Desktop chi chua SQLite, khong co PostgreSQL.
+**Build tag:** `//go:build sqliteonly` — binary Desktop chỉ chứa SQLite, không có PostgreSQL.
 
 **Tech stack Desktop:**
 - **Backend:** Go + Wails v2, embedded gateway, SQLite via `modernc.org/sqlite`
 - **Frontend:** React 19, Vite 6, TypeScript, Tailwind CSS 4, Zustand, Framer Motion
-- **Cong:** 18790 (localhost only, cau hinh qua bien moi truong `GOCLAW_PORT`)
-- **Secrets:** OS keyring (`go-keyring`) voi fallback file tai `~/.goclaw/secrets/`
+- **Cổng:** 18790 (localhost only, cấu hình qua biến môi trường `GOCLAW_PORT`)
+- **Secrets:** OS keyring (`go-keyring`) với fallback file tại `~/.goclaw/secrets/`
 
 ---
 
-## Huong Dan Cai Dat
+## Hướng Dẫn Cài Đặt
 
 ### macOS
 
-**Cach 1: DMG installer (khuyen nghi)**
+**Cách 1: DMG installer (khuyến nghị)**
 
-Tai file `.dmg` tu [GitHub Releases](https://github.com/nextlevelbuilder/goclaw/releases) (tag `lite-v*`), mo va keo vao Applications.
+Tải file `.dmg` từ [GitHub Releases](https://github.com/nextlevelbuilder/goclaw/releases) (tag `lite-v*`), mở và kéo vào Applications.
 
-**Cach 2: Script cai dat tu dong**
+**Cách 2: Script cài đặt tự động**
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/nextlevelbuilder/goclaw/main/scripts/install-lite.sh | bash
 ```
 
-Script tu dong tai binary phu hop voi kien truc (arm64 hoac amd64), dat vao `/usr/local/bin/goclaw`.
+Script tự động tải binary phù hợp với kiến trúc (arm64 hoặc amd64), đặt vào `/usr/local/bin/goclaw`.
 
 ### Windows
 
-**Cach 1: EXE installer**
+**Cách 1: EXE installer**
 
-Tai file `.exe` tu GitHub Releases va chay installer.
+Tải file `.exe` từ GitHub Releases và chạy installer.
 
-**Cach 2: PowerShell script**
+**Cách 2: PowerShell script**
 
 ```powershell
 irm https://raw.githubusercontent.com/nextlevelbuilder/goclaw/main/scripts/install-lite.ps1 | iex
@@ -52,116 +52,116 @@ irm https://raw.githubusercontent.com/nextlevelbuilder/goclaw/main/scripts/insta
 
 ---
 
-## So Sanh Standard vs Desktop (Lite)
+## So Sánh Standard vs Desktop (Lite)
 
-| Tinh nang | Standard | Desktop (Lite) |
+| Tính năng | Standard | Desktop (Lite) |
 |-----------|----------|----------------|
 | Database | PostgreSQL + pgvector | SQLite |
-| Cai dat | Docker / binary + DB | Single binary |
-| Agents | Khong gioi han | Toi da 5 |
-| Teams | Khong gioi han | Toi da 1 |
-| Thanh vien team | Khong gioi han | Toi da 5 |
-| Sessions | Khong gioi han | Toi da 50 |
-| Channels (Telegram, Discord, ...) | Co | Khong |
-| Knowledge Graph | Co | Khong |
-| RBAC (phan quyen chi tiet) | Co | Khong |
-| Multi-tenant | Co | Khong |
-| Memory | Co (pgvector embeddings) | SQLite FTS5 |
-| Heartbeat | Co | Khong |
-| File storage UI | Co | Khong |
-| Skill self-manage | Co | Khong |
-| Auto-update | Khong | Co (GitHub Releases) |
-| Port mac dinh | Cau hinh qua config.json | 18790 |
+| Cài đặt | Docker / binary + DB | Single binary |
+| Agents | Không giới hạn | Tối đa 5 |
+| Teams | Không giới hạn | Tối đa 1 |
+| Thành viên team | Không giới hạn | Tối đa 5 |
+| Sessions | Không giới hạn | Tối đa 50 |
+| Channels (Telegram, Discord, ...) | Có | Không |
+| Knowledge Graph | Có | Không |
+| RBAC (phân quyền chi tiết) | Có | Không |
+| Multi-tenant | Có | Không |
+| Memory | Có (pgvector embeddings) | SQLite FTS5 |
+| Heartbeat | Có | Không |
+| File storage UI | Có | Không |
+| Skill self-manage | Có | Không |
+| Auto-update | Không | Có (GitHub Releases) |
+| Port mặc định | Cấu hình qua config.json | 18790 |
 | Secrets storage | Env vars / .env.local | OS keyring + ~/.goclaw/secrets/ |
 
 ---
 
-## Gioi Han Tinh Nang (Feature Limits)
+## Giới Hạn Tính Năng (Feature Limits)
 
-Desktop Edition ap dung gioi han sau qua `internal/edition/edition.go` (preset `Lite`):
+Desktop Edition áp dụng giới hạn sau qua `internal/edition/edition.go` (preset `Lite`):
 
-| Gioi han | Gia tri |
+| Giới hạn | Giá trị |
 |----------|---------|
 | Max agents | 5 |
 | Max teams | 1 |
-| Max thanh vien team | 5 |
+| Max thành viên team | 5 |
 | Max sessions | 50 |
-| Channels | Khong kha dung |
-| Heartbeat | Khong kha dung |
-| File storage UI | Khong kha dung |
-| Skill self-manage | Khong kha dung |
-| Knowledge Graph | Khong kha dung |
-| RBAC | Khong kha dung |
-| Multi-tenant | Khong kha dung |
+| Channels | Không khả dụng |
+| Heartbeat | Không khả dụng |
+| File storage UI | Không khả dụng |
+| Skill self-manage | Không khả dụng |
+| Knowledge Graph | Không khả dụng |
+| RBAC | Không khả dụng |
+| Multi-tenant | Không khả dụng |
 
-Kiem tra edition tai runtime: `edition.Current()` tra ve `edition.Lite` hoac `edition.Standard`.
+Kiểm tra edition tại runtime: `edition.Current()` trả về `edition.Lite` hoặc `edition.Standard`.
 
 ---
 
-## Tool Gating — Tools Bi Vo Hieu Hoa Trong Lite
+## Tool Gating — Tools Bị Vô Hiệu Hóa Trong Lite
 
-**Team action tools** (bi chan boi `TeamActionPolicy`):
+**Team action tools** (bị chặn bởi `TeamActionPolicy`):
 
-| Tool | Ly do chan |
+| Tool | Lý do chặn |
 |------|-----------|
-| `comment` | Khong co team collaboration UI |
-| `review` | Khong co review workflow |
-| `approve` | Khong co approval workflow |
-| `reject` | Khong co rejection workflow |
-| `attach` | Khong co file storage UI |
-| `ask_user` | Khong co multi-tenant user context |
+| `comment` | Không có team collaboration UI |
+| `review` | Không có review workflow |
+| `approve` | Không có approval workflow |
+| `reject` | Không có rejection workflow |
+| `attach` | Không có file storage UI |
+| `ask_user` | Không có multi-tenant user context |
 
 **Skill tools:**
 
-| Tool | Ly do chan |
+| Tool | Lý do chặn |
 |------|-----------|
-| `skill_manage` | Khong co skill self-management |
-| `publish_skill` | Khong co skill publishing |
+| `skill_manage` | Không có skill self-management |
+| `publish_skill` | Không có skill publishing |
 
 ---
 
-## Vi Tri Du Lieu
+## Vị Trí Dữ Liệu
 
-Tat ca du lieu Desktop duoc luu tai `~/.goclaw/`:
+Tất cả dữ liệu Desktop được lưu tại `~/.goclaw/`:
 
 ```
 ~/.goclaw/
 ├── data/
-│   ├── goclaw.db          # SQLite database chinh
-│   └── config.json        # File cau hinh
-├── workspace/             # Agent files va team workspace
+│   ├── goclaw.db          # SQLite database chính
+│   └── config.json        # File cấu hình
+├── workspace/             # Agent files và team workspace
 │   ├── agent-id-1/
 │   └── teams/
-└── secrets/               # Fallback secrets (neu OS keyring khong kha dung)
+└── secrets/               # Fallback secrets (nếu OS keyring không khả dụng)
 ```
 
-**Bien moi truong ghi de:**
-- `GOCLAW_PORT` — thay doi port (mac dinh 18790)
-- `GOCLAW_SQLITE_PATH` — duong dan tuy chinh den SQLite DB
-- `GOCLAW_CONFIG` — duong dan tuy chinh den config.json
+**Biến môi trường ghi đè:**
+- `GOCLAW_PORT` — thay đổi port (mặc định 18790)
+- `GOCLAW_SQLITE_PATH` — đường dẫn tùy chỉnh đến SQLite DB
+- `GOCLAW_CONFIG` — đường dẫn tùy chỉnh đến config.json
 
 ---
 
 ## Auto-Update
 
-Desktop Edition tu dong kiem tra ban cap nhat moi khi khoi dong:
+Desktop Edition tự động kiểm tra bản cập nhật mỗi khi khởi động:
 
-- **Nguon:** GitHub Releases, tags dang `lite-v*`
-- **Co che:** `internal/updater/updater.go` goi GitHub Releases API, so sanh version hien tai voi latest
-- **Giao dien:** Component `UpdateBanner` hien thi thong bao neu co ban moi
-- **Hanh dong:** Nguoi dung click "Cap nhat" de tai va cai dat, hoac bo qua
-- **Khong tu dong ap dung:** Nguoi dung phai xac nhan truoc khi cap nhat duoc ap dung
+- **Nguồn:** GitHub Releases, tags dạng `lite-v*`
+- **Cơ chế:** `internal/updater/updater.go` gọi GitHub Releases API, so sánh version hiện tại với latest
+- **Giao diện:** Component `UpdateBanner` hiển thị thông báo nếu có bản mới
+- **Hành động:** Người dùng click "Cập nhật" để tải và cài đặt, hoặc bỏ qua
+- **Không tự động áp dụng:** Người dùng phải xác nhận trước khi cập nhật được áp dụng
 
-Kiem tra version hien tai: Frontend goi `wails.getVersion()`, gia tri duoc dat qua `-ldflags` luc build.
+Kiểm tra version hiện tại: Frontend gọi `wails.getVersion()`, giá trị được đặt qua `-ldflags` lúc build.
 
 ---
 
-## Build Tu Source
+## Build Từ Source
 
-### Yeu Cau
+### Yêu Cầu
 
 - Go 1.26+
-- Node.js 20+ va pnpm
+- Node.js 20+ và pnpm
 - Wails v2 CLI: `go install github.com/wailsapp/wails/v2/cmd/wails@latest`
 - macOS: Xcode Command Line Tools
 - Windows: WebView2 Runtime, MSVC Build Tools
@@ -170,33 +170,33 @@ Kiem tra version hien tai: Frontend goi `wails.getVersion()`, gia tri duoc dat q
 
 ```bash
 cd ui/desktop && wails dev -tags sqliteonly
-# hoac
+# hoặc
 make desktop-dev
 ```
 
 ### Build Production
 
 ```bash
-# Build .app (macOS) hoac .exe (Windows)
+# Build .app (macOS) hoặc .exe (Windows)
 make desktop-build VERSION=0.1.0
 
-# Tao .dmg installer (chi macOS)
+# Tạo .dmg installer (chỉ macOS)
 make desktop-dmg VERSION=0.1.0
 ```
 
-Version duoc nhung vao binary qua `-ldflags`:
+Version được nhúng vào binary qua `-ldflags`:
 ```
 -ldflags "-X github.com/nextlevelbuilder/goclaw/cmd.Version=0.1.0"
 ```
 
 ### CI/CD — GitHub Actions
 
-Tag `lite-v*` kich hoat workflow `.github/workflows/release-desktop.yaml`:
-1. Build macOS (arm64 + amd64) va Windows
-2. Tao GitHub Release
-3. Dinh kem binary va DMG/EXE installer
+Tag `lite-v*` kích hoạt workflow `.github/workflows/release-desktop.yaml`:
+1. Build macOS (arm64 + amd64) và Windows
+2. Tạo GitHub Release
+3. Đính kèm binary và DMG/EXE installer
 
-### Cau Truc Thu Muc Desktop
+### Cấu Trúc Thư Mục Desktop
 
 ```
 ui/desktop/
@@ -204,22 +204,22 @@ ui/desktop/
 ├── app.go            # Wails bindings, embedded gateway
 └── frontend/         # React frontend
     ├── src/
-    └── package.json  # Dung pnpm
+    └── package.json  # Dùng pnpm
 ```
 
 ---
 
-## Luu Y Ky Thuat
+## Lưu Ý Kỹ Thuật
 
-- **WS method params:** Tat ca params su dung camelCase (`teamId`, `taskId`, `sessionKey`) — khop voi Go struct `json:"..."` tags
-- **SQLite vs PostgreSQL:** SQLite dung `?` cho positional params, PostgreSQL dung `$1, $2` — code co build tag `sqliteonly` xu ly su khac biet nay
-- **Nullable columns:** Dung `*string`, `*time.Time` — nhat quan giua ca hai backends
-- **Edition check:** Truoc khi them tinh nang moi, kiem tra `edition.Current()` de quyet dinh co ap dung gioi han hay khong
+- **WS method params:** Tất cả params sử dụng camelCase (`teamId`, `taskId`, `sessionKey`) — khớp với Go struct `json:"..."` tags
+- **SQLite vs PostgreSQL:** SQLite dùng `?` cho positional params, PostgreSQL dùng `$1, $2` — code có build tag `sqliteonly` xử lý sự khác biệt này
+- **Nullable columns:** Dùng `*string`, `*time.Time` — nhất quán giữa cả hai backends
+- **Edition check:** Trước khi thêm tính năng mới, kiểm tra `edition.Current()` để quyết định có áp dụng giới hạn hay không
 
 ---
 
-## Xem Them
+## Xem Thêm
 
-- [Cau hinh tham chieu](./03-cau-hinh.md)
-- [So sanh tinh nang Standard vs Lite](../getting-started/02-cai-dat.md)
+- [Cấu hình tham chiếu](./03-cau-hinh.md)
+- [So sánh tính năng Standard vs Lite](../getting-started/02-cai-dat.md)
 - GitHub Releases: `https://github.com/nextlevelbuilder/goclaw/releases`

@@ -1,167 +1,167 @@
-# Cau Hinh Agent
+# Cấu Hình Agent
 
-## Tong quan
+## Tổng quan
 
-Trang chi tiet agent (`/agents/:id`) cung cap day du cong cu de cau hinh model, behavior, sandbox, rate limits, va context files. Day la trang danh cho admin va operator can tinh chinh agent cho moi truong san xuat.
+Trang chi tiết agent (`/agents/:id`) cung cấp đầy đủ công cụ để cấu hình model, behavior, sandbox, rate limits, và context files. Đây là trang dành cho admin và operator cần tinh chỉnh agent cho môi trường sản xuất.
 
 Route: `/agents/:id`
-Nhom Sidebar: Core
-Quyen truy cap: Da dang nhap (mot so phan yeu cau Admin)
+Nhóm Sidebar: Core
+Quyền truy cập: Đã đăng nhập (một số phần yêu cầu Admin)
 
 ---
 
-## Giao dien chi tiet agent
+## Giao diện chi tiết agent
 
-Trang gom 4 tab chinh:
+Trang gồm 4 tab chính:
 
-| Tab | Noi dung |
+| Tab | Nội dung |
 |-----|----------|
-| Tong quan | Cau hinh model, provider, behavior settings |
-| Files | Context files (SOUL.md, IDENTITY.md, AGENTS.md, ...) |
-| Quyen | Phan quyen per-user |
-| Instances | Chi hien voi predefined agent — danh sach per-user instances |
+| Tổng quan | Cấu hình model, provider, behavior settings |
+| Tệp | Context files (SOUL.md, IDENTITY.md, AGENTS.md, ...) |
+| Phân quyền | Phân quyền per-user |
+| Phiên bản người dùng | Chỉ hiện với predefined agent — danh sách per-user instances |
 
-**Thao tac chinh tren trang:**
-- Cap nhat cau hinh agent
-- Tai tao tu prompt — xay dung lai agent tu mo ta moi
-- Trieu hoi lai — khoi tao lai agent (chay lai sinh context files)
-- Xoa agent — hop thoai xac nhan
-- Cai dat nang cao — mo hop thoai nang cao
-- Cau hinh Heartbeat — thiet lap kiem tra suc khoe
-- Quan ly Codex Pool — dieu huong den `/agents/:id/codex-pool`
+**Thao tác chính trên trang:**
+- Cập nhật cấu hình agent
+- Tái tạo từ prompt — xây dựng lại agent từ mô tả mới
+- Triệu hồi lại — khởi tạo lại agent (chạy lại sinh context files)
+- Xóa agent — hộp thoại xác nhận
+- Cài đặt nâng cao — mở hộp thoại nâng cao
+- Cấu hình Heartbeat — thiết lập kiểm tra sức khỏe
+- Quản lý Codex Pool — điều hướng đến `/agents/:id/codex-pool`
 
 ---
 
-## Huong dan cau hinh
+## Hướng dẫn cấu hình
 
-### Model va Provider
+### Model và Provider
 
-Trong tab **Tong quan**:
+Trong tab **Tổng quan**:
 
-| Truong | Mo ta |
+| Trường | Mô tả |
 |--------|-------|
-| Provider | Ten provider da dang ky (vi du: `anthropic`, `openrouter`) |
-| Model | Ten model cu the (vi du: `claude-sonnet-4-5-20250929`, `gpt-4o`) |
-| Max Iterations | So vong lap toi da trong mot lan chay (mac dinh: 20). Tang neu agent co nhieu tool calls phuc tap. |
-| History Limit | So user turn giu lai trong lich su. Ngan tiet kiem token, dai giup nho context. |
+| Provider | Tên provider đã đăng ký (ví dụ: `anthropic`, `openrouter`) |
+| Model | Tên model cụ thể (ví dụ: `claude-sonnet-4-5-20250929`, `gpt-4o`) |
+| Max Iterations | Số vòng lặp tối đa trong một lần chạy (mặc định: 20). Tăng nếu agent có nhiều tool calls phức tạp. |
+| History Limit | Số user turn giữ lại trong lịch sử. Ngắn tiết kiệm token, dài giúp nhớ context. |
 
-### Context Files (Tab Files)
+### Context Files (Tab Tệp)
 
-Cac file dinh nghia nhan cach va kien thuc cua agent:
+Các file định nghĩa nhân cách và kiến thức của agent:
 
-| File | Chuc nang |
+| File | Chức năng |
 |------|-----------|
-| `IDENTITY.md` | Ten, vai tro, nen tang cua agent. Dua vao system prompt o muc "primacy zone". |
-| `SOUL.md` | System prompt chinh — phong cach giao tiep, gia tri, nguyen tac xu ly. |
-| `BOOTSTRAP.md` | Neu ton tai, agent chay ngay lap tuc khi khoi dong (mandatory notice). |
-| `AGENTS.md` | Mo ta cac agent trong he thong de agent chinh biet cach spawn sub-agent. |
-| `TOOLS.md` | Tai lieu ve cac tool co san cho agent. |
+| `IDENTITY.md` | Tên, vai trò, nền tảng của agent. Đưa vào system prompt ở mức "primacy zone". |
+| `SOUL.md` | System prompt chính — phong cách giao tiếp, giá trị, nguyên tắc xử lý. |
+| `BOOTSTRAP.md` | Nếu tồn tại, agent chạy ngay lập tức khi khởi động (mandatory notice). |
+| `AGENTS.md` | Mô tả các agent trong hệ thống để agent chính biết cách spawn sub-agent. |
+| `TOOLS.md` | Tài liệu về các tool có sẵn cho agent. |
 
-Co the them file bat ky vao workspace. File duoc inject vao system prompt trong phan "Project Context" voi defensive preamble bao ve agent khoi bi manipulate boi noi dung ben ngoai.
+Có thể thêm file bất kỳ vào workspace. File được inject vào system prompt trong phần "Project Context" với defensive preamble bảo vệ agent khỏi bị manipulate bởi nội dung bên ngoài.
 
-**Per-user context files** (open agents): Moi nguoi dung co thu muc `base/{userID}/` rieng. File `USER.md` duoc tao tu dong khi nguoi dung chat lan dau — agent co the cap nhat file nay theo thoi gian.
+**Per-user context files** (open agents): Mỗi người dùng có thư mục `base/{userID}/` riêng. File `USER.md` được tạo tự động khi người dùng chat lần đầu — agent có thể cập nhật file này theo thời gian.
 
-**Tao lai tu prompt** (Tab Files):
-1. Nhan **Tai tao tu prompt**.
-2. Nhap mo ta vai tro moi vao textarea.
-3. Nhan **Tai tao** — he thong sinh lai SOUL.md va cac context files.
+**Tái tạo từ prompt** (Tab Tệp):
+1. Nhấn **Tái tạo từ prompt**.
+2. Nhập mô tả vai trò mới vào textarea.
+3. Nhấn **Tái tạo** — hệ thống sinh lại SOUL.md và các context files.
 
 ### Behavior Settings
 
-| Thiet lap | Mo ta |
+| Thiết lập | Mô tả |
 |-----------|-------|
-| Debounce | Thoi gian cho (ms) truoc khi xu ly tin nhan trong group chat (tranh spam) |
-| Streaming | Bat/tat stream response theo tung chunk. Tat giup debug. |
-| Tool Status | Hien thi trang thai tool call trong UI (tool.call / tool.result events) |
-| Input Guard | Kich hoat quet prompt injection (mac dinh: `warn` — log nhung khong block) |
+| Debounce | Thời gian chờ (ms) trước khi xử lý tin nhắn trong group chat (tránh spam) |
+| Streaming | Bật/tắt stream response theo từng chunk. Tắt giúp debug. |
+| Tool Status | Hiển thị trạng thái tool call trong UI (tool.call / tool.result events) |
+| Input Guard | Kích hoạt quét prompt injection (mặc định: `warn` — log nhưng không block) |
 
-### Cai dat nang cao
+### Cài đặt nâng cao
 
-Mo qua nut **Cai dat nang cao**:
+Mở qua nút **Nâng cao**:
 
-| Phan | Noi dung |
+| Phần | Nội dung |
 |------|----------|
-| Chia se workspace | Cau hinh chia se workspace giua cac agent |
-| Suy luan | Che do, muc do, du phong cho Extended Thinking |
-| Dinh tuyen ChatGPT OAuth | Cau hinh Codex Pool routing |
-| Nen ngu canh | Nguong va chien luoc nen lich su hoi thoai |
-| Cat tia ngu canh | Loai bo cac phan ngu canh it quan trong |
-| Sandbox | Cau hinh Docker sandbox cho code execution |
+| Chia sẻ workspace | Cấu hình chia sẻ workspace giữa các agent |
+| Suy luận | Chế độ, mức độ, dự phòng cho Extended Thinking |
+| Định tuyến ChatGPT OAuth | Cấu hình Codex Pool routing |
+| Nén ngữ cảnh | Ngưỡng và chiến lược nén lịch sử hội thoại |
+| Cắt tỉa ngữ cảnh | Loại bỏ các phần ngữ cảnh ít quan trọng |
+| Sandbox | Cấu hình Docker sandbox cho code execution |
 
 ### Sandbox Mode
 
-Chay code trong Docker container de cach ly voi may chu chinh.
+Chạy code trong Docker container để cách ly với máy chủ chính.
 
-| Truong | Mo ta |
+| Trường | Mô tả |
 |--------|-------|
-| Mode | `off` — khong sandbox; `non-main` — chi sandbox sub-agent; `all` — sandbox moi thu |
-| Workspace Access | `none` isolate hoan toan; `ro` mount read-only; `rw` read-write day du |
-| Image | Docker image su dung (vi du: `goclaw-sandbox:bookworm-slim`) |
-| Scope | `session` — 1 container/phien; `agent` — dung chung giua cac phien; `shared` — chia se moi agent |
-| Timeout | Thoi gian toi da (giay) cho moi lenh chay trong sandbox (mac dinh: 300) |
-| Memory | RAM toi da (MB) cho container (mac dinh: 512) |
-| CPUs | So CPU core (phan so duoc, vi du: 0.5) |
-| Network | Bat/tat truy cap mang tu container |
+| Mode | `off` — không sandbox; `non-main` — chỉ sandbox sub-agent; `all` — sandbox mọi thứ |
+| Workspace Access | `none` isolate hoàn toàn; `ro` mount read-only; `rw` read-write đầy đủ |
+| Image | Docker image sử dụng (ví dụ: `goclaw-sandbox:bookworm-slim`) |
+| Scope | `session` — 1 container/phiên; `agent` — dùng chung giữa các phiên; `shared` — chia sẻ mọi agent |
+| Timeout | Thời gian tối đa (giây) cho mỗi lệnh chạy trong sandbox (mặc định: 300) |
+| Memory | RAM tối đa (MB) cho container (mặc định: 512) |
+| CPUs | Số CPU core (phân số được, ví dụ: 0.5) |
+| Network | Bật/tắt truy cập mạng từ container |
 
-Sandbox yeu cau Docker cai tren may chu. Image phai duoc build san.
+Sandbox yêu cầu Docker cài trên máy chủ. Image phải được build sẵn.
 
-### Rate Limits va Quyen (Tab Quyen)
+### Rate Limits và Phân quyền (Tab Phân quyền)
 
-- Gioi han so luong tool call trong khoang thoi gian (per hour/day/week).
-- Ap dung RBAC: `admin` / `operator` / `viewer`.
-- Tu choi cac tool cu the cho agent qua **Tool Policy**.
+- Giới hạn số lượng tool call trong khoảng thời gian (per hour/day/week).
+- Áp dụng RBAC: `admin` / `operator` / `viewer`.
+- Từ chối các tool cụ thể cho agent qua **Tool Policy**.
 
-**Them quyen per-user:**
-- Nhap ID Nguoi dung, Loai cau hinh, Pham vi, Quyen (cho phep/tu choi).
-- Nhan **Them (+)** de cap quyen.
-- Nhan **Xoa (X)** de thu hoi quyen.
+**Thêm quyền per-user:**
+- Nhập ID Người dùng, Loại cấu hình, Phạm vi, Quyền (cho phép/từ chối).
+- Nhấn **Thêm (+)** để cấp quyền.
+- Nhấn **Xóa (X)** để thu hồi quyền.
 
-### Heartbeat (Kiem tra suc khoe)
+### Heartbeat (Kiểm tra sức khỏe)
 
-Nhan **Cau hinh Heartbeat** de thiet lap:
+Nhấn **Cấu hình Heartbeat** để thiết lập:
 
-| Truong | Mo ta |
+| Trường | Mô tả |
 |--------|-------|
-| Bat/tat | Bat/tat heartbeat |
-| Chu ky (phut) | Khoang thoi gian giua cac lan kiem tra |
-| Provider/Model ghi de | Dung provider/model khac cho heartbeat |
-| Kenh | Kenh nhan thong bao |
-| Chat ID | ID cuoc tro chuyen nhan thong bao |
-| Gio hoat dong | Khung gio cho phep chay heartbeat |
-| Mui gio | Mui gio ap dung |
-| Danh sach kiem tra | Cac buoc kiem tra tuy chinh |
+| Bật/tắt | Bật/tắt heartbeat |
+| Chu kỳ (phút) | Khoảng thời gian giữa các lần kiểm tra |
+| Provider/Model ghi đè | Dùng provider/model khác cho heartbeat |
+| Kênh | Kênh nhận thông báo |
+| Chat ID | ID cuộc trò chuyện nhận thông báo |
+| Giờ hoạt động | Khung giờ cho phép chạy heartbeat |
+| Múi giờ | Múi giờ áp dụng |
+| Danh sách kiểm tra | Các bước kiểm tra tùy chỉnh |
 
-Nhan **Chay thu** de kiem tra ngay lap tuc. Xem lich su heartbeat qua **Nhat Ky Heartbeat**.
+Nhấn **Chạy thử** để kiểm tra ngay lập tức. Xem lịch sử heartbeat qua **Nhật Ký Heartbeat**.
 
 ---
 
-## Vi du — Cau hinh sandbox cho agent viet code
+## Ví dụ — Cấu hình sandbox cho agent viết code
 
 ```
-/agents/my-coder -> Cai dat nang cao -> Sandbox:
+/agents/my-coder -> Nâng cao -> Sandbox:
   Mode: non-main
   Workspace Access: rw
   Image: goclaw-sandbox:bookworm-slim
   Scope: session
   Timeout: 120
   Memory: 1024
-  Network: bat
--> Luu
+  Network: bật
+-> Lưu
 ```
 
 ---
 
-## Luu y
+## Lưu ý
 
-- Thay doi Model/Provider anh huong ngay den cac session moi; session dang chay khong bi gian doan.
-- Max Iterations qua thap co the lam agent dung giua chung khi co nhieu tool calls phuc tap.
-- Sandbox yeu cau Docker daemon chay tren may chu — kiem tra `docker info` truoc khi bat.
-- Tab Instances chi hien voi predefined agent — cho phep xem va quan ly context rieng cua tung nguoi dung.
+- Thay đổi Model/Provider ảnh hưởng ngay đến các session mới; session đang chạy không bị gián đoạn.
+- Max Iterations quá thấp có thể làm agent dừng giữa chừng khi có nhiều tool calls phức tạp.
+- Sandbox yêu cầu Docker daemon chạy trên máy chủ — kiểm tra `docker info` trước khi bật.
+- Tab Phiên bản người dùng chỉ hiện với predefined agent — cho phép xem và quản lý context riêng của từng người dùng.
 
 ---
 
-## Xem them
+## Xem thêm
 
-- [01-tong-quan-agents.md](./01-tong-quan-agents.md) — Khai niem co ban ve agents
-- [03-skills.md](./03-skills.md) — Them skills cho agent
-- [04-codex-pool.md](./04-codex-pool.md) — Cau hinh Codex Pool routing
+- [01-tong-quan-agents.md](./01-tong-quan-agents.md) — Khái niệm cơ bản về agents
+- [03-skills.md](./03-skills.md) — Thêm skills cho agent
+- [04-codex-pool.md](./04-codex-pool.md) — Cấu hình Codex Pool routing

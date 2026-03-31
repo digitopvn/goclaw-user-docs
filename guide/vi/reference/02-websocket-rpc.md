@@ -1,21 +1,21 @@
 # WebSocket RPC
 
-GoClaw su dung WebSocket JSON-RPC (protocol v3) lam control plane chinh. Client ket noi toi `/ws`, xac thuc qua frame `connect`, sau do trao doi request/response/event frames.
+GoClaw sử dụng WebSocket JSON-RPC (protocol v3) làm control plane chính. Client kết nối tới `/ws`, xác thực qua frame `connect`, sau đó trao đổi request/response/event frames.
 
 ---
 
-## Tong Quan
+## Tổng Quan
 
-- **URL ket noi:** `ws://<host>:<port>/ws`
+- **URL kết nối:** `ws://<host>:<port>/ws`
 - **Protocol version:** 3
-- **Xac thuc:** Frame `connect` bat buoc la request dau tien sau khi upgrade
-- **Dinh dang:** JSON thuan tuy, moi frame la mot JSON object
+- **Xác thực:** Frame `connect` bắt buộc là request đầu tiên sau khi upgrade
+- **Định dạng:** JSON thuần túy, mỗi frame là một JSON object
 
 ---
 
-## Ket Noi va Xac Thuc
+## Kết Nối và Xác Thực
 
-Sau khi WebSocket upgrade thanh cong (HTTP 101), request dau tien bat buoc phai la `connect`:
+Sau khi WebSocket upgrade thành công (HTTP 101), request đầu tiên bắt buộc phải là `connect`:
 
 ```json
 {
@@ -31,7 +31,7 @@ Sau khi WebSocket upgrade thanh cong (HTTP 101), request dau tien bat buoc phai 
 }
 ```
 
-**Response thanh cong:**
+**Response thành công:**
 ```json
 {
   "type": "res",
@@ -46,21 +46,21 @@ Sau khi WebSocket upgrade thanh cong (HTTP 101), request dau tien bat buoc phai 
 }
 ```
 
-**Luong xac thuc:** Gateway token so sanh timing-safe → role admin. Neu khong khop, SHA-256 hash → tra cuu API key → role suy ra tu scopes. Pairing codes cung duoc chap nhan cho channel devices.
+**Luồng xác thực:** Gateway token so sánh timing-safe → role admin. Nếu không khớp, SHA-256 hash → tra cứu API key → role suy ra từ scopes. Pairing codes cũng được chấp nhận cho channel devices.
 
-### Tham So Ket Noi
+### Tham Số Kết Nối
 
-| Tham so | Gia tri | Mo ta |
+| Tham số | Giá trị | Mô tả |
 |---------|---------|-------|
-| Read limit | 512 KB | Tu dong dong ket noi neu vuot qua |
-| Send buffer | 256 | Drop messages khi day |
-| Read deadline | 60s | Reset moi message hoac pong |
-| Write deadline | 10s | Timeout moi lan ghi |
+| Read limit | 512 KB | Tự động đóng kết nối nếu vượt quá |
+| Send buffer | 256 | Drop messages khi đầy |
+| Read deadline | 60s | Reset mỗi message hoặc pong |
+| Write deadline | 10s | Timeout mỗi lần ghi |
 | Ping interval | 30s | Server keepalive |
 
 ---
 
-## Dinh Dang Frame
+## Định Dạng Frame
 
 ### Request Frame (Client → Server)
 
@@ -84,7 +84,7 @@ Sau khi WebSocket upgrade thanh cong (HTTP 101), request dau tien bat buoc phai 
 }
 ```
 
-Khi loi:
+Khi lỗi:
 ```json
 {
   "type": "res",
@@ -114,29 +114,29 @@ Khi loi:
 
 ---
 
-## Methods — Theo Nhom
+## Methods — Theo Nhóm
 
 ### System
 
-| Method | Mo ta | Role toi thieu |
+| Method | Mô tả | Role tối thiểu |
 |--------|-------|---------------|
-| `connect` | Handshake xac thuc (phai la request dau tien) | — |
-| `health` | Kiem tra suc khoe server va clients ket noi | Viewer |
-| `status` | So luong agent/session/client nhanh | Viewer |
+| `connect` | Handshake xác thực (phải là request đầu tiên) | — |
+| `health` | Kiểm tra sức khỏe server và clients kết nối | Viewer |
+| `status` | Số lượng agent/session/client nhanh | Viewer |
 
 ### Chat
 
-| Method | Mo ta | Role toi thieu |
+| Method | Mô tả | Role tối thiểu |
 |--------|-------|---------------|
-| `chat.send` | Gui message toi agent, nhan response (co the streaming) | Operator |
-| `chat.history` | Lay lich su chat cho session | Viewer |
-| `chat.abort` | Huy agent invocations dang chay | Operator |
-| `chat.inject` | Inject message vao session transcript khong kich hoat agent | Operator |
+| `chat.send` | Gửi message tới agent, nhận response (có thể streaming) | Operator |
+| `chat.history` | Lấy lịch sử chat cho session | Viewer |
+| `chat.abort` | Hủy agent invocations đang chạy | Operator |
+| `chat.inject` | Inject message vào session transcript không kích hoạt agent | Operator |
 
 **`chat.send` request:**
 ```json
 {
-  "message": "Xin chao agent",
+  "message": "Xin chào agent",
   "agentId": "uuid-hoac-key",
   "sessionKey": "session-tuy-chon",
   "stream": true,
@@ -144,77 +144,77 @@ Khi loi:
 }
 ```
 
-Khi `stream: true`, intermediate events duoc phat: `chunk`, `tool.call`, `tool.result`, `run.started`, `run.completed`.
+Khi `stream: true`, intermediate events được phát: `chunk`, `tool.call`, `tool.result`, `run.started`, `run.completed`.
 
 ### Sessions
 
-| Method | Mo ta | Role toi thieu |
+| Method | Mô tả | Role tối thiểu |
 |--------|-------|---------------|
-| `sessions.list` | Liet ke sessions (co phan trang) | Viewer |
-| `sessions.preview` | Lay lich su session va tom tat | Viewer |
-| `sessions.patch` | Cap nhat label, model, metadata | Operator |
-| `sessions.delete` | Xoa session | Operator |
-| `sessions.reset` | Xoa tat ca messages cua session | Operator |
+| `sessions.list` | Liệt kê sessions (có phân trang) | Viewer |
+| `sessions.preview` | Lấy lịch sử session và tóm tắt | Viewer |
+| `sessions.patch` | Cập nhật label, model, metadata | Operator |
+| `sessions.delete` | Xóa session | Operator |
+| `sessions.reset` | Xóa tất cả messages của session | Operator |
 
 ### Agents
 
-| Method | Mo ta | Role toi thieu |
+| Method | Mô tả | Role tối thiểu |
 |--------|-------|---------------|
-| `agents.list` | Liet ke tat ca agents | Viewer |
-| `agent` | Lay trang thai mot agent cu the | Viewer |
-| `agent.wait` | Cho agent hoan thanh | Viewer |
-| `agent.identity.get` | Lay identity agent (ten, emoji, avatar, description) | Viewer |
-| `agents.create` | Tao agent moi | Admin |
-| `agents.update` | Cap nhat thuoc tinh agent | Admin |
-| `agents.delete` | Xoa agent | Admin |
-| `agents.files.list` | Liet ke context files cua agent | Admin |
-| `agents.files.get` | Doc noi dung context file | Admin |
-| `agents.files.set` | Ghi noi dung context file | Admin |
+| `agents.list` | Liệt kê tất cả agents | Viewer |
+| `agent` | Lấy trạng thái một agent cụ thể | Viewer |
+| `agent.wait` | Chờ agent hoàn thành | Viewer |
+| `agent.identity.get` | Lấy identity agent (tên, emoji, avatar, description) | Viewer |
+| `agents.create` | Tạo agent mới | Admin |
+| `agents.update` | Cập nhật thuộc tính agent | Admin |
+| `agents.delete` | Xóa agent | Admin |
+| `agents.files.list` | Liệt kê context files của agent | Admin |
+| `agents.files.get` | Đọc nội dung context file | Admin |
+| `agents.files.set` | Ghi nội dung context file | Admin |
 
 ### Teams
 
-| Method | Mo ta | Role toi thieu |
+| Method | Mô tả | Role tối thiểu |
 |--------|-------|---------------|
-| `teams.list` | Liet ke tat ca teams | Admin |
-| `teams.create` | Tao team moi | Admin |
-| `teams.get` | Lay chi tiet team voi members | Admin |
-| `teams.update` | Cap nhat thuoc tinh team | Admin |
-| `teams.delete` | Xoa team | Admin |
-| `teams.members.add` | Them agent vao team voi role | Admin |
-| `teams.members.remove` | Xoa agent khoi team | Admin |
-| `teams.tasks.list` | Liet ke team tasks (co the loc) | Admin |
-| `teams.tasks.get` | Lay task voi comments/events | Admin |
-| `teams.tasks.create` | Tao task | Admin |
-| `teams.tasks.approve` | Chap nhan task | Admin |
-| `teams.tasks.reject` | Tu choi task | Admin |
-| `teams.tasks.comment` | Them comment vao task | Admin |
-| `teams.tasks.assign` | Gan task cho member | Admin |
-| `teams.tasks.delete` | Xoa task | Admin |
-| `teams.known_users` | Lay danh sach user IDs trong team | Admin |
-| `teams.scopes` | Lay channel/chat scopes cho task routing | Admin |
-| `teams.workspace.list` | Liet ke workspace items | Admin |
-| `teams.workspace.read` | Doc noi dung workspace file | Admin |
-| `teams.workspace.delete` | Xoa workspace item | Admin |
+| `teams.list` | Liệt kê tất cả teams | Admin |
+| `teams.create` | Tạo team mới | Admin |
+| `teams.get` | Lấy chi tiết team với members | Admin |
+| `teams.update` | Cập nhật thuộc tính team | Admin |
+| `teams.delete` | Xóa team | Admin |
+| `teams.members.add` | Thêm agent vào team với role | Admin |
+| `teams.members.remove` | Xóa agent khỏi team | Admin |
+| `teams.tasks.list` | Liệt kê team tasks (có thể lọc) | Admin |
+| `teams.tasks.get` | Lấy task với comments/events | Admin |
+| `teams.tasks.create` | Tạo task | Admin |
+| `teams.tasks.approve` | Chấp nhận task | Admin |
+| `teams.tasks.reject` | Từ chối task | Admin |
+| `teams.tasks.comment` | Thêm comment vào task | Admin |
+| `teams.tasks.assign` | Gán task cho member | Admin |
+| `teams.tasks.delete` | Xóa task | Admin |
+| `teams.known_users` | Lấy danh sách user IDs trong team | Admin |
+| `teams.scopes` | Lấy channel/chat scopes cho task routing | Admin |
+| `teams.workspace.list` | Liệt kê workspace items | Admin |
+| `teams.workspace.read` | Đọc nội dung workspace file | Admin |
+| `teams.workspace.delete` | Xóa workspace item | Admin |
 
 ### Cron
 
-| Method | Mo ta | Role toi thieu |
+| Method | Mô tả | Role tối thiểu |
 |--------|-------|---------------|
-| `cron.list` | Liet ke cron jobs | Viewer |
-| `cron.create` | Tao job theo lich | Operator |
-| `cron.update` | Cap nhat cai dat job | Operator |
-| `cron.delete` | Xoa job | Operator |
-| `cron.toggle` | Bat/tat job | Operator |
-| `cron.status` | Lay trang thai scheduler | Viewer |
-| `cron.run` | Kich hoat chay ngay lap tuc | Operator |
-| `cron.runs` | Liet ke lich su thuc thi | Viewer |
+| `cron.list` | Liệt kê cron jobs | Viewer |
+| `cron.create` | Tạo job theo lịch | Operator |
+| `cron.update` | Cập nhật cài đặt job | Operator |
+| `cron.delete` | Xóa job | Operator |
+| `cron.toggle` | Bật/tắt job | Operator |
+| `cron.status` | Lấy trạng thái scheduler | Viewer |
+| `cron.run` | Kích hoạt chạy ngay lập tức | Operator |
+| `cron.runs` | Liệt kê lịch sử thực thi | Viewer |
 
 **`cron.create` request:**
 ```json
 {
   "name": "bao-cao-hang-ngay",
   "schedule": "every day at 09:00",
-  "message": "Tao bao cao hang ngay",
+  "message": "Tạo báo cáo hàng ngày",
   "deliver": "channel",
   "channel": "telegram",
   "to": "chat-id",
@@ -224,20 +224,20 @@ Khi `stream: true`, intermediate events duoc phat: `chunk`, `tool.call`, `tool.r
 
 ### Skills
 
-| Method | Mo ta | Role toi thieu |
+| Method | Mô tả | Role tối thiểu |
 |--------|-------|---------------|
-| `skills.list` | Liet ke tat ca skills kha dung | Viewer |
-| `skills.get` | Lay metadata va noi dung skill | Viewer |
-| `skills.update` | Cap nhat metadata skill (chi DB-backed) | Operator |
+| `skills.list` | Liệt kê tất cả skills khả dụng | Viewer |
+| `skills.get` | Lấy metadata và nội dung skill | Viewer |
+| `skills.update` | Cập nhật metadata skill (chỉ DB-backed) | Operator |
 
 ### Config
 
-| Method | Mo ta | Role toi thieu |
+| Method | Mô tả | Role tối thiểu |
 |--------|-------|---------------|
-| `config.get` | Lay cau hinh hien tai (secrets da an) | Viewer |
-| `config.apply` | Thay the toan bo config (optimistic locking qua `baseHash`) | Admin |
-| `config.patch` | Cap nhat mot phan config | Admin |
-| `config.schema` | Lay JSON schema de tao form config | Viewer |
+| `config.get` | Lấy cấu hình hiện tại (secrets đã ẩn) | Viewer |
+| `config.apply` | Thay thế toàn bộ config (optimistic locking qua `baseHash`) | Admin |
+| `config.patch` | Cập nhật một phần config | Admin |
+| `config.schema` | Lấy JSON schema để tạo form config | Viewer |
 
 **`config.patch` request:**
 ```json
@@ -249,123 +249,123 @@ Khi `stream: true`, intermediate events duoc phat: `chunk`, `tool.call`, `tool.r
 
 ### Channels
 
-| Method | Mo ta | Role toi thieu |
+| Method | Mô tả | Role tối thiểu |
 |--------|-------|---------------|
-| `channels.list` | Liet ke channels da bat | Viewer |
-| `channels.status` | Lay trang thai ket noi channel | Viewer |
-| `channels.instances.list` | Liet ke instances | Viewer |
-| `channels.instances.get` | Lay chi tiet instance | Viewer |
-| `channels.instances.create` | Tao instance | Admin |
-| `channels.instances.update` | Cap nhat instance | Admin |
-| `channels.instances.delete` | Xoa instance | Admin |
+| `channels.list` | Liệt kê channels đã bật | Viewer |
+| `channels.status` | Lấy trạng thái kết nối channel | Viewer |
+| `channels.instances.list` | Liệt kê instances | Viewer |
+| `channels.instances.get` | Lấy chi tiết instance | Viewer |
+| `channels.instances.create` | Tạo instance | Admin |
+| `channels.instances.update` | Cập nhật instance | Admin |
+| `channels.instances.delete` | Xóa instance | Admin |
 
-### Providers va Tools
+### Providers và Tools
 
-| Method | Mo ta | Role toi thieu |
+| Method | Mô tả | Role tối thiểu |
 |--------|-------|---------------|
-| `providers.models` | Liet ke models kha dung tu tat ca providers | Viewer |
+| `providers.models` | Liệt kê models khả dụng từ tất cả providers | Viewer |
 
 ### API Keys
 
-| Method | Mo ta | Role toi thieu |
+| Method | Mô tả | Role tối thiểu |
 |--------|-------|---------------|
-| `api_keys.list` | Liet ke API keys (da an) | Admin |
-| `api_keys.create` | Tao API key moi | Admin |
-| `api_keys.revoke` | Thu hoi API key | Admin |
+| `api_keys.list` | Liệt kê API keys (đã ẩn) | Admin |
+| `api_keys.create` | Tạo API key mới | Admin |
+| `api_keys.revoke` | Thu hồi API key | Admin |
 
-### Pairing (Ghep Thiet Bi)
+### Pairing (Ghép Thiết Bị)
 
-| Method | Mo ta | Auth |
+| Method | Mô tả | Auth |
 |--------|-------|------|
-| `device.pair.request` | Yeu cau ghep cap (tu thiet bi) | Chua xac thuc |
-| `device.pair.approve` | Chap nhan yeu cau (tu admin) | Admin |
-| `device.pair.deny` | Tu choi yeu cau | Admin |
-| `device.pair.list` | Liet ke pending + da ghep cap | Admin |
-| `device.pair.revoke` | Thu hoi thiet bi | Admin |
-| `browser.pairing.status` | Kiem tra trang thai ghep cap (poll) | Chua xac thuc |
+| `device.pair.request` | Yêu cầu ghép cặp (từ thiết bị) | Chưa xác thực |
+| `device.pair.approve` | Chấp nhận yêu cầu (từ admin) | Admin |
+| `device.pair.deny` | Từ chối yêu cầu | Admin |
+| `device.pair.list` | Liệt kê pending + đã ghép cặp | Admin |
+| `device.pair.revoke` | Thu hồi thiết bị | Admin |
+| `browser.pairing.status` | Kiểm tra trạng thái ghép cặp (poll) | Chưa xác thực |
 
 ### Exec Approvals
 
-| Method | Mo ta | Role toi thieu |
+| Method | Mô tả | Role tối thiểu |
 |--------|-------|---------------|
-| `exec.approval.list` | Liet ke lenh dang cho duyet | Operator |
-| `exec.approval.approve` | Chap nhan lenh (tuy chon: luon chap nhan) | Operator |
-| `exec.approval.deny` | Tu choi thuc thi lenh | Operator |
+| `exec.approval.list` | Liệt kê lệnh đang chờ duyệt | Operator |
+| `exec.approval.approve` | Chấp nhận lệnh (tùy chọn: luôn chấp nhận) | Operator |
+| `exec.approval.deny` | Từ chối thực thi lệnh | Operator |
 
-### Usage va Quotas
+### Usage và Quotas
 
-| Method | Mo ta | Role toi thieu |
+| Method | Mô tả | Role tối thiểu |
 |--------|-------|---------------|
-| `usage.get` | Lay ban ghi su dung theo agent | Viewer |
-| `usage.summary` | Lay tong hop su dung token | Viewer |
-| `quota.usage` | Lay muc tieu thu quota | Viewer |
+| `usage.get` | Lấy bản ghi sử dụng theo agent | Viewer |
+| `usage.summary` | Lấy tổng hợp sử dụng token | Viewer |
+| `quota.usage` | Lấy mức tiêu thụ quota | Viewer |
 
 ### Other
 
-| Method | Mo ta | Role toi thieu |
+| Method | Mô tả | Role tối thiểu |
 |--------|-------|---------------|
-| `send` | Gui message di ra qua channel | Operator |
-| `logs.tail` | Bat/tat live log streaming | Admin |
-| `delegations.list` | Liet ke lich su delegation | Viewer |
-| `delegations.get` | Lay chi tiet delegation | Viewer |
+| `send` | Gửi message đi ra qua channel | Operator |
+| `logs.tail` | Bật/tắt live log streaming | Admin |
+| `delegations.list` | Liệt kê lịch sử delegation | Viewer |
+| `delegations.get` | Lấy chi tiết delegation | Viewer |
 
 ---
 
 ## Streaming Events
 
-Khi `chat.send` duoc goi voi `stream: true`, server day events theo thu tu:
+Khi `chat.send` được gọi với `stream: true`, server đẩy events theo thứ tự:
 
-| Event | Mo ta | Payload chinh |
+| Event | Mô tả | Payload chính |
 |-------|-------|--------------|
-| `run.started` | Agent run bat dau | `runId`, `agentId` |
+| `run.started` | Agent run bắt đầu | `runId`, `agentId` |
 | `chunk` | Text streaming chunk | `content` (string) |
-| `tool.call` | Tool invocation bat dau | `toolName`, `toolInput` |
-| `tool.result` | Tool invocation hoan thanh | `toolName`, `result` |
-| `run.completed` | Agent run ket thuc | `content`, `usage` |
+| `tool.call` | Tool invocation bắt đầu | `toolName`, `toolInput` |
+| `tool.result` | Tool invocation hoàn thành | `toolName`, `result` |
+| `run.completed` | Agent run kết thúc | `content`, `usage` |
 
-### Events Day Tu Server
+### Events Đẩy Từ Server
 
-| Event | Mo ta |
+| Event | Mô tả |
 |-------|-------|
-| `session.updated` | Session metadata thay doi |
-| `agent.updated` | Cau hinh agent thay doi |
-| `cron.fired` | Cron job duoc kich hoat |
+| `session.updated` | Session metadata thay đổi |
+| `agent.updated` | Cấu hình agent thay đổi |
+| `cron.fired` | Cron job được kích hoạt |
 | `team.task.*` | Team task lifecycle events |
-| `exec.approval.pending` | Lenh dang cho duyet |
+| `exec.approval.pending` | Lệnh đang chờ duyệt |
 
 ---
 
 ## Permission Matrix
 
-| Role | Quyen truy cap |
+| Role | Quyền truy cập |
 |------|---------------|
-| **Admin** | Tat ca methods |
-| **Operator** | Doc + ghi (chat, sessions, cron, approvals, send) |
-| **Viewer** | Chi doc (list, get, preview, status, history) |
+| **Admin** | Tất cả methods |
+| **Operator** | Đọc + ghi (chat, sessions, cron, approvals, send) |
+| **Viewer** | Chỉ đọc (list, get, preview, status, history) |
 
-**Methods chi Admin:** `config.apply`, `config.patch`, `agents.create`, `agents.update`, `agents.delete`, `channels.toggle`, `device.pair.approve`, `device.pair.deny`, `device.pair.revoke`, `teams.*`, `api_keys.*`
+**Methods chỉ Admin:** `config.apply`, `config.patch`, `agents.create`, `agents.update`, `agents.delete`, `channels.toggle`, `device.pair.approve`, `device.pair.deny`, `device.pair.revoke`, `teams.*`, `api_keys.*`
 
 ---
 
-## Ma Loi
+## Mã Lỗi
 
-| Code | Mo ta |
+| Code | Mô tả |
 |------|-------|
-| `UNAUTHORIZED` | Xac thuc that bai hoac khong du role |
-| `INVALID_REQUEST` | Truong thieu, sai kieu, hoac method khong ton tai |
-| `NOT_FOUND` | Tai nguyen khong ton tai |
-| `ALREADY_EXISTS` | Tai nguyen da ton tai |
-| `UNAVAILABLE` | Dich vu tam thoi khong kha dung |
-| `RESOURCE_EXHAUSTED` | Vuot gioi han rate limit |
-| `AGENT_TIMEOUT` | Agent run vuot qua thoi gian cho phep |
-| `INTERNAL` | Loi server khong mong doi |
+| `UNAUTHORIZED` | Xác thực thất bại hoặc không đủ role |
+| `INVALID_REQUEST` | Trường thiếu, sai kiểu, hoặc method không tồn tại |
+| `NOT_FOUND` | Tài nguyên không tồn tại |
+| `ALREADY_EXISTS` | Tài nguyên đã tồn tại |
+| `UNAVAILABLE` | Dịch vụ tạm thời không khả dụng |
+| `RESOURCE_EXHAUSTED` | Vượt giới hạn rate limit |
+| `AGENT_TIMEOUT` | Agent run vượt quá thời gian cho phép |
+| `INTERNAL` | Lỗi server không mong đợi |
 
-Response loi bao gom `retryable` (boolean) va `retryAfterMs` (integer).
+Response lỗi bao gồm `retryable` (boolean) và `retryAfterMs` (integer).
 
 ---
 
-## Xem Them
+## Xem Thêm
 
 - [HTTP REST API](./01-api-reference.md)
-- [Cau hinh tham chieu](./03-cau-hinh.md)
-- [Nodes — ghep thiet bi](../admin/12-nodes.md)
+- [Cấu hình tham chiếu](./03-cau-hinh.md)
+- [Nodes — ghép thiết bị](../admin/12-nodes.md)

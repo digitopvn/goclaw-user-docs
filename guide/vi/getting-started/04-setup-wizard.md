@@ -1,142 +1,142 @@
-# Setup Wizard va Dashboard Tong Quan
+# Setup Wizard và Dashboard Tổng Quan
 
-## Tong quan
+## Tổng quan
 
-Lan dau truy cap Web Dashboard sau khi cai dat, he thong hien thi **Setup Wizard** 4 buoc de cau hinh he thong tu dau. Sau khi hoan thanh, chuyen sang trang **Overview** — trung tam giam sat hoat dong cua gateway.
+Lần đầu truy cập Web Dashboard sau khi cài đặt, hệ thống hiển thị **Setup Wizard** 4 bước để cấu hình hệ thống từ đầu. Sau khi hoàn thành, chuyển sang trang **Tổng quan** — trung tâm giám sát hoạt động của gateway.
 
 ---
 
-## Huong dan — Setup Wizard
+## Hướng dẫn — Setup Wizard
 
 Route: `/setup`
-Quyen truy cap: Da dang nhap
+Quyền truy cập: Đã đăng nhập
 
-### Buoc 1 — Cau hinh Provider
+### Bước 1 — Cấu hình Provider
 
-Them nha cung cap LLM dau tien.
+Thêm nhà cung cấp LLM đầu tiên.
 
-| Truong | Mo ta |
+| Trường | Mô tả |
 |--------|-------|
-| Loai Provider | Chon tu danh sach (Anthropic, OpenAI, OpenRouter, ...) |
-| Ten | Ten hien thi cho provider nay |
-| API Key | Khoa xac thuc cua provider |
-| API Base | URL co so (tuy chon, dung cho provider tu host) |
+| Loại provider | Chọn từ danh sách (Anthropic, OpenAI, OpenRouter, ...) |
+| Tên | Tên hiển thị cho provider này |
+| API Key | Khóa xác thực của provider |
+| API Base | URL cơ sở (tùy chọn, dùng cho provider tự host) |
 
-Nhan **Tao** de luu va chuyen sang Buoc 2.
+Nhấn **Tạo provider** để lưu và chuyển sang Bước 2.
 
-### Buoc 2 — Chon Model
+### Bước 2 — Chọn Model
 
-Chon model mac dinh cho provider vua them.
+Chọn model mặc định cho provider vừa thêm.
 
-- Chon model tu combobox.
-- Nhan **Xac minh** — he thong gui request kiem tra (dem nguoc 30 giay).
-- Sau khi xac minh thanh cong, nut **Tiep tuc** hien ra.
+- Chọn model từ combobox.
+- Nhấn **Xác minh** — hệ thống gửi request kiểm tra (đếm ngược 30 giây).
+- Sau khi xác minh thành công, nút **Tiếp tục** hiện ra.
 
-### Buoc 3 — Tao Agent
+### Bước 3 — Tạo Agent
 
-Tao agent dau tien.
+Tạo agent đầu tiên.
 
-| Truong | Mo ta |
+| Trường | Mô tả |
 |--------|-------|
-| Emoji | Bieu tuong dai dien (tuy chon) |
-| Ten | Ten hien thi cua agent |
-| Agent Key | Slug duy nhat (tu dong sinh tu ten) |
-| Tinh cach | Mo ta vai tro, phong cach cua agent |
-| Loai | **Dinh san** (shared context) hoac **Mo** (per-user context) |
-| Tu tien hoa | Cho phep agent tu cap nhat SOUL.md |
+| Biểu tượng | Emoji đại diện (tùy chọn) |
+| Tên hiển thị | Tên hiển thị của agent |
+| Khóa agent | Slug duy nhất (tự động sinh từ tên) |
+| Cá tính agent | Mô tả vai trò, phong cách của agent |
+| Loại | **Định sẵn** (shared context) hoặc **Mở** (per-user context) |
+| Tự tiến hóa | Cho phép agent tự cập nhật SOUL.md |
 
-Nhan **Tao** — hien **Modal Trieu Hoi** voi qua cau dong va tien trinh file theo thoi gian thuc.
-- Thanh cong: nut **Tiep tuc** → chuyen Buoc 4.
-- That bai: nut **Thu lai** hoac **Dong**.
+Nhấn **Tạo agent** — hiện **Modal Triệu Hồi** với quả cầu động và tiến trình file theo thời gian thực.
+- Thành công: nút **Tiếp tục** → chuyển Bước 4.
+- Thất bại: nút **Thử lại** hoặc **Đóng**.
 
-### Buoc 4 — Ket noi Kenh (Tuy chon)
+### Bước 4 — Kết nối Kênh (Tùy chọn)
 
-Ket noi kenh nhan tin (Telegram, Discord, Slack, ...).
+Kết nối kênh nhắn tin (Telegram, Discord, Slack, ...).
 
-| Truong | Mo ta |
+| Trường | Mô tả |
 |--------|-------|
-| Loai Kenh | Chon loai (Telegram, Discord, Slack, Feishu, Zalo, WhatsApp) |
-| Ten | Ten hien thi cho kenh nay |
-| Thong tin xac thuc | Dong theo loai (Bot Token, App ID, ...) |
+| Loại channel | Chọn loại (Telegram, Discord, Slack, Feishu, Zalo, WhatsApp) |
+| Tên | Tên hiển thị cho kênh này |
+| Thông tin xác thực | Tùy theo loại (Bot Token, App ID, ...) |
 
-Nhan **Tao** de ket noi — hien **Modal Hoan Thanh Cai Dat** voi nut **Den Bang Dieu Khien** → `/overview`.
+Nhấn **Tạo channel** để kết nối — hiện **Modal Hoàn Thành Cài Đặt** với nút **Đến bảng điều khiển** → `/overview`.
 
-Nhan **Bo qua** de hoan thanh wizard khong ket noi kenh (co the them sau trong Settings).
+Nhấn **Bỏ qua** để hoàn thành wizard không kết nối kênh (có thể thêm sau trong Settings).
 
-Cac tuy chon khac trong wizard:
-- **Doi ngon ngu** — vi / en / zh
-- **Chuyen to chuc** — chon to chuc khac
+Các tùy chọn khác trong wizard:
+- **Đổi ngôn ngữ** — vi / en / zh
+- **Chuyển tổ chức** — chọn tổ chức khác
 
 ---
 
-## Giao dien — Dashboard Tong Quan
+## Giao diện — Dashboard Tổng Quan
 
 Route: `/overview`
-Nhom Sidebar: Core
-Quyen truy cap: Da dang nhap
+Nhóm Sidebar: Core
+Quyền truy cập: Đã đăng nhập
 
-Sau setup wizard, day la trang chu cua he thong. Co hai tab chinh.
+Sau setup wizard, đây là trang chủ của hệ thống. Có hai tab chính.
 
-### Tab Tong quan
+### Tab Tổng quan
 
-Hien thi 5 the thong ke:
+Hiển thị 5 thẻ thống kê:
 
-| The | Noi dung |
+| Thẻ | Nội dung |
 |-----|----------|
-| Yeu cau Hom nay | Tong so request trong ngay |
-| Token | Tong token da dung |
-| Chi phi | Uoc tinh chi phi LLM |
-| Agents | So luong agent dang hoat dong |
-| Kenh | So luong kenh da ket noi |
+| Request hôm nay | Tổng số request trong ngày |
+| Token hôm nay | Tổng token đã dùng |
+| Chi phí hôm nay | Ước tính chi phí LLM |
+| Agent | Số lượng agent đang hoạt động |
+| Channel | Số lượng kênh đã kết nối |
 
-Cac khu vuc khac tren Tab Tong quan:
-- **Canh bao provider** — provider nao chua cau hinh hoac gap loi
-- **Suc khoe he thong** — trang thai cac thanh phan chinh
-- **Clients ket noi** — danh sach WebSocket clients dang ket noi
-- **Cron jobs** — cac tac vu lich trinh sap chay
-- **Yeu cau gan day** — log cac request moi nhat
-- **Han muc su dung** — muc do su dung so voi gioi han
-- **Thong tin phien ban** — phien ban GoClaw hien tai
+Các khu vực khác trên Tab Tổng quan:
+- **Cảnh báo provider** — provider nào chưa cấu hình hoặc gặp lỗi
+- **Tình trạng hệ thống** — trạng thái các thành phần chính
+- **Máy khách đã kết nối** — danh sách WebSocket clients đang kết nối
+- **Tác vụ định kỳ** — các tác vụ lịch trình sắp chạy
+- **Yêu cầu gần đây** — log các request mới nhất
+- **Mức sử dụng Quota** — mức độ sử dụng so với giới hạn
+- **Thông tin phiên bản** — phiên bản GoClaw hiện tại
 
-Trang tu dong lam moi moi 30 giay.
+Trang tự động làm mới mỗi 30 giây.
 
-### Tab Su dung
+### Tab Sử dụng
 
-Phan tich chi tiet luong su dung theo thoi gian.
+Phân tích chi tiết lượng sử dụng theo thời gian.
 
-**Thao tac:**
-- **Loc** theo agent, provider, kenh, khoang thoi gian, do chi tiet
-- **Bieu do time-series** — luong request theo thoi gian
-- **Phan tich** theo provider / model / kenh
-- **Bang du lieu** chi tiet
-- **Xuat CSV** — tai du lieu su dung thu
+**Thao tác:**
+- **Lọc** theo agent, provider, kênh, khoảng thời gian, độ chi tiết
+- **Biểu đồ time-series** — lượng request theo thời gian
+- **Phân tích** theo provider / model / kênh
+- **Bảng dữ liệu** chi tiết
+- **Xuất CSV** — tải dữ liệu sử dụng thô
 
 ---
 
-## Vi du — Luong setup hoan chinh
+## Ví dụ — Luồng setup hoàn chỉnh
 
 ```
-Dang nhap -> /login
-  -> Chua co Setup? -> /setup
-    -> Buoc 1: Them Anthropic provider + API key
-    -> Buoc 2: Chon claude-sonnet-4-5, Xac minh OK
-    -> Buoc 3: Tao agent "Assistant", type=open
-    -> Buoc 4: Bo qua kenh
+Đăng nhập -> /login
+  -> Chưa có Setup? -> /setup
+    -> Bước 1: Thêm Anthropic provider + API key
+    -> Bước 2: Chọn claude-sonnet-4-5, Xác minh OK
+    -> Bước 3: Tạo agent "Assistant", type=open
+    -> Bước 4: Bỏ qua kênh
   -> /overview (Dashboard)
 ```
 
 ---
 
-## Luu y
+## Lưu ý
 
-- Co the bo qua toan bo wizard bang nut **Bo qua** o buoc bat ky.
-- Sau khi bo qua, co the quay lai cau hinh tung phan trong **Settings** (Providers, Channels, Agents).
-- Tab Su dung tren Overview la noi theo doi chi phi LLM tong quat — de xem chi tiet tung session, dung trang **Sessions**.
+- Có thể bỏ qua toàn bộ wizard bằng nút **Bỏ qua cài đặt và vào dashboard** ở bước bất kỳ.
+- Sau khi bỏ qua, có thể quay lại cấu hình từng phần trong **Settings** (Providers, Channels, Agents).
+- Tab Sử dụng trên Overview là nơi theo dõi chi phí LLM tổng quát — để xem chi tiết từng session, dùng trang **Sessions**.
 
 ---
 
-## Xem them
+## Xem thêm
 
-- [../chat-and-sessions/01-chat-co-ban.md](../chat-and-sessions/01-chat-co-ban.md) — Bat dau chat voi agent
-- [../agents/01-tong-quan-agents.md](../agents/01-tong-quan-agents.md) — Hieu ro hon ve agents
-- [../agents/02-cau-hinh-agent.md](../agents/02-cau-hinh-agent.md) — Cau hinh agent nang cao
+- [../chat-and-sessions/01-chat-co-ban.md](../chat-and-sessions/01-chat-co-ban.md) — Bắt đầu chat với agent
+- [../agents/01-tong-quan-agents.md](../agents/01-tong-quan-agents.md) — Hiểu rõ hơn về agents
+- [../agents/02-cau-hinh-agent.md](../agents/02-cau-hinh-agent.md) — Cấu hình agent nâng cao

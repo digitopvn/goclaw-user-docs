@@ -1,108 +1,108 @@
-# Tham Chieu HTTP REST API
+# Tham Chiếu HTTP REST API
 
-GoClaw cung cap HTTP REST API day du song song voi WebSocket RPC. Tat ca endpoint duoc phuc vu tren cung mot cong voi gateway server.
+GoClaw cung cấp HTTP REST API đầy đủ song song với WebSocket RPC. Tất cả endpoint được phục vụ trên cùng một cổng với gateway server.
 
-Tai lieu tuong tac co tai `/docs` (Swagger UI), spec raw tai `/docs/openapi.json`.
+Tài liệu tương tác có tại `/docs` (Swagger UI), spec raw tại `/docs/openapi.json`.
 
 ---
 
-## Tong Quan
+## Tổng Quan
 
-- **Base URL:** `http://<host>:<port>` (mac dinh port 18790 doi voi Desktop, cau hinh qua `gateway.port`)
-- **Versioning:** Tat ca endpoint bat dau bang `/v1/`
+- **Base URL:** `http://<host>:<port>` (mặc định port 18790 đối với Desktop, cấu hình qua `gateway.port`)
+- **Versioning:** Tất cả endpoint bắt đầu bằng `/v1/`
 - **Protocol:** HTTP/1.1, JSON request/response
 - **Content-Type:** `application/json` cho request body
 - **Encoding:** UTF-8
 
 ---
 
-## Xac Thuc (Authentication)
+## Xác Thực (Authentication)
 
-Tat ca endpoint (tru `/health`) yeu cau xac thuc qua Bearer token trong header `Authorization`:
+Tất cả endpoint (trừ `/health`) yêu cầu xác thực qua Bearer token trong header `Authorization`:
 
 ```
 Authorization: Bearer <token>
 ```
 
-Hai loai token duoc chap nhan:
+Hai loại token được chấp nhận:
 
-| Loai | Dinh dang | Pham vi |
+| Loại | Định dạng | Phạm vi |
 |------|-----------|---------|
-| Gateway token | Cau hinh trong `config.json` (truong `gateway.token`) | Admin toan quyen |
-| API key | `goclaw_` + 32 ky tu hex | Pham vi gioi han boi scope cua key |
+| Gateway token | Cấu hình trong `config.json` (trường `gateway.token`) | Admin toàn quyền |
+| API key | `goclaw_` + 32 ký tự hex | Phạm vi giới hạn bởi scope của key |
 
-API key duoc hash SHA-256 truoc khi tra cuu — raw key khong bao gio duoc luu tru. Mot so endpoint chap nhan token qua query parameter `?token=<token>` (dung cho `<img>` va `<audio>` tags).
+API key được hash SHA-256 trước khi tra cứu — raw key không bao giờ được lưu trữ. Một số endpoint chấp nhận token qua query parameter `?token=<token>` (dùng cho `<img>` và `<audio>` tags).
 
-### Headers Thuong Gap
+### Headers Thường Gặp
 
-| Header | Muc dich |
+| Header | Mục đích |
 |--------|----------|
-| `Authorization` | Bearer token xac thuc |
-| `X-GoClaw-User-Id` | User ID ben ngoai cho context multi-tenant |
-| `X-GoClaw-Agent-Id` | Agent identifier cho tac vu co pham vi |
-| `X-GoClaw-Tenant-Id` | Tenant scope — UUID hoac slug |
-| `Accept-Language` | Locale (`en`, `vi`, `zh`) cho thong bao loi i18n |
+| `Authorization` | Bearer token xác thực |
+| `X-GoClaw-User-Id` | User ID bên ngoài cho context multi-tenant |
+| `X-GoClaw-Agent-Id` | Agent identifier cho tác vụ có phạm vi |
+| `X-GoClaw-Tenant-Id` | Tenant scope — UUID hoặc slug |
+| `Accept-Language` | Locale (`en`, `vi`, `zh`) cho thông báo lỗi i18n |
 | `Content-Type` | `application/json` cho request body |
 
 ---
 
 ## Agents
 
-CRUD quan ly agent. Yeu cau header `X-GoClaw-User-Id` cho context multi-tenant.
+CRUD quản lý agent. Yêu cầu header `X-GoClaw-User-Id` cho context multi-tenant.
 
-| Method | Path | Mo ta | Auth |
+| Method | Path | Mô tả | Auth |
 |--------|------|-------|------|
-| `GET` | `/v1/agents` | Liet ke agents ma user truy cap duoc | Bearer |
-| `POST` | `/v1/agents` | Tao agent moi | Bearer |
-| `GET` | `/v1/agents/{id}` | Lay agent theo ID hoac key | Bearer |
-| `PUT` | `/v1/agents/{id}` | Cap nhat agent (chi owner) | Bearer |
-| `DELETE` | `/v1/agents/{id}` | Xoa agent (chi owner) | Bearer |
+| `GET` | `/v1/agents` | Liệt kê agents mà user truy cập được | Bearer |
+| `POST` | `/v1/agents` | Tạo agent mới | Bearer |
+| `GET` | `/v1/agents/{id}` | Lấy agent theo ID hoặc key | Bearer |
+| `PUT` | `/v1/agents/{id}` | Cập nhật agent (chỉ owner) | Bearer |
+| `DELETE` | `/v1/agents/{id}` | Xóa agent (chỉ owner) | Bearer |
 
 ### Agent Actions
 
-| Method | Path | Mo ta |
+| Method | Path | Mô tả |
 |--------|------|-------|
-| `POST` | `/v1/agents/{id}/wake` | Kich hoat agent tu ben ngoai (n8n, orchestrators) |
-| `POST` | `/v1/agents/{id}/regenerate` | Tao lai cau hinh agent bang LLM |
-| `POST` | `/v1/agents/{id}/resummon` | Thu lai qua trinh summoning ban dau |
+| `POST` | `/v1/agents/{id}/wake` | Kích hoạt agent từ bên ngoài (n8n, orchestrators) |
+| `POST` | `/v1/agents/{id}/regenerate` | Tạo lại cấu hình agent bằng LLM |
+| `POST` | `/v1/agents/{id}/resummon` | Thử lại quá trình summoning ban đầu |
 
-### Agent Files va Instances
+### Agent Files và Instances
 
-| Method | Path | Mo ta |
+| Method | Path | Mô tả |
 |--------|------|-------|
-| `GET` | `/v1/agents/{id}/instances` | Liet ke user instances |
-| `GET` | `/v1/agents/{id}/instances/{userID}/files` | Liet ke context files cua user |
-| `PUT` | `/v1/agents/{id}/instances/{userID}/files/{fileName}` | Cap nhat user file (chi USER.md) |
+| `GET` | `/v1/agents/{id}/instances` | Liệt kê user instances |
+| `GET` | `/v1/agents/{id}/instances/{userID}/files` | Liệt kê context files của user |
+| `PUT` | `/v1/agents/{id}/instances/{userID}/files/{fileName}` | Cập nhật user file (chỉ USER.md) |
 
 ### Agent Sharing
 
-| Method | Path | Mo ta |
+| Method | Path | Mô tả |
 |--------|------|-------|
-| `GET` | `/v1/agents/{id}/sharing` | Liet ke shares cua agent |
-| `POST` | `/v1/agents/{id}/sharing` | Chia se agent voi user |
-| `DELETE` | `/v1/agents/{id}/sharing/{userID}` | Thu hoi quyen truy cap |
+| `GET` | `/v1/agents/{id}/sharing` | Liệt kê shares của agent |
+| `POST` | `/v1/agents/{id}/sharing` | Chia sẻ agent với user |
+| `DELETE` | `/v1/agents/{id}/sharing/{userID}` | Thu hồi quyền truy cập |
 
 ---
 
 ## Sessions
 
-| Method | Path | Mo ta |
+| Method | Path | Mô tả |
 |--------|------|-------|
-| `GET` | `/v1/sessions` | Liet ke sessions (co phan trang) |
+| `GET` | `/v1/sessions` | Liệt kê sessions (có phân trang) |
 
-Chi tiet session duoc quan ly chu yeu qua WebSocket RPC (xem `sessions.*` methods).
+Chi tiết session được quản lý chủ yếu qua WebSocket RPC (xem `sessions.*` methods).
 
 ---
 
 ## Providers
 
-| Method | Path | Mo ta |
+| Method | Path | Mô tả |
 |--------|------|-------|
-| `GET` | `/v1/providers` | Liet ke LLM providers |
-| `POST` | `/v1/providers` | Tao provider moi |
-| `GET` | `/v1/providers/{id}` | Lay chi tiet provider |
-| `PUT` | `/v1/providers/{id}` | Cap nhat cau hinh provider |
-| `DELETE` | `/v1/providers/{id}` | Xoa provider |
+| `GET` | `/v1/providers` | Liệt kê LLM providers |
+| `POST` | `/v1/providers` | Tạo provider mới |
+| `GET` | `/v1/providers/{id}` | Lấy chi tiết provider |
+| `PUT` | `/v1/providers/{id}` | Cập nhật cấu hình provider |
+| `DELETE` | `/v1/providers/{id}` | Xóa provider |
 
 ---
 
@@ -110,96 +110,96 @@ Chi tiet session duoc quan ly chu yeu qua WebSocket RPC (xem `sessions.*` method
 
 ### Custom Tools
 
-| Method | Path | Mo ta |
+| Method | Path | Mô tả |
 |--------|------|-------|
-| `GET` | `/v1/tools/custom` | Liet ke tools (loc theo `?agent_id=`) |
-| `POST` | `/v1/tools/custom` | Tao custom tool |
-| `GET` | `/v1/tools/custom/{id}` | Lay chi tiet tool |
-| `PUT` | `/v1/tools/custom/{id}` | Cap nhat tool |
-| `DELETE` | `/v1/tools/custom/{id}` | Xoa tool |
-| `POST` | `/v1/tools/invoke` | Goi truc tiep tool khong qua agent loop |
+| `GET` | `/v1/tools/custom` | Liệt kê tools (lọc theo `?agent_id=`) |
+| `POST` | `/v1/tools/custom` | Tạo custom tool |
+| `GET` | `/v1/tools/custom/{id}` | Lấy chi tiết tool |
+| `PUT` | `/v1/tools/custom/{id}` | Cập nhật tool |
+| `DELETE` | `/v1/tools/custom/{id}` | Xóa tool |
+| `POST` | `/v1/tools/invoke` | Gọi trực tiếp tool không qua agent loop |
 
 ---
 
 ## MCP Servers
 
-| Method | Path | Mo ta |
+| Method | Path | Mô tả |
 |--------|------|-------|
-| `GET` | `/v1/mcp/servers` | Liet ke MCP servers da dang ky |
-| `POST` | `/v1/mcp/servers` | Dang ky MCP server moi |
-| `GET` | `/v1/mcp/servers/{id}` | Lay chi tiet server |
-| `PUT` | `/v1/mcp/servers/{id}` | Cap nhat cau hinh server |
-| `DELETE` | `/v1/mcp/servers/{id}` | Xoa MCP server |
-| `POST` | `/v1/mcp/servers/{id}/grants/agent` | Cap quyen truy cap cho agent |
-| `DELETE` | `/v1/mcp/servers/{id}/grants/agent/{agentID}` | Thu hoi quyen agent |
-| `GET` | `/v1/mcp/grants/agent/{agentID}` | Liet ke MCP grants cua agent |
-| `POST` | `/v1/mcp/servers/{id}/grants/user` | Cap quyen truy cap cho user |
-| `DELETE` | `/v1/mcp/servers/{id}/grants/user/{userID}` | Thu hoi quyen user |
-| `POST` | `/v1/mcp/requests` | Yeu cau cap quyen (user tu phuc vu) |
-| `GET` | `/v1/mcp/requests` | Liet ke yeu cau dang cho |
-| `POST` | `/v1/mcp/requests/{id}/review` | Chap nhan hoac tu choi yeu cau |
+| `GET` | `/v1/mcp/servers` | Liệt kê MCP servers đã đăng ký |
+| `POST` | `/v1/mcp/servers` | Đăng ký MCP server mới |
+| `GET` | `/v1/mcp/servers/{id}` | Lấy chi tiết server |
+| `PUT` | `/v1/mcp/servers/{id}` | Cập nhật cấu hình server |
+| `DELETE` | `/v1/mcp/servers/{id}` | Xóa MCP server |
+| `POST` | `/v1/mcp/servers/{id}/grants/agent` | Cấp quyền truy cập cho agent |
+| `DELETE` | `/v1/mcp/servers/{id}/grants/agent/{agentID}` | Thu hồi quyền agent |
+| `GET` | `/v1/mcp/grants/agent/{agentID}` | Liệt kê MCP grants của agent |
+| `POST` | `/v1/mcp/servers/{id}/grants/user` | Cấp quyền truy cập cho user |
+| `DELETE` | `/v1/mcp/servers/{id}/grants/user/{userID}` | Thu hồi quyền user |
+| `POST` | `/v1/mcp/requests` | Yêu cầu cấp quyền (user tự phục vụ) |
+| `GET` | `/v1/mcp/requests` | Liệt kê yêu cầu đang chờ |
+| `POST` | `/v1/mcp/requests/{id}/review` | Chấp nhận hoặc từ chối yêu cầu |
 
 ---
 
 ## Channels
 
-| Method | Path | Mo ta |
+| Method | Path | Mô tả |
 |--------|------|-------|
-| `GET` | `/v1/channel-instances` | Liet ke channel instances |
-| `POST` | `/v1/channel-instances` | Tao channel instance moi |
-| `GET` | `/v1/channel-instances/{id}` | Lay chi tiet instance |
-| `PUT` | `/v1/channel-instances/{id}` | Cap nhat cau hinh instance |
-| `DELETE` | `/v1/channel-instances/{id}` | Xoa channel instance |
+| `GET` | `/v1/channel-instances` | Liệt kê channel instances |
+| `POST` | `/v1/channel-instances` | Tạo channel instance mới |
+| `GET` | `/v1/channel-instances/{id}` | Lấy chi tiết instance |
+| `PUT` | `/v1/channel-instances/{id}` | Cập nhật cấu hình instance |
+| `DELETE` | `/v1/channel-instances/{id}` | Xóa channel instance |
 
 ---
 
 ## Skills
 
-| Method | Path | Mo ta |
+| Method | Path | Mô tả |
 |--------|------|-------|
-| `GET` | `/v1/skills` | Liet ke tat ca skills |
-| `POST` | `/v1/skills/upload` | Upload ZIP chua SKILL.md (toi da 20 MB) |
-| `GET` | `/v1/skills/{id}` | Lay chi tiet skill |
-| `PUT` | `/v1/skills/{id}` | Cap nhat metadata skill |
-| `DELETE` | `/v1/skills/{id}` | Xoa skill (khong ap dung voi system skills) |
-| `POST` | `/v1/skills/{id}/toggle` | Bat/tat skill |
-| `GET` | `/v1/skills/{id}/versions` | Liet ke phien ban co san |
-| `GET` | `/v1/skills/{id}/files` | Liet ke files trong skill |
-| `POST` | `/v1/skills/{id}/grants/agent` | Cap skill cho agent |
-| `DELETE` | `/v1/skills/{id}/grants/agent/{agentID}` | Thu hoi skill khoi agent |
-| `GET` | `/v1/agents/{agentID}/skills` | Liet ke skills voi trang thai grant cua agent |
+| `GET` | `/v1/skills` | Liệt kê tất cả skills |
+| `POST` | `/v1/skills/upload` | Upload ZIP chứa SKILL.md (tối đa 20 MB) |
+| `GET` | `/v1/skills/{id}` | Lấy chi tiết skill |
+| `PUT` | `/v1/skills/{id}` | Cập nhật metadata skill |
+| `DELETE` | `/v1/skills/{id}` | Xóa skill (không áp dụng với system skills) |
+| `POST` | `/v1/skills/{id}/toggle` | Bật/tắt skill |
+| `GET` | `/v1/skills/{id}/versions` | Liệt kê phiên bản có sẵn |
+| `GET` | `/v1/skills/{id}/files` | Liệt kê files trong skill |
+| `POST` | `/v1/skills/{id}/grants/agent` | Cấp skill cho agent |
+| `DELETE` | `/v1/skills/{id}/grants/agent/{agentID}` | Thu hồi skill khỏi agent |
+| `GET` | `/v1/agents/{agentID}/skills` | Liệt kê skills với trạng thái grant của agent |
 
 ---
 
 ## Files
 
-| Method | Path | Mo ta |
+| Method | Path | Mô tả |
 |--------|------|-------|
-| `GET` | `/v1/files` | Liet ke workspace files |
-| `GET` | `/v1/files/{path}` | Phuc vu noi dung file |
-| `DELETE` | `/v1/storage/{path}` | Xoa workspace file |
+| `GET` | `/v1/files` | Liệt kê workspace files |
+| `GET` | `/v1/files/{path}` | Phục vụ nội dung file |
+| `DELETE` | `/v1/storage/{path}` | Xóa workspace file |
 | `POST` | `/v1/media/upload` | Upload media file |
-| `GET` | `/v1/media/{id}` | Phuc vu media file |
+| `GET` | `/v1/media/{id}` | Phục vụ media file |
 
 ---
 
 ## Config, Usage, Traces, Audit
 
-| Method | Path | Mo ta |
+| Method | Path | Mô tả |
 |--------|------|-------|
-| `GET` | `/v1/usage` | Lay metrics su dung |
-| `GET` | `/v1/usage/summary` | Lay tong hop su dung |
-| `GET` | `/v1/traces` | Liet ke traces (loc theo agent, user, status, ngay) |
-| `GET` | `/v1/traces/{id}` | Lay chi tiet trace voi tat ca spans |
-| `GET` | `/v1/activity` | Liet ke audit logs hoat dong |
-| `GET` | `/v1/api-keys` | Liet ke API keys (da che) |
-| `POST` | `/v1/api-keys` | Tao API key moi |
-| `DELETE` | `/v1/api-keys/{id}` | Thu hoi API key |
-| `GET` | `/v1/delegations` | Liet ke lich su delegation (phan trang) |
-| `GET` | `/v1/delegations/{id}` | Lay chi tiet delegation |
-| `GET` | `/v1/memory` | Lay memory entries |
-| `POST` | `/v1/memory` | Tao memory entry |
-| `DELETE` | `/v1/memory/{id}` | Xoa memory entry |
+| `GET` | `/v1/usage` | Lấy metrics sử dụng |
+| `GET` | `/v1/usage/summary` | Lấy tổng hợp sử dụng |
+| `GET` | `/v1/traces` | Liệt kê traces (lọc theo agent, user, status, ngày) |
+| `GET` | `/v1/traces/{id}` | Lấy chi tiết trace với tất cả spans |
+| `GET` | `/v1/activity` | Liệt kê audit logs hoạt động |
+| `GET` | `/v1/api-keys` | Liệt kê API keys (đã che) |
+| `POST` | `/v1/api-keys` | Tạo API key mới |
+| `DELETE` | `/v1/api-keys/{id}` | Thu hồi API key |
+| `GET` | `/v1/delegations` | Liệt kê lịch sử delegation (phân trang) |
+| `GET` | `/v1/delegations/{id}` | Lấy chi tiết delegation |
+| `GET` | `/v1/memory` | Lấy memory entries |
+| `POST` | `/v1/memory` | Tạo memory entry |
+| `DELETE` | `/v1/memory/{id}` | Xóa memory entry |
 
 ---
 
@@ -207,21 +207,21 @@ Chi tiet session duoc quan ly chu yeu qua WebSocket RPC (xem `sessions.*` method
 
 ### `POST /v1/chat/completions`
 
-Tuong thich voi OpenAI Chat API de truy cap agent theo chuong trinh.
+Tương thích với OpenAI Chat API để truy cập agent theo chương trình.
 
 **Request:**
 ```json
 {
   "model": "goclaw:agent-id-hoac-key",
   "messages": [
-    {"role": "user", "content": "Xin chao"}
+    {"role": "user", "content": "Xin chào"}
   ],
   "stream": false,
   "user": "user-id-tuy-chon"
 }
 ```
 
-Quy tac phan giai agent: truong `model` voi prefix `goclaw:` hoac `agent:`, sau do header `X-GoClaw-Agent-Id`, sau do agent `"default"`.
+Quy tắc phân giải agent: trường `model` với prefix `goclaw:` hoặc `agent:`, sau đó header `X-GoClaw-Agent-Id`, sau đó agent `"default"`.
 
 **Response (non-streaming):**
 ```json
@@ -237,44 +237,44 @@ Quy tac phan giai agent: truong `model` voi prefix `goclaw:` hoac `agent:`, sau 
 }
 ```
 
-**Streaming:** Dat `"stream": true` de nhan Server-Sent Events (SSE) voi `data: {...}` chunks, ket thuc bang `data: [DONE]`.
+**Streaming:** Đặt `"stream": true` để nhận Server-Sent Events (SSE) với `data: {...}` chunks, kết thúc bằng `data: [DONE]`.
 
 ### `POST /v1/responses`
 
-Alternative protocol tuong thich voi OpenAI Responses API. Cung cap xac thuc tuong tu, tra ve response objects co cau truc (`response.started`, `response.delta`, `response.done`).
+Alternative protocol tương thích với OpenAI Responses API. Cung cấp xác thực tương tự, trả về response objects có cấu trúc (`response.started`, `response.delta`, `response.done`).
 
 ---
 
 ## Rate Limiting
 
-Token bucket rate limiting theo user hoac IP. Cau hinh qua `gateway.rate_limit_rpm` (0 = tat, > 0 = bat).
+Token bucket rate limiting theo user hoặc IP. Cấu hình qua `gateway.rate_limit_rpm` (0 = tắt, > 0 = bật).
 
 - **Burst:** 5 requests
-- **HTTP 429** khi vuot gioi han, kem header `Retry-After: 60`
-- **Cleanup:** moi 5 phut, xoa entries khong hoat dong qua 10 phut
+- **HTTP 429** khi vượt giới hạn, kèm header `Retry-After: 60`
+- **Cleanup:** mỗi 5 phút, xóa entries không hoạt động quá 10 phút
 
 ---
 
-## Ma Loi (Error Codes)
+## Mã Lỗi (Error Codes)
 
-| Code | Mo ta |
+| Code | Mô tả |
 |------|-------|
-| `UNAUTHORIZED` | Xac thuc that bai hoac khong du quyen |
-| `INVALID_REQUEST` | Truong thieu hoac khong hop le trong request |
-| `NOT_FOUND` | Tai nguyen khong ton tai |
-| `ALREADY_EXISTS` | Tai nguyen da ton tai (conflict) |
-| `UNAVAILABLE` | Dich vu tam thoi khong kha dung |
-| `RESOURCE_EXHAUSTED` | Vuot gioi han rate limit |
-| `FAILED_PRECONDITION` | Dieu kien tien quyet chua duoc dap ung |
-| `AGENT_TIMEOUT` | Agent run vuot qua gioi han thoi gian |
-| `INTERNAL` | Loi server khong mong doi |
+| `UNAUTHORIZED` | Xác thực thất bại hoặc không đủ quyền |
+| `INVALID_REQUEST` | Trường thiếu hoặc không hợp lệ trong request |
+| `NOT_FOUND` | Tài nguyên không tồn tại |
+| `ALREADY_EXISTS` | Tài nguyên đã tồn tại (conflict) |
+| `UNAVAILABLE` | Dịch vụ tạm thời không khả dụng |
+| `RESOURCE_EXHAUSTED` | Vượt giới hạn rate limit |
+| `FAILED_PRECONDITION` | Điều kiện tiên quyết chưa được đáp ứng |
+| `AGENT_TIMEOUT` | Agent run vượt quá giới hạn thời gian |
+| `INTERNAL` | Lỗi server không mong đợi |
 
-Response loi bao gom truong `retryable` (boolean) va `retryAfterMs` (integer) de huong dan client retry.
+Response lỗi bao gồm trường `retryable` (boolean) và `retryAfterMs` (integer) để hướng dẫn client retry.
 
 ---
 
-## Xem Them
+## Xem Thêm
 
 - [WebSocket RPC](./02-websocket-rpc.md)
-- [Cau hinh tham chieu](./03-cau-hinh.md)
-- Swagger UI truc tiep: `http://<host>:<port>/docs`
+- [Cấu hình tham chiếu](./03-cau-hinh.md)
+- Swagger UI trực tiếp: `http://<host>:<port>/docs`

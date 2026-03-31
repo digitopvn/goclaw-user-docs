@@ -1,90 +1,90 @@
-# Danh Ba Lien He (Contacts)
+# Danh Bạ Liên Hệ (Contacts)
 
-## Tong Quan
+## Tổng Quan
 
-Trang Contacts hien thi tat ca lien he tu cac kenh ket noi (Telegram, Discord, Slack, v.v.). Dung de quan ly, tim kiem va hop nhat lien he trung lap.
+Trang Contacts hiển thị tất cả liên hệ từ các kênh kết nối (Telegram, Discord, Slack, v.v.). Dùng để quản lý, tìm kiếm và gộp liên hệ trùng lặp.
 
 **Route:** `/contacts`
-**Quyen truy cap:** Operator+
+**Quyền truy cập:** Operator+
 
 ---
 
-## Huong Dan Su Dung
+## Hướng Dẫn Sử Dụng
 
-### Tim Kiem va Loc Lien He
+### Tìm Kiếm và Lọc Liên Hệ
 
-- **Tim kiem theo ten / username / sender ID** — nhap tu khoa, bam nut Submit
-- **Loc theo loai kenh** — dropdown chon kenh (Telegram, Discord, Slack, v.v.)
-- **Loc theo loai ngang hang** — Direct (DM) hoac Group (nhom)
+- **Tìm kiếm theo tên / username / sender ID** — nhập từ khóa, bấm nút Submit
+- **Lọc theo loại kênh** — dropdown chọn kênh (Telegram, Discord, Slack, v.v.)
+- **Lọc theo loại ngang hàng** — Trực tiếp (DM) hoặc Nhóm (group)
 
-### Hop Nhat Lien He Trung Lap
+### Gộp Liên Hệ Trùng Lặp
 
-Khi cung mot nguoi dung xuat hien tren nhieu kenh, co the hop nhat thanh mot profile:
+Khi cùng một người dùng xuất hiện trên nhiều kênh, có thể gộp thành một profile:
 
-1. Chon cac lien he can hop nhat (checkbox)
-2. Nhan **Hop nhat lien he da chon**
-3. Chon che do hop nhat:
-   - **Lien ket Nguoi dung Hien co** — chon user tu combobox
-   - **Tao Nguoi dung Moi** — nhap ten + ID moi
-4. Nhan **Hop nhat**
+1. Chọn các liên hệ cần gộp (checkbox)
+2. Nhấn **Gộp**
+3. Chọn chế độ gộp:
+   - **Liên kết với người dùng có sẵn** — chọn user từ combobox
+   - **Tạo người dùng mới** — nhập tên + ID mới
+4. Nhấn **Gộp**
 
-### Tach Hop Nhat
+### Tách Gộp
 
-Khi tat ca lien he da chon deu da duoc hop nhat, nut **Tach hop nhat** xuat hien — dung de hoan tac viec hop nhat.
-
----
-
-## Giao Dien (UI)
-
-### Trang Danh Sach (`/contacts`)
-
-**Hien thi:** Bang phan trang cac lien he tu tat ca kenh voi cac cot:
-- Ten hien thi
-- Ten nguoi dung (username)
-- Sender ID
-- Loai kenh
-- Loai ngang hang (truc tiep / nhom)
-- Lan hoat dong cuoi
-
-**Thao tac:**
-- O chon (checkbox) cho chon hang loat
-- **Tim kiem** — tim kiem bang nut Submit
-- **Loc theo loai kenh** — dropdown
-- **Loc theo loai ngang hang** — truc tiep / nhom
-- **Hop nhat lien he da chon** — ket hop lien he trung lap
-- **Tach hop nhat** — hien thi khi tat ca da chon deu da hop nhat
-
-**Hop thoai Hop Nhat Danh Ba:**
-- Che do (radio): Lien ket Nguoi dung Hien co (combobox) hoac Tao Nguoi dung Moi (ten + ID)
-- Thao tac: **Hop nhat** | **Huy**
+Khi tất cả liên hệ đã chọn đều đã được gộp, nút **Tách** xuất hiện — dùng để hoàn tác việc gộp.
 
 ---
 
-## Vi Du
+## Giao Diện (UI)
 
-### Hop Nhat Lien He Da Kenh
+### Trang Danh Sách (`/contacts`)
 
-Nguoi dung "Nguyen Van A" nhan tin qua Telegram (ID: 123456) va Discord (ID: abc#1234):
+**Hiển thị:** Bảng phân trang các liên hệ từ tất cả kênh với các cột:
+- Tên hiển thị
+- Tên đăng nhập (username)
+- ID gửi (Sender ID)
+- Loại kênh
+- Loại ngang hàng (trực tiếp / nhóm)
+- Lần hoạt động cuối
 
-1. Tim kiem "Nguyen Van A" trong danh sach
-2. Tick chon ca hai dong
-3. Nhan **Hop nhat lien he da chon**
-4. Chon **Tao Nguoi dung Moi**, nhap ten "Nguyen Van A"
-5. Nhan **Hop nhat**
+**Thao tác:**
+- Ô chọn (checkbox) cho chọn hàng loạt
+- **Tìm kiếm** — tìm kiếm bằng nút Submit
+- **Lọc theo loại kênh** — dropdown
+- **Lọc theo loại ngang hàng** — trực tiếp / nhóm
+- **Gộp** — kết hợp liên hệ trùng lặp
+- **Tách** — hiển thị khi tất cả đã chọn đều đã được gộp
 
-Ket qua: lich su chat tu ca hai kenh duoc gan vao cung mot profile.
+**Hộp thoại Gộp Danh Bạ:**
+- Chế độ (radio): Liên kết với người dùng có sẵn (combobox) hoặc Tạo người dùng mới (tên + ID)
+- Thao tác: **Gộp** | **Hủy**
 
 ---
 
-## Luu Y
+## Ví Dụ
 
-- Can quyen Operator tro len moi truy cap trang Contacts
-- Hop nhat lien he khong xoa lich su chat — chi lien ket cac sender ID voi nhau
-- Tach hop nhat chi kha dung khi tat ca lien he da chon deu da duoc hop nhat truoc do
+### Gộp Liên Hệ Đa Kênh
+
+Người dùng "Nguyễn Văn A" nhắn tin qua Telegram (ID: 123456) và Discord (ID: abc#1234):
+
+1. Tìm kiếm "Nguyễn Văn A" trong danh sách
+2. Tick chọn cả hai dòng
+3. Nhấn **Gộp**
+4. Chọn **Tạo người dùng mới**, nhập tên "Nguyễn Văn A"
+5. Nhấn **Gộp**
+
+Kết quả: lịch sử chat từ cả hai kênh được gắn vào cùng một profile.
 
 ---
 
-## Xem Them
+## Lưu Ý
 
-- [guide/vi/teams/01-doi-nhom.md](01-doi-nhom.md) — Quan ly doi nhom
-- [guide/vi/admin/02-channels-setup.md](../admin/02-channels-setup.md) — Cau hinh kenh ket noi
+- Cần quyền Operator trở lên mới truy cập trang Contacts
+- Gộp liên hệ không xóa lịch sử chat — chỉ liên kết các sender ID với nhau
+- Tách gộp chỉ khả dụng khi tất cả liên hệ đã chọn đều đã được gộp trước đó
+
+---
+
+## Xem Thêm
+
+- [guide/vi/teams/01-doi-nhom.md](01-doi-nhom.md) — Quản lý đội nhóm
+- [guide/vi/admin/02-channels-setup.md](../admin/02-channels-setup.md) — Cấu hình kênh kết nối

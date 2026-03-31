@@ -1,25 +1,25 @@
-# Cai Dat va Khoi Dong GoClaw
+# Cài Đặt và Khởi Động GoClaw
 
-## Tong quan
+## Tổng quan
 
-Huong dan nay mo ta cac buoc cai dat GoClaw tu source, cau hinh database, va khoi dong server. Cung bao gom cai dat Desktop (Lite) va Docker Compose.
+Hướng dẫn này mô tả các bước cài đặt GoClaw từ source, cấu hình database, và khởi động server. Cũng bao gồm cài đặt Desktop (Lite) và Docker Compose.
 
 ---
 
-## Yeu cau he thong
+## Yêu cầu hệ thống
 
-| Thanh phan | Phien ban toi thieu | Ghi chu |
+| Thành phần | Phiên bản tối thiểu | Ghi chú |
 |------------|---------------------|---------|
-| Go | 1.26+ | Bat buoc khi build tu source |
-| PostgreSQL | 18+ voi pgvector | Bat buoc cho Standard edition |
-| pnpm | Moi nhat | Chi can cho Web UI development |
-| Docker | 24+ | Tuy chon, dung cho Docker Compose |
+| Go | 1.26+ | Bắt buộc khi build từ source |
+| PostgreSQL | 18+ với pgvector | Bắt buộc cho Standard edition |
+| pnpm | Mới nhất | Chỉ cần cho Web UI development |
+| Docker | 24+ | Tùy chọn, dùng cho Docker Compose |
 
-Desktop (Lite) edition khong can PostgreSQL — dung SQLite, zero setup.
+Desktop (Lite) edition không cần PostgreSQL — dùng SQLite, zero setup.
 
 ---
 
-## Cai dat tu source
+## Cài đặt từ source
 
 ```bash
 git clone https://github.com/nextlevelbuilder/goclaw.git
@@ -27,9 +27,9 @@ cd goclaw
 make build
 ```
 
-Lenh `make build` tao binary `./goclaw` (~25 MB, static, khong phu thuoc Node.js runtime).
+Lệnh `make build` tạo binary `./goclaw` (~25 MB, static, không phụ thuộc Node.js runtime).
 
-Hoac build thu cong:
+Hoặc build thủ công:
 
 ```bash
 CGO_ENABLED=0 go build -o goclaw .
@@ -37,27 +37,27 @@ CGO_ENABLED=0 go build -o goclaw .
 
 ---
 
-## Cai dat database (PostgreSQL)
+## Cài đặt database (PostgreSQL)
 
-GoClaw yeu cau PostgreSQL 18+ voi extension `pgvector`.
+GoClaw yêu cầu PostgreSQL 18+ với extension `pgvector`.
 
-Tao database:
+Tạo database:
 
 ```sql
 CREATE DATABASE goclaw;
 CREATE USER goclaw WITH PASSWORD 'your_password';
 GRANT ALL PRIVILEGES ON DATABASE goclaw TO goclaw;
--- Ket noi vao database goclaw roi chay:
+-- Kết nối vào database goclaw rồi chạy:
 CREATE EXTENSION IF NOT EXISTS vector;
 ```
 
-Connection string (dung trong buoc onboard):
+Connection string (dùng trong bước onboard):
 
 ```
 postgres://goclaw:your_password@localhost:5432/goclaw?sslmode=disable
 ```
 
-Migrations chay tu dong trong buoc onboard hoac co the chay thu cong:
+Migrations chạy tự động trong bước onboard hoặc có thể chạy thủ công:
 
 ```bash
 ./goclaw migrate up
@@ -65,20 +65,20 @@ Migrations chay tu dong trong buoc onboard hoac co the chay thu cong:
 
 ---
 
-## Onboard wizard (lan dau tien)
+## Onboard wizard (lần đầu tiên)
 
-Chay wizard tuong tac de tao file `.env.local` va khoi tao database:
+Chạy wizard tương tác để tạo file `.env.local` và khởi tạo database:
 
 ```bash
 ./goclaw onboard
 ```
 
-Wizard se hoi lan luot:
-- PostgreSQL DSN (connection string den database)
-- Gateway token (tu tao neu de trong)
-- Encryption key (tu tao neu de trong)
+Wizard sẽ hỏi lần lượt:
+- PostgreSQL DSN (connection string đến database)
+- Gateway token (tự tạo nếu để trống)
+- Encryption key (tự tạo nếu để trống)
 
-Ket qua: file `.env.local` duoc tao voi cac bien moi truong can thiet:
+Kết quả: file `.env.local` được tạo với các biến môi trường cần thiết:
 
 ```bash
 GOCLAW_GATEWAY_TOKEN=<token>
@@ -86,24 +86,24 @@ GOCLAW_ENCRYPTION_KEY=<key>
 GOCLAW_POSTGRES_DSN=postgres://...
 ```
 
-Migrations database cung duoc chay tu dong trong buoc nay.
+Migrations database cũng được chạy tự động trong bước này.
 
 ---
 
-## Khoi dong server
+## Khởi động server
 
 ```bash
 source .env.local && ./goclaw
 ```
 
-Khi khoi dong, gateway thuc hien theo thu tu:
-1. Load config tu `GOCLAW_CONFIG` (JSON5) hoac dung defaults
-2. Ket noi PostgreSQL, verify schema version
-3. Khoi tao provider registry, tool registry, scheduler
-4. Bat dau lang nghe WebSocket + HTTP tai `localhost:18790`
-5. Khoi dong cac channel da cau hinh (Telegram, Discord, ...)
+Khi khởi động, gateway thực hiện theo thứ tự:
+1. Load config từ `GOCLAW_CONFIG` (JSON5) hoặc dùng defaults
+2. Kết nối PostgreSQL, verify schema version
+3. Khởi tạo provider registry, tool registry, scheduler
+4. Bắt đầu lắng nghe WebSocket + HTTP tại `localhost:18790`
+5. Khởi động các channel đã cấu hình (Telegram, Discord, ...)
 
-Log startup thanh cong:
+Log startup thành công:
 
 ```
 level=INFO msg="gateway started" addr=":18790"
@@ -117,30 +117,30 @@ curl http://localhost:18790/health
 
 ---
 
-## Truy cap Web Dashboard
+## Truy cập Web Dashboard
 
-Sau khi server khoi dong, mo trinh duyet tai:
+Sau khi server khởi động, mở trình duyệt tại:
 
 ```
 http://localhost:8000
 ```
 
-Lan dau truy cap, Web Dashboard hien thi **Setup Wizard** gom 4 buoc:
+Lần đầu truy cập, Web Dashboard hiển thị **Setup Wizard** gồm 4 bước:
 
-| Buoc | Noi dung |
+| Bước | Nội dung |
 |------|----------|
-| 1 - Provider | Them LLM provider (Anthropic, OpenAI, OpenRouter, ...) va API key |
-| 2 - Model | Chon model mac dinh cho provider vua them |
-| 3 - Agent | Tao agent dau tien voi ten, personality |
-| 4 - Channel | (Tuy chon) Ket noi Telegram, Discord, Slack, ... |
+| 1 - Provider | Thêm LLM provider (Anthropic, OpenAI, OpenRouter, ...) và API key |
+| 2 - Model | Chọn model mặc định cho provider vừa thêm |
+| 3 - Agent | Tạo agent đầu tiên với tên, cá tính |
+| 4 - Channel | (Tùy chọn) Kết nối Telegram, Discord, Slack, ... |
 
-Co the bo qua buoc 4 va thiet lap channel sau trong Settings. Sau khi hoan thanh wizard, dashboard chuyen sang trang Overview.
+Có thể bỏ qua bước 4 và thiết lập channel sau trong Settings. Sau khi hoàn thành wizard, dashboard chuyển sang trang Tổng quan.
 
 ---
 
-## Cai dat Desktop (GoClaw Lite)
+## Cài đặt Desktop (GoClaw Lite)
 
-Desktop edition (Lite) la app native cho may tinh ca nhan — khong can Docker, khong can PostgreSQL.
+Desktop edition (Lite) là app native cho máy tính cá nhân — không cần Docker, không cần PostgreSQL.
 
 macOS:
 
@@ -154,55 +154,55 @@ Windows (PowerShell):
 irm https://raw.githubusercontent.com/nextlevelbuilder/goclaw/main/scripts/install-lite.ps1 | iex
 ```
 
-Hoac tai file cai dat tu [GitHub Releases](https://github.com/nextlevelbuilder/goclaw/releases) (tag `lite-v*`):
+Hoặc tải file cài đặt từ [GitHub Releases](https://github.com/nextlevelbuilder/goclaw/releases) (tag `lite-v*`):
 - macOS: `.dmg` installer
 - Windows: `.zip`
 
-Vi tri du lieu:
+Vị trí dữ liệu:
 - Database (SQLite): `~/.goclaw/data/`
 - Workspace (agent files): `~/.goclaw/workspace/`
-- Secrets: OS keyring hoac `~/.goclaw/secrets/`
+- Secrets: OS keyring hoặc `~/.goclaw/secrets/`
 
-Gioi han Lite edition: toi da 5 agents, 1 team, khong co messaging channels, khong co RBAC.
+Giới hạn Lite edition: tối đa 5 agents, 1 team, không có messaging channels, không có RBAC.
 
 ---
 
-## Cai dat voi Docker Compose
+## Cài đặt với Docker Compose
 
-Cach nhanh nhat de chay toan bo stack:
+Cách nhanh nhất để chạy toàn bộ stack:
 
 ```bash
-# Tao .env voi auto-generated secrets
+# Tạo .env với auto-generated secrets
 chmod +x prepare-env.sh && ./prepare-env.sh
 
-# Them it nhat mot API key vao .env, vi du:
+# Thêm ít nhất một API key vào .env, ví dụ:
 # GOCLAW_ANTHROPIC_API_KEY=sk-ant-...
 
 make up
 ```
 
-Web Dashboard tai `http://localhost:3000`.
+Web Dashboard tại `http://localhost:3000`.
 
-Cac lenh thuong dung:
+Các lệnh thường dùng:
 
 ```bash
-make up          # Khoi dong tat ca services (build + migrate)
-make down        # Dung tat ca services
+make up          # Khởi động tất cả services (build + migrate)
+make down        # Dừng tất cả services
 make logs        # Xem logs realtime
-make reset       # Xoa volumes va build lai tu dau
+make reset       # Xóa volumes và build lại từ đầu
 ```
 
 Optional services:
 
 ```bash
-make up WITH_BROWSER=1    # Them headless Chrome (web scraping)
-make up WITH_OTEL=1       # Them Jaeger tracing UI
-make up WITH_SANDBOX=1    # Them Docker sandbox cho code execution
+make up WITH_BROWSER=1    # Thêm headless Chrome (web scraping)
+make up WITH_OTEL=1       # Thêm Jaeger tracing UI
+make up WITH_SANDBOX=1    # Thêm Docker sandbox cho code execution
 ```
 
 ---
 
-## Xac minh cai dat
+## Xác minh cài đặt
 
 1. Health check server:
 
@@ -211,25 +211,25 @@ curl http://localhost:18790/health
 # Expected: {"status":"ok"}
 ```
 
-2. Kiem tra database migrations:
+2. Kiểm tra database migrations:
 
 ```bash
 ./goclaw migrate status
 ```
 
-3. Test chat dau tien: Mo Web Dashboard, vao **Chat**, chon agent vua tao va gui tin nhan thu.
+3. Test chat đầu tiên: Mở Web Dashboard, vào **Chat**, chọn agent vừa tạo và gửi tin nhắn thử.
 
 ---
 
-## Luu y
+## Lưu ý
 
-- Dung `pnpm`, khong dung `npm` cho Web UI development.
-- Docker Compose Web Dashboard chay tai cong 3000, build tu source tai cong 8000.
-- Lite edition khong ho tro channels (Telegram, Discord, Slack, v.v.).
+- Dùng `pnpm`, không dùng `npm` cho Web UI development.
+- Docker Compose Web Dashboard chạy tại cổng 3000, build từ source tại cổng 8000.
+- Lite edition không hỗ trợ channels (Telegram, Discord, Slack, v.v.).
 
 ---
 
-## Xem them
+## Xem thêm
 
-- [03-dang-nhap.md](./03-dang-nhap.md) — Dang nhap va chon to chuc
-- [04-setup-wizard.md](./04-setup-wizard.md) — Huong dan setup wizard chi tiet
+- [03-dang-nhap.md](./03-dang-nhap.md) — Đăng nhập và chọn tổ chức
+- [04-setup-wizard.md](./04-setup-wizard.md) — Hướng dẫn setup wizard chi tiết

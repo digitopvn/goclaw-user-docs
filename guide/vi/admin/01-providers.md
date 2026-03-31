@@ -1,92 +1,92 @@
-# Cau Hinh LLM Providers
+# Cấu Hình LLM Providers
 
-## Tong Quan
+## Tổng Quan
 
-Provider la ket noi den mot LLM backend. GoClaw abstracts tat ca provider sau mot interface chung nen agent loop hoat dong nhu nhau bat ke backend. API key duoc ma hoa AES-256-GCM truoc khi luu.
+Provider là kết nối đến một LLM backend. GoClaw abstracts tất cả provider sau một interface chung nên agent loop hoạt động như nhau bất kể backend. API key được mã hóa AES-256-GCM trước khi lưu.
 
-**Route danh sach:** `/providers`
-**Route chi tiet:** `/providers/:id`
-**Quyen truy cap:** Admin
+**Route danh sách:** `/providers`
+**Route chi tiết:** `/providers/:id`
+**Quyền truy cập:** Admin
 
 ---
 
-## Huong Dan
+## Hướng Dẫn
 
-### Them Provider Moi
+### Thêm Provider Mới
 
-1. Vao **Settings > Providers > Tao Provider**
-2. Dien cac truong:
+1. Vào **Settings > Providers > Thêm provider**
+2. Điền các trường:
 
-| Truong | Mo Ta |
+| Trường | Mô Tả |
 |--------|-------|
-| Display Name | Ten hien thi trong UI |
-| Provider Name | Slug duy nhat (vd: `my-openrouter`) |
+| Display Name | Tên hiển thị trong UI |
+| Provider Name | Slug duy nhất (vd: `my-openrouter`) |
 | Provider Type | `openai_compat`, `anthropic`, `claude_cli`, `acp`, `chatgpt_oauth` |
-| API Key | Duoc ma hoa AES-256-GCM khi luu |
-| API Base URL | Chi can khi dung OpenAI-compat voi endpoint rieng |
-| Enabled | Tat thi agent khong the dung provider nay |
+| API Key | Được mã hóa AES-256-GCM khi lưu |
+| API Base URL | Chỉ cần khi dùng OpenAI-compat với endpoint riêng |
+| Enabled | Tắt thì agent không thể dùng provider này |
 
-3. Nhan **Tao** | **Huy**
+3. Nhấn **Tạo** | **Hủy**
 
-### Kiem Tra Ket Noi
+### Kiểm Tra Kết Nối
 
-Trong dialog tao/sua agent, nhan **Check**:
-- Xanh la: model hop le, ket noi thanh cong
-- Do: loi xac thuc hoac model khong ton tai
+Trong dialog tạo/sửa agent, nhấn **Kiểm tra**:
+- Xanh lá: model hợp lệ, kết nối thành công
+- Đỏ: lỗi xác thực hoặc model không tồn tại
 
-### Chon Model Cho Agent
+### Chọn Model Cho Agent
 
-Sau khi chon provider, dropdown model tai danh sach tu `GET /v1/providers/{id}/models`. Co the chon tu danh sach hoac go ten thu cong (Combobox). Neu provider khong tra ve danh sach, go ten va dung **Check** de xac nhan.
+Sau khi chọn provider, dropdown model tải danh sách từ `GET /v1/providers/{id}/models`. Có thể chọn từ danh sách hoặc gõ tên thủ công (Combobox). Nếu provider không trả về danh sách, gõ tên và dùng **Kiểm tra** để xác nhận.
 
-### Sua va Xoa Provider
+### Sửa và Xóa Provider
 
-**Sua:** Vao `/providers/:id` — co the chinh sua Display Name, API Key, API Base URL, Enabled/Disabled, Settings nang cao.
+**Sửa:** Vào `/providers/:id` — có thể chỉnh sửa Display Name, API Key, API Base URL, Enabled/Disabled, Settings nâng cao.
 
-> Luu y: Doi ten (`name`) lam mat ket noi cac agent dang dung provider do. Cap nhat agent truoc khi doi ten.
+> Lưu ý: Đổi tên (`name`) làm mất kết nối các agent đang dùng provider đó. Cập nhật agent trước khi đổi tên.
 
-**Xoa:** Click icon xoa, nhap lai ten provider de xac nhan. Agent se fallback sang provider dau tien trong registry.
-
----
-
-## Giao Dien (UI)
-
-### Trang Danh Sach (`/providers`)
-
-**Hien thi:** Danh sach phan trang co tim kiem. Hien thi so do phan cap pool cho ChatGPT OAuth va han muc OAuth.
-
-**Thao tac:** Tao provider | Xoa provider | Xem chi tiet | Tim kiem | Lam moi
-
-**Hop thoai Tao Provider:**
-- Truong: Loai (anthropic_native, openai_compat, gemini_native, claude_cli, dashscope, openrouter, groq, deepseek, ollama, acp, ...), Ten, API Key, API Base, Cac truong OAuth
-- Thao tac: **Tao** | **Huy**
-
-### Trang Chi Tiet (`/providers/:id`)
-
-**Hien thi:** Cac truong cau hinh, API key (an), cai dat model, cau hinh nhung va suy luan.
-
-**Thao tac:** Chinh sua cau hinh | Xac minh API key | Xac minh model nhung | Duyet model kha dung | Dang nhap OAuth | Quan ly Codex Pool | Xoa provider
-
-**Hop thoai Cai Dat Nang Cao:**
-- Truong theo loai: URL API Base, binary path/args/TTL/perm-mode/work-dir (ACP), cau hinh CLI, cau hinh OAuth
-- Thao tac: **Luu** | **Huy**
+**Xóa:** Click icon xóa, nhập lại tên provider để xác nhận. Agent sẽ fallback sang provider đầu tiên trong registry.
 
 ---
 
-## Danh Sach Providers Ho Tro
+## Giao Diện (UI)
+
+### Trang Danh Sách (`/providers`)
+
+**Hiển thị:** Danh sách phân trang có tìm kiếm. Hiển thị số đồ phân cấp pool cho ChatGPT OAuth và hạn mức OAuth.
+
+**Thao tác:** Thêm provider | Xóa provider | Xem chi tiết | Tìm kiếm | Làm mới
+
+**Hộp thoại Thêm Provider:**
+- Trường: Loại (anthropic_native, openai_compat, gemini_native, claude_cli, dashscope, openrouter, groq, deepseek, ollama, acp, ...), Tên, API Key, API Base, Các trường OAuth
+- Thao tác: **Tạo** | **Hủy**
+
+### Trang Chi Tiết (`/providers/:id`)
+
+**Hiển thị:** Các trường cấu hình, API key (ẩn), cài đặt model, cấu hình nhúng và suy luận.
+
+**Thao tác:** Chỉnh sửa cấu hình | Xác minh API key | Xác minh model nhúng | Duyệt model khả dụng | Đăng nhập OAuth | Quản lý Codex Pool | Xóa provider
+
+**Hộp thoại Cài Đặt Nâng Cao:**
+- Trường theo loại: URL API Base, binary path/args/TTL/perm-mode/work-dir (ACP), cấu hình CLI, cấu hình OAuth
+- Thao tác: **Lưu** | **Hủy**
+
+---
+
+## Danh Sách Providers Hỗ Trợ
 
 ### Core Providers
 
-| Ten | Loai | Mo Ta |
+| Tên | Loại | Mô Tả |
 |-----|------|-------|
 | `anthropic` | Native HTTP+SSE | Claude models qua api.anthropic.com |
-| `claude_cli` | stdio subprocess | Binary `claude` cuc bo |
+| `claude_cli` | stdio subprocess | Binary `claude` cục bộ |
 | `codex` | OAuth Responses API | ChatGPT via chatgpt.com |
-| `acp` | JSON-RPC 2.0 | Claude Code / Codex / Gemini CLI lam sub-agent |
+| `acp` | JSON-RPC 2.0 | Claude Code / Codex / Gemini CLI làm sub-agent |
 | `dashscope` | OpenAI-compat | Alibaba Qwen3 models |
 
 ### OpenAI-Compatible Providers
 
-| Ten | API Base |
+| Tên | API Base |
 |-----|----------|
 | `openai` | api.openai.com/v1 |
 | `openrouter` | openrouter.ai/api/v1 |
@@ -102,42 +102,42 @@ Sau khi chon provider, dropdown model tai danh sach tu `GET /v1/providers/{id}/m
 
 ## Extended Thinking
 
-Cho phep LLM sinh "reasoning tokens" noi bo truoc khi tra loi — cai thien chat luong voi task phuc tap nhung ton them token.
+Cho phép LLM sinh "reasoning tokens" nội bộ trước khi trả lời — cải thiện chất lượng với task phức tạp nhưng tốn thêm token.
 
-| Muc | Mo Ta |
+| Mức | Mô Tả |
 |-----|-------|
-| `off` | Tat thinking (mac dinh) |
-| `low` | Suy nghi nhe, nhanh |
-| `medium` | Can bang toc do va chat luong |
-| `high` | Suy nghi sau nhat |
+| `off` | Tắt thinking (mặc định) |
+| `low` | Suy nghĩ nhẹ, nhanh |
+| `medium` | Cân bằng tốc độ và chất lượng |
+| `high` | Suy nghĩ sâu nhất |
 
-**Ho tro:** Anthropic (4K/10K/32K budget), OpenAI-compat GPT-5/Codex, DashScope Qwen3. Ollama/Groq/DeepSeek: khong ho tro.
+**Hỗ trợ:** Anthropic (4K/10K/32K budget), OpenAI-compat GPT-5/Codex, DashScope Qwen3. Ollama/Groq/DeepSeek: không hỗ trợ.
 
-**Cau hinh:** Tab Config cua agent > phan Thinking > Inherit hoac Custom. Expert Mode cho phep chon `reasoning_effort` chi tiet hon.
+**Cấu hình:** Tab Config của agent > phần Thinking > Inherit hoặc Custom. Expert Mode cho phép chọn `reasoning_effort` chi tiết hơn.
 
 ---
 
-## Provider Pool (Nhieu Account Cung Loai)
+## Provider Pool (Nhiều Account Cùng Loại)
 
-Danh cho `chatgpt_oauth`: gop nhieu account vao mot pool de load balance.
+Dành cho `chatgpt_oauth`: gộp nhiều account vào một pool để load balance.
 
-| Strategy | Mo Ta |
+| Strategy | Mô Tả |
 |----------|-------|
-| `primary_first` | Dung account chinh truoc, fallback khi loi |
-| `round_robin` | Xoay vong deu giua tat ca account |
-| `priority_order` | Drain theo thu tu cac account phu |
+| `primary_first` | Dùng account chính trước, fallback khi lỗi |
+| `round_robin` | Xoay vòng đều giữa tất cả account |
+| `priority_order` | Drain theo thứ tự các account phụ |
 
 ---
 
-## Luu Y
+## Lưu Ý
 
-- Provider tu config file bi override boi provider cung ten trong database
-- Fallback: neu provider khong tim thay, dung provider dau tien trong registry
-- Xoa provider khong xoa agent
+- Provider từ config file bị override bởi provider cùng tên trong database
+- Fallback: nếu provider không tìm thấy, dùng provider đầu tiên trong registry
+- Xóa provider không xóa agent
 
 ---
 
-## Xem Them
+## Xem Thêm
 
-- [guide/vi/admin/02-channels-setup.md](02-channels-setup.md) — Cau hinh kenh ket noi
-- [guide/vi/admin/05-bao-mat.md](05-bao-mat.md) — Ma hoa API keys
+- [guide/vi/admin/02-channels-setup.md](02-channels-setup.md) — Cấu hình kênh kết nối
+- [guide/vi/admin/05-bao-mat.md](05-bao-mat.md) — Mã hóa API keys

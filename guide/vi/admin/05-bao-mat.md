@@ -1,126 +1,126 @@
-# Bao Mat va Phan Quyen
+# Bảo Mật và Phân Quyền
 
-## Tong Quan
+## Tổng Quan
 
-GoClaw ap dung bao mat theo chieu sau (defense-in-depth) voi 5 lop doc lap. Phan quyen dua tren RBAC 3 cap. API keys ho tro pham vi gioi han cho tich hop ben ngoai.
+GoClaw áp dụng bảo mật theo chiều sâu (defense-in-depth) với 5 lớp độc lập. Phân quyền dựa trên RBAC 3 cấp. API keys hỗ trợ phạm vi giới hạn cho tích hợp bên ngoài.
 
 **Route API keys:** `/api-keys` — Admin
-**Route phe duyet:** `/approvals` — Operator+
+**Route phê duyệt:** `/approvals` — Operator+
 
 ---
 
-## Huong Dan
+## Hướng Dẫn
 
-### Xac Thuc (Authentication)
+### Xác Thực (Authentication)
 
-3 phuong thuc, uu tien theo thu tu:
+3 phương thức, ưu tiên theo thứ tự:
 
-1. **Gateway token** — token chinh trong `config.json` (`gateway.token`), cap quyen Admin toan he thong
-2. **API key** — khoa co pham vi gioi han, cap quyen theo scopes
-3. **Browser pairing** — trinh duyet duoc cap quyen qua QR/code, cap quyen Operator (chi HTTP)
+1. **Gateway token** — token chính trong `config.json` (`gateway.token`), cấp quyền Admin toàn hệ thống
+2. **API key** — khóa có phạm vi giới hạn, cấp quyền theo scopes
+3. **Browser pairing** — trình duyệt được cấp quyền qua QR/code, cấp quyền Operator (chỉ HTTP)
 
-Su dung: `Authorization: Bearer <token>`
+Sử dụng: `Authorization: Bearer <token>`
 
-> Neu khong cau hinh gateway token, he thong chap nhan tat ca request khong xac thuc (dev mode).
+> Nếu không cấu hình gateway token, hệ thống chấp nhận tất cả request không xác thực (dev mode).
 
-### Tao API Key
+### Tạo API Key
 
-1. Vao **System > API Keys > Tao API key** (can quyen Admin)
-2. Dien:
-   - **Ten** (bat buoc)
-   - **To chuc** (chon, chi chu so huu)
-   - **Pham vi** (6 checkbox): `operator.admin` / `.read` / `.write` / `.approvals` / `.pairing` / `.provision`
-   - **Thoi han**: Khong gioi han / 7 / 30 / 90 ngay
-3. Nhan **Tao** → hien thi key day du + **Sao chep**
+1. Vào **System > API Keys > Tạo API Key** (cần quyền Admin)
+2. Điền:
+   - **Tên** (bắt buộc)
+   - **Tổ chức** (chọn, chỉ chủ sở hữu)
+   - **Phạm vi** (6 checkbox): `operator.admin` / `.read` / `.write` / `.approvals` / `.pairing` / `.provision`
+   - **Thời hạn**: Không giới hạn / 7 / 30 / 90 ngày
+3. Nhấn **Tạo** → hiển thị key đầy đủ + **Sao chép**
 
-> **Quan trong:** Sao chep key ngay — chi hien thi 1 lan duy nhat khi tao.
+> **Quan trọng:** Sao chép key ngay — chỉ hiển thị 1 lần duy nhất khi tạo.
 
-**Thu hoi:** Danh sach API Keys > click **Thu hoi** — mat hieu luc ngay lap tuc.
+**Thu hồi:** Danh sách API Keys > click **Thu hồi** — mất hiệu lực ngay lập tức.
 
-**Bao mat luu tru:** Raw key khong bao gio luu trong database — chi luu SHA-256 hash. Xac thuc dung `ConstantTimeCompare` tranh timing attack. Cache in-memory 5 phut.
+**Bảo mật lưu trữ:** Raw key không bao giờ lưu trong database — chỉ lưu SHA-256 hash. Xác thực dùng `ConstantTimeCompare` tránh timing attack. Cache in-memory 5 phút.
 
-### RBAC — 3 Cap Quyen
+### RBAC — 3 Cấp Quyền
 
-| Role | Cap | Quyen Chinh |
+| Role | Cấp | Quyền Chính |
 |------|:---:|-------------|
-| Viewer | 1 | Xem agents, sessions, skills, trang thai he thong |
-| Operator | 2 | Viewer + gui chat, quan ly sessions, chay cron jobs, cap nhat skills |
-| Admin | 3 | Operator + sua cau hinh, tao/xoa agents, quan ly kenh, duyet device pairing |
+| Viewer | 1 | Xem agents, sessions, skills, trạng thái hệ thống |
+| Operator | 2 | Viewer + gửi chat, quản lý sessions, chạy cron jobs, cập nhật skills |
+| Admin | 3 | Operator + sửa cấu hình, tạo/xóa agents, quản lý kênh, duyệt device pairing |
 
 ### Scopes cho API Key
 
-| Scope | Quyen |
+| Scope | Quyền |
 |-------|-------|
-| `operator.admin` | Toan quyen, tuong duong gateway token |
-| `operator.read` | Chi doc (Viewer) |
-| `operator.write` | Doc + ghi (Operator) |
-| `operator.approvals` | Duyet/tu choi lenh shell |
-| `operator.pairing` | Quan ly browser device pairing |
+| `operator.admin` | Toàn quyền, tương đương gateway token |
+| `operator.read` | Chỉ đọc (Viewer) |
+| `operator.write` | Đọc + ghi (Operator) |
+| `operator.approvals` | Duyệt/từ chối lệnh shell |
+| `operator.pairing` | Quản lý browser device pairing |
 
-### Phe Duyet Lenh Shell (`/approvals`)
+### Phê Duyệt Lệnh Shell (`/approvals`)
 
-Khi exec ask mode la `on-miss` hoac `always`, lenh shell can duoc admin duyet:
+Khi exec ask mode là `on-miss` hoặc `always`, lệnh shell cần được admin duyệt:
 
-- **Cho phep Mot lan** — phe duyet lan thuc thi nay
-- **Luon Cho phep** — them lenh vao danh sach cho phep vinh vien
-- **Tu choi** — tu choi lenh
+- **Cho phép một lần** — phê duyệt lần thực thi này
+- **Luôn cho phép** — thêm lệnh vào danh sách cho phép vĩnh viễn
+- **Từ chối** — từ chối lệnh
 
-Timeout: 2 phut. Qua timeout, lenh bi tu choi tu dong.
+Timeout: 2 phút. Quá timeout, lệnh bị từ chối tự động.
 
 ---
 
-## Giao Dien (UI)
+## Giao Diện (UI)
 
 ### Trang API Keys (`/api-keys`)
 
-**Hien thi:** Bang API keys: ten, tien to (8 ky tu dau), pham vi, to chuc, trang thai (hoat dong/thu hoi/het han), ngay het han, lan dung cuoi.
+**Hiển thị:** Bảng API keys: tên, tiền tố (8 ký tự đầu), phạm vi, tổ chức, trạng thái (hoạt động/thu hồi/hết hạn), ngày hết hạn, lần dùng cuối.
 
-**Thao tac:** Tao API key | Thu hoi | Sao chep key moi tao | Xem vi du ma (curl/TypeScript/Go) | Tim kiem | Lam moi
+**Thao tác:** Tạo API key | Thu hồi | Sao chép key mới tạo | Xem ví dụ mã (curl/TypeScript/Go) | Tìm kiếm | Làm mới
 
-**Hop thoai Tao Key:** Ten (bat buoc), To chuc, Pham vi (6 checkbox), Thoi han. **Tao** → hien thi key + **Sao chep** | **Huy**
+**Hộp thoại Tạo Key:** Tên (bắt buộc), Tổ chức, Phạm vi (6 checkbox), Thời hạn. **Tạo** → hiển thị key + **Sao chép** | **Hủy**
 
-**Hop thoai Vi Du Ma:** Tab curl / TypeScript / Go — hien thi code voi to sang cu phap. **Sao chep** moi tab (chi doc).
+**Hộp thoại Ví Dụ Mã:** Tab curl / TypeScript / Go — hiển thị code với tô sáng cú pháp. **Sao chép** mỗi tab (chỉ đọc).
 
-### Trang Phe Duyet (`/approvals`)
+### Trang Phê Duyệt (`/approvals`)
 
-**Hien thi:** Danh sach yeu cau phe duyet shell dang cho: ID agent, lenh, thoi gian.
+**Hiển thị:** Danh sách yêu cầu phê duyệt shell đang chờ: ID agent, lệnh, thời gian.
 
-**Thao tac:** Cho phep Mot lan | Luon Cho phep | Tu choi | Lam moi
+**Thao tác:** Cho phép một lần | Luôn cho phép | Từ chối | Làm mới
 
 ---
 
-## 5 Lop Bao Ve
+## 5 Lớp Bảo Vệ
 
-| Lop | Co Che | Chi Tiet |
+| Lớp | Cơ Chế | Chi Tiết |
 |-----|--------|---------|
-| 1 - Transport | CORS, gioi han kich thuoc | WS kiem tra `allowed_origins`; WS max 512KB; HTTP body max 1MB |
-| 2 - Input | Phat hien injection | 6 mau: ignore_instructions, role_override, system_tags, instruction_injection, null_bytes, delimiter_escape |
-| 3 - Tool | Shell deny, path traversal, SSRF | Cam lenh nguy hiem, kiem tra thu muc, bao ve DNS rebinding |
-| 4 - Output | Scrub credentials | Xoa token LLM, GitHub, AWS, connection strings khoi output |
-| 5 - Isolation | Workspace per-user, Docker sandbox | Moi user co thu muc rieng; shell co the chay trong container |
+| 1 - Transport | CORS, giới hạn kích thước | WS kiểm tra `allowed_origins`; WS max 512KB; HTTP body max 1MB |
+| 2 - Input | Phát hiện injection | 6 mẫu: ignore_instructions, role_override, system_tags, instruction_injection, null_bytes, delimiter_escape |
+| 3 - Tool | Shell deny, path traversal, SSRF | Cấm lệnh nguy hiểm, kiểm tra thư mục, bảo vệ DNS rebinding |
+| 4 - Output | Scrub credentials | Xóa token LLM, GitHub, AWS, connection strings khỏi output |
+| 5 - Isolation | Workspace per-user, Docker sandbox | Mỗi user có thư mục riêng; shell có thể chạy trong container |
 
-### Input Guard — Phat Hien Injection
+### Input Guard — Phát Hiện Injection
 
-6 mau bi quet truoc khi xu ly:
+6 mẫu bị quét trước khi xử lý:
 
-| Mau | Vi Du Bi Phat Hien |
+| Mẫu | Ví Dụ Bị Phát Hiện |
 |-----|-------------------|
 | `ignore_instructions` | "ignore all previous instructions" |
 | `role_override` | "you are now...", "pretend you are..." |
 | `system_tags` | `<system>`, `[SYSTEM]`, `[INST]` |
 | `instruction_injection` | "new instructions:", "override:" |
-| `null_bytes` | Ky tu `\x00` |
+| `null_bytes` | Ký tự `\x00` |
 | `delimiter_escape` | `</instructions>`, "end of system" |
 
-Hanh dong (`gateway.injection_action`): `off` / `log` / `warn` (mac dinh) / `block`.
+Hành động (`gateway.injection_action`): `off` / `log` / `warn` (mặc định) / `block`.
 
-### Shell Deny Patterns (Luon Ap Dung)
+### Shell Deny Patterns (Luôn Áp Dụng)
 
-| Nhom | Vi Du |
+| Nhóm | Ví Dụ |
 |------|-------|
-| Xoa file nguy hiem | `rm -rf`, `del /f`, `rmdir /s` |
-| Thao tac dia | `mkfs`, `dd if=`, ghi vao `/dev/sd*` |
-| Lenh he thong | `shutdown`, `reboot`, `poweroff` |
+| Xóa file nguy hiểm | `rm -rf`, `del /f`, `rmdir /s` |
+| Thao tác đĩa | `mkfs`, `dd if=`, ghi vào `/dev/sd*` |
+| Lệnh hệ thống | `shutdown`, `reboot`, `poweroff` |
 | Fork bomb | `:(){ ... };:` |
 | Remote code execution | `curl \| sh`, `wget -O - \| sh` |
 | Reverse shell | `/dev/tcp/`, `nc -e` |
@@ -128,42 +128,42 @@ Hanh dong (`gateway.injection_action`): `off` / `log` / `warn` (mac dinh) / `blo
 
 ### SSRF Protection
 
-URL kiem tra 3 buoc truoc khi fetch:
-1. Hostname bi chan: `localhost`, `*.local`, `*.internal`, `metadata.google.internal`
-2. Dai IP noi bo: `10.0.0.0/8`, `172.16.0.0/12`, `192.168.0.0/16`, `127.0.0.0/8`, `169.254.0.0/16`
-3. DNS pinning: resolve domain, kiem tra tung IP ket qua ke ca redirect target
+URL kiểm tra 3 bước trước khi fetch:
+1. Hostname bị chặn: `localhost`, `*.local`, `*.internal`, `metadata.google.internal`
+2. Dải IP nội bộ: `10.0.0.0/8`, `172.16.0.0/12`, `192.168.0.0/16`, `127.0.0.0/8`, `169.254.0.0/16`
+3. DNS pinning: resolve domain, kiểm tra từng IP kết quả kể cả redirect target
 
-### Ma Hoa AES-256-GCM
+### Mã Hóa AES-256-GCM
 
-| Du Lieu | Bang | Cot |
+| Dữ Liệu | Bảng | Cột |
 |---------|------|-----|
 | API key LLM provider | `llm_providers` | `api_key` |
 | API key MCP server | `mcp_servers` | `api_key` |
 | Env vars custom tool | `custom_tools` | `env` |
 
-Khoa ma hoa: bien moi truong `GOCLAW_ENCRYPTION_KEY`.
+Khóa mã hóa: biến môi trường `GOCLAW_ENCRYPTION_KEY`.
 Format: `"aes-gcm:" + base64(12-byte nonce + ciphertext + GCM tag)`.
 
 ### Rate Limiting
 
-| Tham So | Mac Dinh | Mo Ta |
+| Tham Số | Mặc Định | Mô Tả |
 |---------|----------|-------|
-| `rate_limit_rpm` | 0 (tat) | Request toi da/phut/user/IP |
-| Burst | 5 | Cho phep vuot gioi han tuc thoi |
+| `rate_limit_rpm` | 0 (tắt) | Request tối đa/phút/user/IP |
+| Burst | 5 | Cho phép vượt giới hạn tức thời |
 
-Cau hinh trong `config.json`: `gateway.rate_limit_rpm`. Request vuot gioi han: HTTP 429 hoac WebSocket error.
-
----
-
-## Luu Y
-
-- Sao chep API key ngay sau khi tao — khong the lay lai sau
-- Doi gateway token lam vo hieu toan bo session hien tai
-- Raw API key khong luu trong DB — chi SHA-256 hash
+Cấu hình trong `config.json`: `gateway.rate_limit_rpm`. Request vượt giới hạn: HTTP 429 hoặc WebSocket error.
 
 ---
 
-## Xem Them
+## Lưu Ý
 
-- [guide/vi/admin/03-tools-va-mcp.md](03-tools-va-mcp.md) — Exec approval chi tiet
+- Sao chép API key ngay sau khi tạo — không thể lấy lại sau
+- Đổi gateway token làm vô hiệu toàn bộ session hiện tại
+- Raw API key không lưu trong DB — chỉ SHA-256 hash
+
+---
+
+## Xem Thêm
+
+- [guide/vi/admin/03-tools-va-mcp.md](03-tools-va-mcp.md) — Exec approval chi tiết
 - [guide/vi/admin/06-theo-doi.md](06-theo-doi.md) — Security event logs

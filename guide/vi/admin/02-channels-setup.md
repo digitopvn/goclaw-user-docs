@@ -1,174 +1,174 @@
-# Cau Hinh Channels
+# Cấu Hình Channels
 
-## Tong Quan
+## Tổng Quan
 
-GoClaw ho tro 7 kenh ket noi. Moi channel instance co the gan vao mot agent cu the. Nhieu channel co the dung cung mot agent.
+GoClaw hỗ trợ 7 kênh kết nối. Mỗi channel instance có thể gắn vào một agent cụ thể. Nhiều channel có thể dùng cùng một agent.
 
-**Route danh sach:** `/channels`
-**Route chi tiet:** `/channels/:id`
-**Quyen truy cap:** Admin
+**Route danh sách:** `/channels`
+**Route chi tiết:** `/channels/:id`
+**Quyền truy cập:** Admin
 
 ---
 
-## Huong Dan
+## Hướng Dẫn
 
-### 7 Channels Ho Tro
+### 7 Channels Hỗ Trợ
 
-| Kenh | Kieu Ket Noi | DM | Nhom | Streaming |
+| Kênh | Kiểu Kết Nối | DM | Nhóm | Streaming |
 |------|--------------|----|------|-----------|
-| Telegram | Long polling | Co | Co | Typing indicator |
-| Discord | Gateway events | Co | Co | Edit "Thinking..." |
-| Slack | Socket Mode (WebSocket) | Co | Co | Edit-in-place |
-| Feishu/Lark | WebSocket / Webhook | Co | Co | Streaming card |
-| Zalo OA | Long polling | Co | Khong | Khong |
-| Zalo Personal | Giao thuc noi bo | Co | Co | Khong |
-| WhatsApp | WebSocket bridge ngoai | Co | Co | Khong |
+| Telegram | Long polling | Có | Có | Typing indicator |
+| Discord | Gateway events | Có | Có | Edit "Thinking..." |
+| Slack | Socket Mode (WebSocket) | Có | Có | Edit-in-place |
+| Feishu/Lark | WebSocket / Webhook | Có | Có | Streaming card |
+| Zalo OA | Long polling | Có | Không | Không |
+| Zalo Personal | Giao thức nội bộ | Có | Có | Không |
+| WhatsApp | WebSocket bridge ngoài | Có | Có | Không |
 
 ### Setup Telegram
 
-1. Nhan tin voi `@BotFather` tren Telegram
-2. Gui `/newbot`, dat ten va username (phai ket thuc bang `bot`)
-3. BotFather tra ve **Bot Token** dang `123456789:ABC-DEF...`
-4. Vao **Channels > Add Channel > Telegram**, nhap Bot Token
-5. (Tuy chon) API Server URL neu dung local Bot API server cho file >20 MB
-6. (Tuy chon) HTTP Proxy neu can route traffic qua proxy
+1. Nhắn tin với `@BotFather` trên Telegram
+2. Gửi `/newbot`, đặt tên và username (phải kết thúc bằng `bot`)
+3. BotFather trả về **Bot Token** dạng `123456789:ABC-DEF...`
+4. Vào **Channels > Thêm channel > Telegram**, nhập Bot Token
+5. (Tùy chọn) API Server URL nếu dùng local Bot API server cho file >20 MB
+6. (Tùy chọn) HTTP Proxy nếu cần route traffic qua proxy
 
-Telegram dung long polling — khong can cau hinh webhook.
+Telegram dùng long polling — không cần cấu hình webhook.
 
-| Truong | Mac Dinh | Mo Ta |
+| Trường | Mặc Định | Mô Tả |
 |--------|----------|-------|
-| DM Policy | `pairing` | Yeu cau ma ket cap cho user moi |
-| Group Policy | `pairing` | Yeu cau phe duyet cho nhom moi |
-| Require @mention | `true` | Chi tra loi khi duoc mention trong nhom |
-| Group History Limit | 50 | So tin nhan nhom giu lam nguyen canh |
+| Chính sách DM | `pairing` | Yêu cầu mã kết cặp cho user mới |
+| Chính sách nhóm | `pairing` | Yêu cầu phê duyệt cho nhóm mới |
+| Yêu cầu @đề cập | `true` | Chỉ trả lời khi được mention trong nhóm |
+| Giới hạn lịch sử nhóm | 50 | Số tin nhắn nhóm giữ làm ngữ cảnh |
 
 ### Setup Discord
 
-1. Vao [Discord Developer Portal](https://discord.com/developers/applications) > **New Application > Bot**
-2. Nhan **Reset Token** lay bot token
-3. Bat Privileged Gateway Intents: `Server Members Intent` va `Message Content Intent`
-4. Tao invite link: **OAuth2 > URL Generator** > scopes: `bot`, permissions: `Send Messages`, `Read Message History`, `View Channels`
-5. Vao **Channels > Add Channel > Discord**, nhap Bot Token
+1. Vào [Discord Developer Portal](https://discord.com/developers/applications) > **New Application > Bot**
+2. Nhấn **Reset Token** lấy bot token
+3. Bật Privileged Gateway Intents: `Server Members Intent` và `Message Content Intent`
+4. Tạo invite link: **OAuth2 > URL Generator** > scopes: `bot`, permissions: `Send Messages`, `Read Message History`, `View Channels`
+5. Vào **Channels > Thêm channel > Discord**, nhập Bot Token
 
 ### Setup Slack
 
-1. Vao [api.slack.com/apps](https://api.slack.com/apps) > **Create New App > From scratch**
-2. **Socket Mode** > bat `Enable Socket Mode` > tao App-Level Token scope `connections:write` (token `xapp-...`)
-3. **OAuth & Permissions > Bot Token Scopes**: them `chat:write`, `im:history`, `im:read`, `channels:history`, `channels:read`, `groups:history`, `reactions:write`
+1. Vào [api.slack.com/apps](https://api.slack.com/apps) > **Create New App > From scratch**
+2. **Socket Mode** > bật `Enable Socket Mode` > tạo App-Level Token scope `connections:write` (token `xapp-...`)
+3. **OAuth & Permissions > Bot Token Scopes**: thêm `chat:write`, `im:history`, `im:read`, `channels:history`, `channels:read`, `groups:history`, `reactions:write`
 4. **Install to Workspace** > copy Bot User OAuth Token (`xoxb-...`)
-5. Vao **Channels > Add Channel > Slack**:
+5. Vào **Channels > Thêm channel > Slack**:
    - Bot Token: `xoxb-...`
    - App-Level Token: `xapp-...`
-   - User Token (tuy chon): `xoxp-...`
-   - Debounce Delay: mac dinh 300ms
-   - Thread Participation TTL: mac dinh 24h
+   - User Token (tùy chọn): `xoxp-...`
+   - Debounce Delay: mặc định 300ms
+   - Thread Participation TTL: mặc định 24h
 
-Slack dung Socket Mode — khong can public URL.
+Slack dùng Socket Mode — không cần public URL.
 
 ### Setup Feishu/Lark
 
-1. Tao Custom App tai [open.feishu.cn](https://open.feishu.cn) hoac [open.larksuite.com](https://open.larksuite.com)
-2. Lay App ID (`cli_xxxxx`) va App Secret
-3. Scopes can: `im:message`, `im:message:send_as_bot`, `im:resource`, `contact:user.base:readonly`, `cardkit:card:write`
-4. Vao **Channels > Add Channel > Feishu**, nhap App ID, App Secret, chon Domain (`lark` hoac `feishu`), Connection Mode, Render Mode
+1. Tạo Custom App tại [open.feishu.cn](https://open.feishu.cn) hoặc [open.larksuite.com](https://open.larksuite.com)
+2. Lấy App ID (`cli_xxxxx`) và App Secret
+3. Scopes cần: `im:message`, `im:message:send_as_bot`, `im:resource`, `contact:user.base:readonly`, `cardkit:card:write`
+4. Vào **Channels > Thêm channel > Feishu**, nhập App ID, App Secret, chọn Domain (`lark` hoặc `feishu`), Connection Mode, Render Mode
 
-| Mode | Yeu Cau | Khuyen Nghi |
+| Mode | Yêu Cầu | Khuyến Nghị |
 |------|---------|-------------|
-| `websocket` | Khong can IP public | Co (mac dinh) |
-| `webhook` | Can endpoint public | Khi websocket khong kha dung |
+| `websocket` | Không cần IP public | Có (mặc định) |
+| `webhook` | Cần endpoint public | Khi websocket không khả dụng |
 
 ### Setup Zalo OA
 
-1. Dang ky Zalo Official Account tai [oa.zalo.me](https://oa.zalo.me)
-2. Vao **Dev Tools > API** lay OA Access Token
-3. Vao **Channels > Add Channel > Zalo OA**, nhap OA Access Token
-4. (Tuy chon) nhap Webhook Secret
+1. Đăng ký Zalo Official Account tại [oa.zalo.me](https://oa.zalo.me)
+2. Vào **Dev Tools > API** lấy OA Access Token
+3. Vào **Channels > Thêm channel > Zalo OA**, nhập OA Access Token
+4. (Tùy chọn) nhập Webhook Secret
 
-> Mac dinh DM Policy la `pairing`. Gioi han: 2,000 ky tu tin nhan, media 5 MB. Chi ho tro DM.
+> Mặc định Chính sách DM là `pairing`. Giới hạn: 2,000 ký tự tin nhắn, media 5 MB. Chỉ hỗ trợ DM.
 
 ### Setup WhatsApp
 
-WhatsApp yeu cau external bridge (vd: whatsapp-web.js). GoClaw ket noi den bridge qua WebSocket.
+WhatsApp yêu cầu external bridge (vd: whatsapp-web.js). GoClaw kết nối đến bridge qua WebSocket.
 
-1. Vao **Channels > Add Channel > WhatsApp**
-2. Nhap Bridge URL: `http://bridge:3000`
+1. Vào **Channels > Thêm channel > WhatsApp**
+2. Nhập Bridge URL: `http://bridge:3000`
 
-> GoClaw khong implement giao thuc WhatsApp truc tiep. Bridge phai deploy rieng.
+> GoClaw không implement giao thức WhatsApp trực tiếp. Bridge phải deploy riêng.
 
 ---
 
-## Giao Dien (UI)
+## Giao Diện (UI)
 
-### Trang Chi Tiet (`/channels/:id`)
+### Trang Chi Tiết (`/channels/:id`)
 
-**Hien thi:** Cau hinh kenh, trang thai ket noi, cai dat.
+**Hiển thị:** Cấu hình kênh, trạng thái kết nối, cài đặt.
 
-**Thao tac:** Xem cau hinh | Xoa kenh | Quay lai danh sach | Hien thi trang thai ket noi
+**Thao tác:** Xem cấu hình | Xóa kênh | Quay lại danh sách | Hiển thị trạng thái kết nối
 
 ---
 
 ## Channel Policies
 
-### DM Policy
+### Chính Sách DM
 
-| Policy | Hanh Vi |
+| Policy | Hành Vi |
 |--------|---------|
-| `open` | Chap nhan tu bat ky user |
-| `allowlist` | Chi chap nhan user trong danh sach |
-| `pairing` | User moi nhan ma 8 ky tu (hieu luc 60 phut), admin phe duyet |
-| `disabled` | Tu choi tat ca DM |
+| `open` | Chấp nhận từ bất kỳ user |
+| `allowlist` | Chỉ chấp nhận user trong danh sách |
+| `pairing` | User mới nhận mã 8 ký tự (hiệu lực 60 phút), admin phê duyệt |
+| `disabled` | Từ chối tất cả DM |
 
-### Group Policy
+### Chính Sách Nhóm
 
-| Policy | Hanh Vi |
+| Policy | Hành Vi |
 |--------|---------|
-| `open` | Chap nhan tu bat ky nhom |
-| `allowlist` | Chi chap nhan nhom trong danh sach |
-| `disabled` | Khong xu ly tin nhan nhom |
+| `open` | Chấp nhận từ bất kỳ nhóm |
+| `allowlist` | Chỉ chấp nhận nhóm trong danh sách |
+| `disabled` | Không xử lý tin nhắn nhóm |
 
 ### Mention Mode (Telegram, Slack, Feishu)
 
-| Mode | Hanh Vi |
+| Mode | Hành Vi |
 |------|---------|
-| `strict` (mac dinh) | Chi tra loi khi duoc @mention |
-| `yield` | Tra loi tru khi bot khac duoc mention |
+| `strict` (mặc định) | Chỉ trả lời khi được @mention |
+| `yield` | Trả lời trừ khi bot khác được mention |
 
 ---
 
 ## Per-Group Overrides (Telegram)
 
-Cau hinh rieng cho tung group hoac forum topic, ghi de len cau hinh kenh chung.
+Cấu hình riêng cho từng group hoặc forum topic, ghi đè lên cấu hình kênh chung.
 
-**Truy cap:** Channels > chon Telegram instance > tab **Group Overrides**
+**Truy cập:** Channels > chọn Telegram instance > tab **Nhóm**
 
-Cac truong co the ghi de: Group Policy, Require @mention, Mention Mode, Allowed Users, Skills Filter, Tool Allowlist, System Prompt, Enabled.
+Các trường có thể ghi đè: Chính sách nhóm, Yêu cầu @mention, Mention Mode, Người dùng được phép, Bộ lọc Skill, Tool Allowlist, System Prompt, Enabled.
 
-Thu tu uu tien: Global defaults < Wildcard group `*` < Specific group < Specific topic.
+Thứ tự ưu tiên: Global defaults < Wildcard group `*` < Specific group < Specific topic.
 
 ---
 
 ## Voice Routing (Telegram)
 
-Khi nhan voice/audio, Telegram channel:
-1. Download file audio tu Telegram
-2. Gui den STT proxy de phien am
-3. Tien to noi dung: `[audio: filename] Transcript: <text>`
-4. Neu VoiceAgentID duoc cau hinh, chuyen den agent chuyen biet
-5. Neu khong, chuyen den agent mac dinh cua kenh
+Khi nhận voice/audio, Telegram channel:
+1. Download file audio từ Telegram
+2. Gửi đến STT proxy để phiên âm
+3. Tiền tố nội dung: `[audio: filename] Transcript: <text>`
+4. Nếu VoiceAgentID được cấu hình, chuyển đến agent chuyên biệt
+5. Nếu không, chuyển đến agent mặc định của kênh
 
-> Cau hinh Voice Agent ID trong phan Advanced cua Telegram channel settings.
-
----
-
-## Luu Y
-
-- Telegram, Discord, Slack: long polling hoac WebSocket — khong can public endpoint
-- Feishu webhook mode voi `port=0`: gan tren cong HTTP cua gateway
-- WhatsApp yeu cau deploy bridge rieng biet
+> Cấu hình Voice Agent ID trong phần Advanced của Telegram channel settings.
 
 ---
 
-## Xem Them
+## Lưu Ý
 
-- [guide/vi/teams/02-contacts.md](../teams/02-contacts.md) — Quan ly danh ba lien he
-- [guide/vi/admin/05-bao-mat.md](05-bao-mat.md) — DM Policy va bao mat
+- Telegram, Discord, Slack: long polling hoặc WebSocket — không cần public endpoint
+- Feishu webhook mode với `port=0`: gắn trên cổng HTTP của gateway
+- WhatsApp yêu cầu deploy bridge riêng biệt
+
+---
+
+## Xem Thêm
+
+- [guide/vi/teams/02-contacts.md](../teams/02-contacts.md) — Quản lý danh bạ liên hệ
+- [guide/vi/admin/05-bao-mat.md](05-bao-mat.md) — Chính sách DM và bảo mật

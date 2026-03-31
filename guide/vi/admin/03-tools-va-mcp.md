@@ -1,149 +1,149 @@
-# Tools va MCP Servers
+# Tools và MCP Servers
 
-## Tong Quan
+## Tổng Quan
 
-GoClaw co he thong built-in tools nhom theo category, va ho tro dang ky MCP servers de mo rong kha nang agent. Tool access duoc kiem soat qua profiles va policies nhieu lop.
+GoClaw có hệ thống built-in tools nhóm theo category, và hỗ trợ đăng ký MCP servers để mở rộng khả năng agent. Tool access được kiểm soát qua profiles và policies nhiều lớp.
 
 **Route built-in tools:** `/builtin-tools` — Admin
 **Route MCP servers:** `/mcp` — Admin
 
 ---
 
-## Huong Dan
+## Hướng Dẫn
 
 ### Built-in Tool Profiles
 
-4 cap do profile xac dinh bo tools nao agent duoc phep dung:
+4 cấp độ profile xác định bộ tools nào agent được phép dùng:
 
-| Profile | Tools Bao Gom |
+| Profile | Tools Bao Gồm |
 |---------|---------------|
-| `minimal` | Chi `session_status` |
+| `minimal` | Chỉ `session_status` |
 | `messaging` | messaging, web, sessions, media_read, skill_search |
 | `coding` | fs, runtime, sessions, memory, web, knowledge, media_gen, media_read, skills |
-| `full` | Tat ca tools da dang ky |
+| `full` | Tất cả tools đã đăng ký |
 
-**Cau hinh:** Agents > chon agent > tab Tools > chon profile. Co the ghi de profile theo tung LLM provider.
+**Cấu hình:** Agents > chọn agent > tab Tools > chọn profile. Có thể ghi đè profile theo từng LLM provider.
 
 ### Exec Approval
 
-Kiem soat viec agent chay lenh shell:
+Kiểm soát việc agent chạy lệnh shell:
 
-**Security Mode:**
+**Chế độ bảo mật:**
 
-| Mode | Hanh Vi |
+| Mode | Hành Vi |
 |------|---------|
-| `deny` | Block tat ca lenh shell |
-| `allowlist` | Chi chap nhan lenh khop glob pattern trong allowlist |
-| `full` | Cho phep tat ca lenh (mac dinh) |
+| `deny` | Block tất cả lệnh shell |
+| `allowlist` | Chỉ chấp nhận lệnh khớp glob pattern trong allowlist |
+| `full` | Cho phép tất cả lệnh (mặc định) |
 
-**Ask Mode:**
+**Chế độ hỏi:**
 
-| Mode | Hanh Vi |
+| Mode | Hành Vi |
 |------|---------|
-| `off` | Tu dong chap nhan — khong hoi (mac dinh) |
-| `on-miss` | Hoi khi lenh khong co trong allowlist |
-| `always` | Hoi truoc moi lan chay lenh |
+| `off` | Tự động chấp nhận — không hỏi (mặc định) |
+| `on-miss` | Hỏi khi lệnh không có trong allowlist |
+| `always` | Hỏi trước mỗi lần chạy lệnh |
 
-Khi hoi: request gui den admin, timeout 2 phut. Admin chon: **Allow once** | **Allow always** | **Deny**.
+Khi hỏi: request gửi đến admin, timeout 2 phút. Admin chọn: **Cho phép một lần** | **Luôn cho phép** | **Từ chối**.
 
-Lenh bi block bat ke mode: `rm -rf`, `curl|sh`, reverse shells, fork bombs, ...
+Lệnh bị block bất kể mode: `rm -rf`, `curl|sh`, reverse shells, fork bombs, ...
 
-**Cau hinh:** Settings > Config > exec, hoac per-agent trong Agents settings.
+**Cấu hình:** Settings > Config > exec, hoặc per-agent trong Agents settings.
 
 ### Custom Tools
 
-Tao tool tu shell command khong can recompile hay restart:
+Tạo tool từ shell command không cần recompile hay restart:
 
-1. Vao **Settings > Custom Tools > Add Tool**
-2. Dien cac truong:
-   - **Name**: ten tool (dung trong LLM tool call)
-   - **Description**: mo ta de LLM hieu khi nao dung
-   - **Parameters**: JSON Schema cho tham so
-   - **Command**: lenh shell, dung `{{.param_name}}` cho tham so
-   - **Timeout**: mac dinh 60 giay
-   - **Scope**: Global (tat ca agents) hoac per-agent
-3. **Environment Variables**: luu ma hoa AES-256-GCM, inject vao process khi chay
+1. Vào **Settings > Custom Tools > Tạo công cụ**
+2. Điền các trường:
+   - **Name**: tên tool (dùng trong LLM tool call)
+   - **Description**: mô tả để LLM hiểu khi nào dùng
+   - **Parameters**: JSON Schema cho tham số
+   - **Command**: lệnh shell, dùng `{{.param_name}}` cho tham số
+   - **Timeout**: mặc định 60 giây
+   - **Scope**: Global (tất cả agents) hoặc per-agent
+3. **Environment Variables**: lưu mã hóa AES-256-GCM, inject vào process khi chạy
 
-Vi du: `dig +short {{.record_type}} {{.domain}}`
+Ví dụ: `dig +short {{.record_type}} {{.domain}}`
 
-Bao mat: tham so duoc shell-escape, ap dung deny pattern nhu `exec` tool, env vars khong bao gio hien thi plain text.
+Bảo mật: tham số được shell-escape, áp dụng deny pattern như `exec` tool, env vars không bao giờ hiển thị plain text.
 
 ### Web Fetch Policy
 
-Kiem soat URL nao agent duoc phep fetch:
+Kiểm soát URL nào agent được phép fetch:
 
-| Mode | Hanh Vi |
+| Mode | Hành Vi |
 |------|---------|
-| `allow_all` | Cho phep fetch bat ky URL (mac dinh) |
-| `allowlist` | Chi cho phep domain trong `allowed_domains` |
+| `allow_all` | Cho phép fetch bất kỳ URL (mặc định) |
+| `allowlist` | Chỉ cho phép domain trong `allowed_domains` |
 
-**Cau hinh:** Settings > Builtin Tools > web_fetch > Settings.
+**Cấu hình:** Settings > Builtin Tools > web_fetch > Cài đặt.
 
-### Dang Ky MCP Server
+### Đăng Ký MCP Server
 
-1. Vao **Settings > MCP > Add Server**
-2. Dien:
-   - **Name**: ten nhan dang (tao prefix tool: `mcp_{name}_{tool}`)
+1. Vào **Settings > MCP > Thêm máy chủ**
+2. Điền:
+   - **Name**: tên nhận dạng (tạo prefix tool: `mcp_{name}_{tool}`)
    - **Transport**: stdio / sse / streamable-http
    - **Command** (stdio): vd `npx -y @modelcontextprotocol/server-filesystem /workspace`
    - **URL** (sse/http): endpoint URL
-   - **Environment Variables**, Timeout, Enabled, Yeu cau xac thuc nguoi dung
-3. Nhan **Kiem tra ket noi** > **Tao/Cap nhat** | **Huy**
+   - **Environment Variables**, Timeout, Enabled, Yêu cầu xác thực người dùng
+3. Nhấn **Kiểm tra kết nối** > **Tạo/Cập nhật** | **Hủy**
 
-Health check: 30 giay/lan. Reconnect: exponential backoff (2s → 60s max, 10 lan thu).
+Health check: 30 giây/lần. Reconnect: exponential backoff (2s → 60s max, 10 lần thử).
 
-### MCP Grants — Cap Quyen
+### MCP Grants — Cấp Quyền
 
-**Cap quyen cho Agent:**
-1. MCP > chon server > Grants
-2. Chon agent, tuy chon them Tool Allow / Tool Deny
-3. Nhan **Grant** / **Thu hoi**
+**Cấp quyền cho Agent:**
+1. MCP > chọn server > Quản lý quyền
+2. Chọn agent, tùy chọn thêm Tool Allow / Tool Deny
+3. Nhấn **Cấp quyền** / **Thu hồi**
 
-**Cap quyen cho User:** Tuong tu nhung ap dung cho user cu the.
+**Cấp quyền cho User:** Tương tự nhưng áp dụng cho user cụ thể.
 
-Quy tac: deny > allow. Tool bi deny se khong xuat hien du co trong allow list.
+Quy tắc: deny > allow. Tool bị deny sẽ không xuất hiện dù có trong allow list.
 
 ### MCP Self-Service
 
-User co the tu yeu cau quyen truy cap MCP server:
-1. User gui request qua Web UI hoac API
-2. Request o trang thai `pending` — admin nhan thong bao
-3. Admin vao **MCP > Pending Requests** > **Approve** hoac **Reject**
-4. Grant co hieu luc ngay sau khi duyet
+User có thể tự yêu cầu quyền truy cập MCP server:
+1. User gửi request qua Web UI hoặc API
+2. Request ở trạng thái `pending` — admin nhận thông báo
+3. Admin vào **MCP > Pending Requests** > **Phê duyệt** hoặc **Từ chối**
+4. Grant có hiệu lực ngay sau khi duyệt
 
 ---
 
-## Giao Dien (UI)
+## Giao Diện (UI)
 
 ### Trang Built-in Tools (`/builtin-tools`)
 
-**Hien thi:** Tat ca tools nhom theo category. Moi tool: ten hien thi, ten ma, mo ta, huy hieu yeu cau, huy hieu loi thoi.
+**Hiển thị:** Tất cả tools nhóm theo category. Mỗi tool: tên hiển thị, tên mã, mô tả, huy hiệu yêu cầu, huy hiệu lỗi thời.
 
-**Danh muc:** filesystem, runtime, web, memory, media, browser, sessions, messaging, scheduling, subagents, skills, delegation, teams.
+**Danh mục:** filesystem, runtime, web, memory, media, browser, sessions, messaging, scheduling, subagents, skills, delegation, teams.
 
-**Thao tac:** Bat/tat switch moi tool | Cau hinh cai dat (hop thoai) | Ghi de theo to chuc | Dat lai ghi de | Tim kiem | Lam moi
+**Thao tác:** Bật/tắt switch mỗi tool | Cấu hình cài đặt (hộp thoại) | Ghi đè theo tổ chức | Đặt lại ghi đè | Tìm kiếm | Làm mới
 
-> Canh bao khi bat tool media ma khong co provider duoc cau hinh.
+> Cảnh báo khi bật tool media mà không có provider được cấu hình.
 
 ### Trang MCP Servers (`/mcp`)
 
-**Hien thi:** Bang tich hop MCP: ten, loai van chuyen, so tool, so agent, trang thai, nguoi tao.
+**Hiển thị:** Bảng tích hợp MCP: tên, loại vận chuyển, số tool, số agent, trạng thái, người tạo.
 
-**Thao tac:** Them MCP server | Chinh sua | Xoa | Ket noi lai | Quan ly cap phep agent | Xem tools | Quan ly xac thuc nguoi dung
+**Thao tác:** Thêm MCP server | Chỉnh sửa | Xóa | Kết nối lại | Quản lý cấp phép agent | Xem tools | Quản lý xác thực người dùng
 
-**Hop thoai Form MCP:**
-- Truong: Ten, Ten hien thi, Van chuyen (stdio: lenh+args | SSE/HTTP: URL+headers), Bien moi truong, Tien to tool, Timeout, Bat/tat, Yeu cau xac thuc
-- Thao tac: **Kiem tra ket noi** | **Tao/Cap nhat** | **Huy**
+**Hộp thoại Form MCP:**
+- Trường: Tên, Tên hiển thị, Vận chuyển (stdio: lệnh+args | SSE/HTTP: URL+headers), Biến môi trường, Tiền tố tool, Timeout, Bật/tắt, Yêu cầu xác thực
+- Thao tác: **Kiểm tra kết nối** | **Tạo/Cập nhật** | **Hủy**
 
-**Hop thoai Cap Phep Agent:** Danh sach cap phep hien co + form cap: chon agent, danh sach cho phep/tu choi (multi-select co tim kiem). **Cap/Cap nhat** | **Thu hoi** | **Huy**
+**Hộp thoại Cấp Phép Agent:** Danh sách cấp phép hiện có + form cấp: chọn agent, danh sách cho phép/từ chối (multi-select có tìm kiếm). **Cấp/Cập nhật** | **Thu hồi** | **Hủy**
 
-**Hop thoai Xem Tools:** Danh sach cuon co loc tim kiem — ten, mo ta, huy hieu tien to (chi doc).
+**Hộp thoại Xem Tools:** Danh sách cuộn có lọc tìm kiếm — tên, mô tả, huy hiệu tiền tố (chỉ đọc).
 
-**Hop thoai Xac Thuc Nguoi Dung:** Chon nguoi dung, API Key, Headers (che giau nhay cam), Bien moi truong. **Luu** | **Xoa tat ca** | **Huy**
+**Hộp thoại Xác Thực Người Dùng:** Chọn người dùng, API Key, Headers (che giấu nhạy cảm), Biến môi trường. **Lưu** | **Xóa tất cả** | **Hủy**
 
 ---
 
-## Danh Sach Built-in Tools
+## Danh Sách Built-in Tools
 
 ### Filesystem (`fs`)
 `read_file`, `write_file`, `edit`, `list_files`, `search`, `glob`
@@ -163,18 +163,18 @@ User co the tu yeu cau quyen truy cap MCP server:
 ### Teams (`teams`)
 `team_tasks`, `team_message`
 
-### Tao Media (`media_gen`)
+### Tạo Media (`media_gen`)
 `create_image`, `create_audio`, `create_video`, `tts`
 
-### Doc Media (`media_read`)
+### Đọc Media (`media_read`)
 `read_image`, `read_audio`, `read_document`, `read_video`
 
-### Khac
+### Khác
 `cron` (automation), `datetime` (automation), `message` (messaging), `knowledge_graph_search`, `use_skill`, `publish_skill`, `workspace_dir`, `openai_compat_call`
 
 ---
 
-## Tool Policies — 7 Buoc Loc
+## Tool Policies — 7 Bước Lọc
 
 1. Global profile (full/coding/messaging/minimal)
 2. Provider profile override
@@ -184,19 +184,19 @@ User co the tu yeu cau quyen truy cap MCP server:
 6. Agent + Provider allow
 7. Group allow list
 
-Sau do ap dung deny list (global, agent), cuoi cung ap dung alsoAllow. Tham chieu nhom tool: dung tien to `group:`, vd `group:fs`, `group:web`.
+Sau đó áp dụng deny list (global, agent), cuối cùng áp dụng alsoAllow. Tham chiếu nhóm tool: dùng tiền tố `group:`, vd `group:fs`, `group:web`.
 
 ---
 
-## Luu Y
+## Lưu Ý
 
-- MCP Transport `stdio`: khoi chay process cuc bo; `sse`/`streamable-http`: ket noi den URL
-- Tool prefix mac dinh: `mcp_{server_name}_{tool_name}`
-- Slack channel co SSRF protection rieng: chi cho download tu `*.slack.com`
+- MCP Transport `stdio`: khởi chạy process cục bộ; `sse`/`streamable-http`: kết nối đến URL
+- Tool prefix mặc định: `mcp_{server_name}_{tool_name}`
+- Slack channel có SSRF protection riêng: chỉ cho download từ `*.slack.com`
 
 ---
 
-## Xem Them
+## Xem Thêm
 
-- [guide/vi/admin/05-bao-mat.md](05-bao-mat.md) — Exec approval va shell deny patterns
-- [guide/vi/admin/01-providers.md](01-providers.md) — Cau hinh LLM providers
+- [guide/vi/admin/05-bao-mat.md](05-bao-mat.md) — Exec approval và shell deny patterns
+- [guide/vi/admin/01-providers.md](01-providers.md) — Cấu hình LLM providers

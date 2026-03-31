@@ -1,91 +1,91 @@
-# Doi Nhom (Agent Teams)
+# Đội Nhóm (Agent Teams)
 
-## Tong Quan
+## Tổng Quan
 
-Agent team la nhom cac AI agent hop tac qua mot **task board chung**. Lead agent dieu phoi cong viec, member agents thuc thi doc lap va song song.
+Agent team là nhóm các AI agent hợp tác qua một **task board chung**. Lead agent điều phối công việc, member agents thực thi độc lập và song song.
 
-**Route danh sach:** `/teams` — Operator+
-**Route chi tiet:** `/teams/:id` — Operator+
+**Route danh sách:** `/teams` — Operator+
+**Route chi tiết:** `/teams/:id` — Operator+
 
 ---
 
-## Huong Dan Su Dung
+## Hướng Dẫn Sử Dụng
 
-### Khi Nao Can Dung Team
+### Khi Nào Cần Dùng Team
 
-| Tinh Huong | Vi Du |
+| Tình Huống | Ví Dụ |
 |-----------|-------|
-| Research + viet bao cao | Member A tim tai lieu, Member B soan van ban |
-| Viet code + review | Member A code, Member B kiem tra loi |
-| Tao noi dung da dang | Member A viet caption, Member B tao hinh anh |
-| Phan tich nhieu nguon | Moi member xu ly mot tap du lieu rieng |
-| Luong duyet (human-in-the-loop) | Task can nguoi duyet truoc khi xong |
+| Research + viết báo cáo | Member A tìm tài liệu, Member B soạn văn bản |
+| Viết code + review | Member A code, Member B kiểm tra lỗi |
+| Tạo nội dung đa dạng | Member A viết caption, Member B tạo hình ảnh |
+| Phân tích nhiều nguồn | Mỗi member xử lý một tập dữ liệu riêng |
+| Luồng duyệt (human-in-the-loop) | Task cần người duyệt trước khi xong |
 
-### Tao Team
+### Tạo Team
 
-1. Vao **Web UI > Teams > New Team**
-2. Dien **Ten** va **Mo ta**
-3. Chon **Lead Agent** (chi mot lead)
-4. Them **Member Agents** (chi chon agent dinh san)
-5. Nhan **Tao** — yeu cau: ten + lead + it nhat 1 thanh vien
+1. Vào **Web UI > Teams > Tạo Team**
+2. Điền **Tên** và **Mô tả**
+3. Chọn **Agent trưởng nhóm** (chỉ một lead)
+4. Thêm **Thành viên** (chỉ chọn agent định sẵn)
+5. Nhấn **Tạo** — yêu cầu: tên + lead + ít nhất 1 thành viên
 
-Gioi han: Lite edition toi da 1 team / 5 member. Standard edition khong gioi han.
+Giới hạn: Lite edition tối đa 1 team / 5 thành viên. Standard edition không giới hạn.
 
-### Tao Task
+### Tạo Nhiệm Vụ
 
-Trong trang chi tiet team, nhan **Tao Task**:
+Trong trang chi tiết team, nhấn **Tạo nhiệm vụ**:
 
-| Truong | Mo Ta |
+| Trường | Mô Tả |
 |--------|-------|
-| Chu de | Tieu de ngan gon (bat buoc) |
-| Mo ta | Noi dung chi tiet |
-| Loai | Chung / Uy quyen / Leo thang |
-| Uu tien | So nguyen, cao hon = uu tien hon |
-| Giao cho | Member duoc phan cong |
+| Tiêu đề | Tiêu đề ngắn gọn (bắt buộc) |
+| Mô tả | Nội dung chi tiết |
+| Loại | Chung / Ủy quyền / Leo thang |
+| Độ ưu tiên | Số nguyên, cao hơn = ưu tiên hơn |
+| Giao cho | Thành viên được phân công |
 
-### Dependency Giua Task
+### Dependency Giữa Nhiệm Vụ
 
-Dat `blocked_by` khi mot task can task khac xong truoc:
-- Task o trang thai `blocked` cho den khi tat ca task phu thuoc hoan thanh
-- Khi task phu thuoc xong, task `blocked` tu dong chuyen sang `pending`
-- Task `cancelled` cung giai phong phu thuoc
+Đặt `blocked_by` khi một task cần task khác xong trước:
+- Task ở trạng thái `blocked` cho đến khi tất cả task phụ thuộc hoàn thành
+- Khi task phụ thuộc xong, task `blocked` tự động chuyển sang `pending`
+- Task `cancelled` cũng giải phóng phụ thuộc
 
-### Comments va Blocker
+### Bình luận và Blocker
 
-Ca nguoi dung lan agent deu co the them binh luan vao task:
-- **Binh luan thuong** — phan hoi, giai thich
-- **Blocker comment** — task tu dong chuyen sang `failed`, lead nhan thong bao escalation
-
----
-
-## Giao Dien (UI)
-
-### Trang Danh Sach (`/teams`)
-
-Hien thi: danh sach phan trang (the hoac danh sach), tim kiem.
-
-Thao tac:
-- **Tao nhom** — mo hop thoai
-- **Xoa nhom** — xac nhan
-- **Xem chi tiet** — nhan vao the
-
-### Trang Chi Tiet (`/teams/:id`)
-
-Hien thi: thong tin nhom, danh sach thanh vien, task board.
-
-**Hop thoai Thanh Vien**: danh sach cuon — emoji, ten, vai tro (truong/nguoi danh gia/thanh vien). Them (combobox agent dinh san) | Xoa (X) moi thanh vien (tru truong).
-
-**Hop thoai Thong Tin Nhom**: ten, trang thai, mo ta, truong nhom, so thanh vien, tab cai dat. Nhan huy hieu "v2 Super Team" → Modal Tinh Nang.
-
-**Hop thoai Tao Task**: Chu de (bat buoc), Mo ta, Loai, Uu tien, Giao cho. Nhan **Tao Task** | **Huy**.
-
-**Hop thoai Chi Tiet Task**: ID task, trang thai, tien trinh (V2), banner theo doi (V2), metadata, task bi chan, mo ta, ket qua, binh luan, timeline. Thao tac: **Xoa** (task hoan thanh) | **Them binh luan** | **Dieu huong task lien quan**.
-
-**Workspace Nhom** (90vh x 95vw): trinh duyet file — bo loc pham vi, cay thu muc, trinh xem noi dung. Thao tac: **Tai len** | **Tai xuong** | **Xoa** | **Di chuyen** (keo tha) | **Lam moi**.
+Cả người dùng lẫn agent đều có thể thêm bình luận vào task:
+- **Bình luận thường** — phản hồi, giải thích
+- **Blocker comment** — task tự động chuyển sang `failed`, lead nhận thông báo escalation
 
 ---
 
-## Vong Doi Task
+## Giao Diện (UI)
+
+### Trang Danh Sách (`/teams`)
+
+Hiển thị: danh sách phân trang (thẻ hoặc danh sách), tìm kiếm.
+
+Thao tác:
+- **Tạo nhóm** — mở hộp thoại
+- **Xóa nhóm** — xác nhận
+- **Xem chi tiết** — nhấn vào thẻ
+
+### Trang Chi Tiết (`/teams/:id`)
+
+Hiển thị: thông tin nhóm, danh sách thành viên, task board.
+
+**Hộp thoại Thành Viên**: danh sách cuộn — emoji, tên, vai trò (trưởng/người đánh giá/thành viên). Thêm (combobox agent định sẵn) | Xóa (X) mỗi thành viên (trừ trưởng).
+
+**Hộp thoại Thông Tin Nhóm**: tên, trạng thái, mô tả, trưởng nhóm, số thành viên, tab cài đặt. Nhấn huy hiệu "v2 Super Team" → Modal Tính Năng.
+
+**Hộp thoại Tạo Nhiệm Vụ**: Tiêu đề (bắt buộc), Mô tả, Loại, Độ ưu tiên, Giao cho. Nhấn **Tạo nhiệm vụ** | **Hủy**.
+
+**Hộp thoại Chi Tiết Nhiệm Vụ**: ID task, trạng thái, tiến trình (V2), banner theo dõi (V2), metadata, task bị chặn, mô tả, kết quả, bình luận, lịch sử. Thao tác: **Xóa** (task hoàn thành) | **Thêm bình luận** | **Điều hướng task liên quan**.
+
+**Không Gian Làm Việc Nhóm** (90vh x 95vw): trình duyệt file — bộ lọc phạm vi, cây thư mục, trình xem nội dung. Thao tác: **Tải lên** | **Tải xuống** | **Xóa** | **Di chuyển** (kéo thả) | **Làm mới**.
+
+---
+
+## Vòng Đời Nhiệm Vụ
 
 ```
 pending → in_progress → completed
@@ -96,49 +96,49 @@ pending → in_progress → completed
   failed → (retry) → pending
 ```
 
-| Status | Y Nghia |
+| Trạng thái | Ý Nghĩa |
 |--------|---------|
-| `pending` | Moi tao, cho xu ly |
-| `in_progress` | Member dang lam |
-| `in_review` | Member gui duyet |
-| `completed` | Hoan thanh |
-| `blocked` | Cho task phu thuoc |
-| `failed` | Loi / blocker escalation |
-| `cancelled` | Bi huy |
-| `stale` | Khong hoat dong lau |
+| `pending` | Mới tạo, chờ xử lý |
+| `in_progress` | Thành viên đang làm |
+| `in_review` | Thành viên gửi duyệt |
+| `completed` | Hoàn thành |
+| `blocked` | Chờ task phụ thuộc |
+| `failed` | Lỗi / blocker escalation |
+| `cancelled` | Bị hủy |
+| `stale` | Không hoạt động lâu |
 
 ---
 
-## Team Workspace
+## Không Gian Làm Việc Nhóm
 
-| Che Do | Thu Muc | Dung Khi |
+| Chế Độ | Thư Mục | Dùng Khi |
 |--------|---------|---------|
-| Isolated (mac dinh) | `teams/{teamID}/{chatID}/` | Phan tach file theo cuoc tro chuyen |
-| Shared | `teams/{teamID}/` | Tat ca member dung chung |
+| Cô lập (mặc định) | `teams/{teamID}/{chatID}/` | Phân tách file theo cuộc trò chuyện |
+| Chia sẻ | `teams/{teamID}/` | Tất cả thành viên dùng chung |
 
-Gioi han: file toi da 10 MB, toi da 100 file/scope.
+Giới hạn: file tối đa 10 MB, tối đa 100 file/scope.
 
 ---
 
-## Gioi Han Theo Phien Ban
+## Giới Hạn Theo Phiên Bản
 
-| Tinh Nang | Lite | Standard |
+| Tính Năng | Lite | Standard |
 |-----------|:----:|:--------:|
-| So team toi da | 1 | Khong gioi han |
-| So member/team | 5 | Khong gioi han |
-| Comment / Review / Attach | Khong | Day du |
-| Ask user reminder | Khong | Day du |
+| Số team tối đa | 1 | Không giới hạn |
+| Số thành viên/team | 5 | Không giới hạn |
+| Bình luận / Review / Đính kèm | Không | Đầy đủ |
+| Nhắc nhở theo dõi | Không | Đầy đủ |
 
 ---
 
-## Luu Y
+## Lưu Ý
 
-- Lead chi giao viec qua task board, khong giao truc tiep qua ham goi
-- Cac member co the chay song song — ket qua duoc gop lai va tra ve user trong mot luot
-- File tao ra trong task duoc tu dong luu vao `attachments/` va gan voi task
+- Lead chỉ giao việc qua task board, không giao trực tiếp qua hàm gọi
+- Các thành viên có thể chạy song song — kết quả được gộp lại và trả về user trong một lượt
+- File tạo ra trong task được tự động lưu vào `attachments/` và gắn với task
 
 ---
 
-## Xem Them
+## Xem Thêm
 
-- [guide/vi/files-and-media/01-file-va-media.md](../files-and-media/01-file-va-media.md) — Team workspace va file
+- [guide/vi/files-and-media/01-file-va-media.md](../files-and-media/01-file-va-media.md) — Không gian làm việc nhóm và file
