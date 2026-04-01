@@ -81,9 +81,9 @@ The wizard will prompt for the following in order:
 Result: a `.env.local` file is created with the necessary environment variables:
 
 ```bash
-GOCLAW_GATEWAY_TOKEN=
-GOCLAW_ENCRYPTION_KEY=
-GOCLAW_POSTGRES_DSN=
+GOCLAW_GATEWAY_TOKEN=<token>
+GOCLAW_ENCRYPTION_KEY=<key>
+GOCLAW_POSTGRES_DSN=postgres://...
 ```
 
 Database migrations are also run automatically during this step.
