@@ -134,12 +134,38 @@ fi
 # ════════════════════════════════════════════════
 if [ "$MODE" = "docker" ]; then
   if ! $has_docker; then
-    error "Docker is not installed. Install Docker Desktop from https://docker.com and retry."
-    exit 1
+    warn "Docker is not installed."
+    if ask_yn "Install Docker automatically?" "y"; then
+      info "Installing Docker..."
+      curl -fsSL https://get.docker.com | sh
+      if command -v docker &>/dev/null; then
+        success "Docker installed successfully."
+        has_docker=true
+      else
+        error "Docker installation failed. Install manually from https://docker.com and retry."
+        exit 1
+      fi
+    else
+      error "Docker is required for this mode. Install from https://docker.com and retry."
+      exit 1
+    fi
   fi
   if ! $has_docker_compose; then
-    error "Docker Compose plugin not found. Make sure you have Docker Desktop ≥ 4.x or install the compose plugin."
-    exit 1
+    if docker compose version &>/dev/null 2>&1; then
+      has_docker_compose=true
+    else
+      warn "Docker Compose plugin not found."
+      info "Attempting to install Docker Compose plugin..."
+      apt-get update -qq && apt-get install -y -qq docker-compose-plugin 2>/dev/null \
+        || { error "Could not install Docker Compose. Install manually and retry."; exit 1; }
+      if docker compose version &>/dev/null 2>&1; then
+        success "Docker Compose installed successfully."
+        has_docker_compose=true
+      else
+        error "Docker Compose plugin not found. Make sure you have Docker Desktop ≥ 4.x or install the compose plugin."
+        exit 1
+      fi
+    fi
   fi
 
   bold "── Docker Setup ──"
