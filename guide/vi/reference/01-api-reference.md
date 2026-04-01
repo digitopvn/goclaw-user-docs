@@ -276,5 +276,5 @@ Response lỗi bao gồm trường `retryable` (boolean) và `retryAfterMs` (int
 ## Xem Thêm
 
 - [WebSocket RPC](./02-websocket-rpc.md)
-- [Cấu hình tham chiếu](./03-cau-hinh.md)
+- [Cấu hình tham chiếu](./03-configuration.md)
 - Swagger UI trực tiếp: `http://<host>:<port>/docs`

@@ -135,4 +135,4 @@ Xóa nhóm là vĩnh viễn — không thể khôi phục. Chỉ xóa khi chắc
 
 - [Cấu hình Hệ Thống — pending_compaction](../admin/10-config.md)
 - [Cấu hình kênh kết nối](../admin/02-channels-setup.md)
-- [Theo dõi và logs](../admin/06-theo-doi.md)
+- [Theo dõi và logs](../admin/06-monitoring.md)

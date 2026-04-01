@@ -175,6 +175,6 @@ Trang config hỗ trợ JSON5 — định dạng mở rộng của JSON:
 
 ## Xem Thêm
 
-- [Cấu hình tham chiếu đầy đủ](../reference/03-cau-hinh.md)
+- [Cấu hình tham chiếu đầy đủ](../reference/03-configuration.md)
 - [Cấu hình TTS](../admin/08-tts.md)
 - [WebSocket RPC — config methods](../reference/02-websocket-rpc.md)

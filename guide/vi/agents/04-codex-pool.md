@@ -109,5 +109,5 @@ Kết quả:
 
 ## Xem thêm
 
-- [Cấu hình tổng quát agent, bao gồm mục "Định tuyến ChatGPT OAuth"](./02-cau-hinh-agent.md)
-- [Tổng quan về agents](./01-tong-quan-agents.md)
+- [Cấu hình tổng quát agent, bao gồm mục "Định tuyến ChatGPT OAuth"](./02-agent-config.md)
+- [Tổng quan về agents](./01-agents-overview.md)

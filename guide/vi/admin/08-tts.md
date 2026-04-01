@@ -115,5 +115,5 @@ Cấu hình TTS sử dụng Edge TTS (miễn phí), tự động phát cho tin n
 
 ## Xem Thêm
 
-- [Cấu hình tham chiếu — Section tts](../reference/03-cau-hinh.md#7-section-tts)
+- [Cấu hình tham chiếu — Section tts](../reference/03-configuration.md#7-section-tts)
 - [Cấu hình providers](../admin/01-providers.md)

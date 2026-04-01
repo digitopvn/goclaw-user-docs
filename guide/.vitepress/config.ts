@@ -94,7 +94,7 @@ export default defineConfig({
       link: "/vi/",
       themeConfig: {
         nav: [
-          { text: "Hướng dẫn", link: "/vi/getting-started/01-gioi-thieu" },
+          { text: "Hướng dẫn", link: "/vi/getting-started/01-introduction" },
           { text: "API", link: "/vi/reference/01-api-reference" },
         ],
         sidebar: {
@@ -102,25 +102,25 @@ export default defineConfig({
             {
               text: "Bắt đầu",
               items: [
-                { text: "Giới thiệu GoClaw", link: "/vi/getting-started/01-gioi-thieu" },
-                { text: "Cài đặt và khởi động", link: "/vi/getting-started/02-cai-dat" },
-                { text: "Đăng nhập và chọn tổ chức", link: "/vi/getting-started/03-dang-nhap" },
+                { text: "Giới thiệu GoClaw", link: "/vi/getting-started/01-introduction" },
+                { text: "Cài đặt và khởi động", link: "/vi/getting-started/02-installation" },
+                { text: "Đăng nhập và chọn tổ chức", link: "/vi/getting-started/03-login" },
                 { text: "Setup Wizard và Dashboard", link: "/vi/getting-started/04-setup-wizard" },
               ],
             },
             {
               text: "Chat và Sessions",
               items: [
-                { text: "Chat cơ bản", link: "/vi/chat-and-sessions/01-chat-co-ban" },
-                { text: "Quản lý Sessions", link: "/vi/chat-and-sessions/02-quan-ly-sessions" },
-                { text: "Kênh kết nối", link: "/vi/chat-and-sessions/03-kenh-ket-noi" },
+                { text: "Chat cơ bản", link: "/vi/chat-and-sessions/01-basic-chat" },
+                { text: "Quản lý Sessions", link: "/vi/chat-and-sessions/02-session-management" },
+                { text: "Kênh kết nối", link: "/vi/chat-and-sessions/03-channels" },
               ],
             },
             {
               text: "Agents",
               items: [
-                { text: "Tổng quan về Agents", link: "/vi/agents/01-tong-quan-agents" },
-                { text: "Cấu hình Agent", link: "/vi/agents/02-cau-hinh-agent" },
+                { text: "Tổng quan về Agents", link: "/vi/agents/01-agents-overview" },
+                { text: "Cấu hình Agent", link: "/vi/agents/02-agent-config" },
                 { text: "Skills (Kỹ năng)", link: "/vi/agents/03-skills" },
                 { text: "Codex Pool", link: "/vi/agents/04-codex-pool" },
               ],
@@ -128,14 +128,14 @@ export default defineConfig({
             {
               text: "Đội nhóm",
               items: [
-                { text: "Agent Teams", link: "/vi/teams/01-doi-nhom" },
+                { text: "Agent Teams", link: "/vi/teams/01-teams" },
                 { text: "Danh bạ liên hệ", link: "/vi/teams/02-contacts" },
               ],
             },
             {
               text: "File và Media",
               items: [
-                { text: "File và Media", link: "/vi/files-and-media/01-file-va-media" },
+                { text: "File và Media", link: "/vi/files-and-media/01-files-and-media" },
               ],
             },
             {
@@ -144,11 +144,11 @@ export default defineConfig({
               items: [
                 { text: "Cấu hình LLM Providers", link: "/vi/admin/01-providers" },
                 { text: "Cấu hình Channels", link: "/vi/admin/02-channels-setup" },
-                { text: "Tools và MCP Servers", link: "/vi/admin/03-tools-va-mcp" },
+                { text: "Tools và MCP Servers", link: "/vi/admin/03-tools-and-mcp" },
                 { text: "Cron và lịch trình", link: "/vi/admin/04-cron" },
-                { text: "Bảo mật và phân quyền", link: "/vi/admin/05-bao-mat" },
-                { text: "Theo dõi và Logs", link: "/vi/admin/06-theo-doi" },
-                { text: "Sao lưu và khôi phục", link: "/vi/admin/07-sao-luu" },
+                { text: "Bảo mật và phân quyền", link: "/vi/admin/05-security" },
+                { text: "Theo dõi và Logs", link: "/vi/admin/06-monitoring" },
+                { text: "Sao lưu và khôi phục", link: "/vi/admin/07-backup" },
                 { text: "Text-to-Speech", link: "/vi/admin/08-tts" },
                 { text: "Bộ nhớ và đồ thị tri thức", link: "/vi/admin/09-memory-kg" },
                 { text: "Cấu hình hệ thống", link: "/vi/admin/10-config" },
@@ -163,7 +163,7 @@ export default defineConfig({
               items: [
                 { text: "HTTP REST API", link: "/vi/reference/01-api-reference" },
                 { text: "WebSocket RPC", link: "/vi/reference/02-websocket-rpc" },
-                { text: "Cấu hình tham chiếu", link: "/vi/reference/03-cau-hinh" },
+                { text: "Cấu hình tham chiếu", link: "/vi/reference/03-configuration" },
                 { text: "Phiên bản Desktop (Lite)", link: "/vi/reference/04-desktop-lite" },
               ],
             },

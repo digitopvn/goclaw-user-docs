@@ -157,5 +157,5 @@ Tất cả được mã hóa AES-256-GCM và không đưa vào file export.
 ## Xem Thêm
 
 - [Nhập lại LLM provider credentials](01-providers.md)
-- [Nhập lại MCP credentials](03-tools-va-mcp.md)
-- [Mã hóa AES-256-GCM](05-bao-mat.md)
+- [Nhập lại MCP credentials](03-tools-and-mcp.md)
+- [Mã hóa AES-256-GCM](05-security.md)

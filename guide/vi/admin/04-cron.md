@@ -130,5 +130,5 @@ Công thức: `delay = min(2 x 2^lần, 30)` +/- 25% jitter.
 
 ## Xem Thêm
 
-- [Xem lịch sử chạy và traces](06-theo-doi.md)
-- [Tool `cron` để agent tự quản lý jobs](03-tools-va-mcp.md)
+- [Xem lịch sử chạy và traces](06-monitoring.md)
+- [Tool `cron` để agent tự quản lý jobs](03-tools-and-mcp.md)

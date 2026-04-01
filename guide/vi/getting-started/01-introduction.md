@@ -111,5 +111,5 @@ Không cần Go, PostgreSQL, hay Docker.
 
 ## Xem thêm
 
-- [Cài đặt và khởi động GoClaw (Standard + Lite)](./02-cai-dat.md)
-- [Đăng nhập và chọn tổ chức](./03-dang-nhap.md)
+- [Cài đặt và khởi động GoClaw (Standard + Lite)](./02-installation.md)
+- [Đăng nhập và chọn tổ chức](./03-login.md)

@@ -220,6 +220,6 @@ ui/desktop/
 
 ## Xem Thêm
 
-- [Cấu hình tham chiếu](./03-cau-hinh.md)
-- [So sánh tính năng Standard vs Lite](../getting-started/02-cai-dat.md)
+- [Cấu hình tham chiếu](./03-configuration.md)
+- [So sánh tính năng Standard vs Lite](../getting-started/02-installation.md)
 - GitHub Releases: `https://github.com/nextlevelbuilder/goclaw/releases`

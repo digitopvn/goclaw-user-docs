@@ -7,7 +7,7 @@ hero:
   actions:
     - theme: brand
       text: Bắt đầu
-      link: /vi/getting-started/01-gioi-thieu
+      link: /vi/getting-started/01-introduction
     - theme: alt
       text: English
       link: /en/

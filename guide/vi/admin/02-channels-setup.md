@@ -171,4 +171,4 @@ Khi nhận voice/audio, Telegram channel:
 ## Xem Thêm
 
 - [Quản lý danh bạ liên hệ](../teams/02-contacts.md)
-- [Chính sách DM và bảo mật](05-bao-mat.md)
+- [Chính sách DM và bảo mật](05-security.md)

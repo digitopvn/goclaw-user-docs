@@ -141,4 +141,4 @@ Giới hạn: file tối đa 10 MB, tối đa 100 file/scope.
 
 ## Xem Thêm
 
-- [Không gian làm việc nhóm và file](../files-and-media/01-file-va-media.md)
+- [Không gian làm việc nhóm và file](../files-and-media/01-files-and-media.md)

@@ -146,5 +146,5 @@ Admin có thể bật/tắt kênh qua `channels.toggle` (yêu cầu quyền admi
 
 ## Xem thêm
 
-- [Giao diện chat trên Web](./01-chat-co-ban.md)
-- [Quản lý sessions](./02-quan-ly-sessions.md)
+- [Giao diện chat trên Web](./01-basic-chat.md)
+- [Quản lý sessions](./02-session-management.md)

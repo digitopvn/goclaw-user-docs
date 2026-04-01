@@ -165,5 +165,5 @@ Cấu hình trong `config.json`: `gateway.rate_limit_rpm`. Request vượt giớ
 
 ## Xem Thêm
 
-- [Exec approval chi tiết](03-tools-va-mcp.md)
-- [Security event logs](06-theo-doi.md)
+- [Exec approval chi tiết](03-tools-and-mcp.md)
+- [Security event logs](06-monitoring.md)

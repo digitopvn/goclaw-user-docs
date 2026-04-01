@@ -113,6 +113,6 @@ Bắt đầu chat với agent "Assistant":
 
 ## Xem thêm
 
-- [Quản lý và tìm kiếm sessions](./02-quan-ly-sessions.md)
-- [Chat qua Telegram, Discord, Slack](./03-kenh-ket-noi.md)
-- [Hiểu rõ về agents và skills](../agents/01-tong-quan-agents.md)
+- [Quản lý và tìm kiếm sessions](./02-session-management.md)
+- [Chat qua Telegram, Discord, Slack](./03-channels.md)
+- [Hiểu rõ về agents và skills](../agents/01-agents-overview.md)

@@ -162,6 +162,6 @@ Nhấn **Chạy thử** để kiểm tra ngay lập tức. Xem lịch sử heart
 
 ## Xem thêm
 
-- [Khái niệm cơ bản về agents](./01-tong-quan-agents.md)
+- [Khái niệm cơ bản về agents](./01-agents-overview.md)
 - [Thêm skills cho agent](./03-skills.md)
 - [Cấu hình Codex Pool routing](./04-codex-pool.md)

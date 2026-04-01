@@ -367,5 +367,5 @@ Response lỗi bao gồm `retryable` (boolean) và `retryAfterMs` (integer).
 ## Xem Thêm
 
 - [HTTP REST API](./01-api-reference.md)
-- [Cấu hình tham chiếu](./03-cau-hinh.md)
+- [Cấu hình tham chiếu](./03-configuration.md)
 - [Nodes — ghép thiết bị](../admin/12-nodes.md)

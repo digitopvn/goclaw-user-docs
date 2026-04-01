@@ -137,6 +137,6 @@ Phân tích chi tiết lượng sử dụng theo thời gian.
 
 ## Xem thêm
 
-- [Bắt đầu chat với agent](../chat-and-sessions/01-chat-co-ban.md)
-- [Hiểu rõ hơn về agents](../agents/01-tong-quan-agents.md)
-- [Cấu hình agent nâng cao](../agents/02-cau-hinh-agent.md)
+- [Bắt đầu chat với agent](../chat-and-sessions/01-basic-chat.md)
+- [Hiểu rõ hơn về agents](../agents/01-agents-overview.md)
+- [Cấu hình agent nâng cao](../agents/02-agent-config.md)

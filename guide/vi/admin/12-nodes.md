@@ -108,4 +108,4 @@ Trong môi trường có nhiều instance GoClaw chạy song song (horizontal sc
 
 - [Cấu hình kênh kết nối](../admin/02-channels-setup.md)
 - [WebSocket RPC — Pairing methods](../reference/02-websocket-rpc.md)
-- [Bảo mật và phân quyền](../admin/05-bao-mat.md)
+- [Bảo mật và phân quyền](../admin/05-security.md)

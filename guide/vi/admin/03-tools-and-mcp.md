@@ -198,5 +198,5 @@ Sau đó áp dụng deny list (global, agent), cuối cùng áp dụng alsoAllow
 
 ## Xem Thêm
 
-- [Exec approval và shell deny patterns](05-bao-mat.md)
+- [Exec approval và shell deny patterns](05-security.md)
 - [Cấu hình LLM providers](01-providers.md)
