@@ -10,7 +10,7 @@ hero:
       link: /en/getting-started/01-introduction
     - theme: alt
       text: Tiếng Việt
-      link: /vi/getting-started/01-gioi-thieu
+      link: /vi/getting-started/01-introduction
 features:
   - title: Multi-Agent Orchestration
     details: Deploy and manage multiple AI agents with different LLM providers, tools, and skills.
