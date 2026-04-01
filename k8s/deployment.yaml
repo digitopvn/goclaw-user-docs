@@ -1,0 +1,182 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: docs
+    namespace: goclaw
+    labels:
+        app: docs
+        app-version: docs-1
+        deploy-strategy: v2
+        main-app: docs
+        owner: tam-lam
+        phase: live
+        project: layarmicrosite
+        updated-by: tam-lam
+        workspace: topgroup
+spec:
+    replicas: 1
+    minReadySeconds: 10
+    revisionHistoryLimit: 10
+    progressDeadlineSeconds: 600
+    selector:
+        matchLabels:
+            app: docs
+    strategy:
+        type: RollingUpdate
+        rollingUpdate:
+            maxUnavailable: 1
+            maxSurge: 1
+    template:
+        metadata:
+            labels:
+                app: docs
+                app-version: docs-1
+                deploy-strategy: v2
+                main-app: docs
+                owner: tam-lam
+                phase: live
+                project: layarmicrosite
+                updated-by: tam-lam
+                workspace: topgroup
+        spec:
+            imagePullSecrets:
+                - name: digitopdockerhub-docker-registry-key
+            containers:
+                - name: docs
+                  image: reg.ult.vn/digitop/goclaw-user-docs:dev
+                  imagePullPolicy: Always
+                  ports:
+                      - containerPort: 80
+                        protocol: TCP
+                  env:
+                      - name: PORT
+                        value: "80"
+                  envFrom:
+                      - configMapRef:
+                            name: docs-config
+                  resources:
+                      requests:
+                          memory: "128Mi"
+                          cpu: "100m"
+                      limits:
+                          memory: "512Mi"
+                          cpu: "1000m"
+                  terminationMessagePath: /dev/termination-log
+                  terminationMessagePolicy: File
+            restartPolicy: Always
+            terminationGracePeriodSeconds: 120
+            dnsPolicy: ClusterFirst
+            securityContext: {}
+            schedulerName: default-scheduler
+---
+apiVersion: v1
+kind: Service
+metadata:
+    name: docs
+    namespace: goclaw
+    labels:
+        app: docs
+        app-version: docs-1
+        deploy-strategy: v2
+        main-app: docs
+        owner: tam-lam
+        phase: live
+        project: layarmicrosite
+        updated-by: tam-lam
+        workspace: topgroup
+spec:
+    type: ClusterIP
+    sessionAffinity: ClientIP
+    sessionAffinityConfig:
+        clientIP:
+            timeoutSeconds: 10800
+    selector:
+        app: docs
+    ports:
+        - port: 80
+          targetPort: 80
+          protocol: TCP
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+    name: docs
+    namespace: goclaw
+    labels:
+        app: docs
+        app-version: docs-1
+        deploy-strategy: v2
+        main-app: docs
+        owner: tam-lam
+        phase: live
+        project: layarmicrosite
+        updated-by: tam-lam
+        workspace: topgroup
+    annotations:
+        cert-manager.io/cluster-issuer: letsencrypt-prod
+        nginx.ingress.kubernetes.io/limit-rps: "200"
+        nginx.ingress.kubernetes.io/proxy-body-size: 100m
+        nginx.ingress.kubernetes.io/server-snippet: "location ~ /.git { deny all; return 403; }"
+spec:
+    ingressClassName: nginx
+    tls:
+        - hosts:
+              - docs.goclaw.diginext.site
+          secretName: tls-docs-goclaw-diginext-site
+    rules:
+        - host: docs.goclaw.diginext.site
+          http:
+              paths:
+                  - path: /
+                    pathType: Prefix
+                    backend:
+                        service:
+                            name: docs
+                            port:
+                                number: 80
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+    name: docs-hpa
+    namespace: goclaw
+    labels:
+        app: docs
+spec:
+    scaleTargetRef:
+        apiVersion: apps/v1
+        kind: Deployment
+        name: docs
+    minReplicas: 1
+    maxReplicas: 2
+    metrics:
+        - type: Resource
+          resource:
+              name: cpu
+              target:
+                  type: Utilization
+                  averageUtilization: 70
+        - type: Resource
+          resource:
+              name: memory
+              target:
+                  type: Utilization
+                  averageUtilization: 80
+    behavior:
+        scaleUp:
+            stabilizationWindowSeconds: 30
+            policies:
+                - type: Percent
+                  value: 100
+                  periodSeconds: 15
+                - type: Pods
+                  value: 5
+                  periodSeconds: 15
+            selectPolicy: Max
+        scaleDown:
+            stabilizationWindowSeconds: 300
+            policies:
+                - type: Percent
+                  value: 50
+                  periodSeconds: 60
