@@ -52,9 +52,6 @@ spec:
                   env:
                       - name: PORT
                         value: "80"
-                  envFrom:
-                      - configMapRef:
-                            name: docs-config
                   resources:
                       requests:
                           memory: "128Mi"
