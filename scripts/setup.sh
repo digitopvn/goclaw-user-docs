@@ -533,5 +533,83 @@ if [ "$MODE" = "native" ]; then
   export GOCLAW_POSTGRES_DSN="$PG_DSN"
   goclaw onboard
 
+  # ── Web UI Dashboard ──
+  echo
+  bold "── Web UI Dashboard ──"
+  echo
+  if ask_yn "Install web dashboard UI?" "y"; then
+    if command -v docker &>/dev/null; then
+      GOCLAW_PORT="${GOCLAW_PORT:-18790}"
+      UI_PORT="${GOCLAW_UI_PORT:-3000}"
+      info "Starting GoClaw Web UI on port ${UI_PORT}..."
+      docker rm -f goclaw-ui 2>/dev/null || true
+      docker run -d \
+        --name goclaw-ui \
+        --restart unless-stopped \
+        -p "${UI_PORT}:80" \
+        -e GOCLAW_API_URL="http://host.docker.internal:${GOCLAW_PORT}" \
+        --add-host=host.docker.internal:host-gateway \
+        ghcr.io/nextlevelbuilder/goclaw-web:latest
+      success "Dashboard running at http://localhost:${UI_PORT}"
+    else
+      warn "Docker not available — cannot run web UI container."
+      info "Install Docker to enable the dashboard, or use the API directly."
+    fi
+  fi
+
+  # ── Systemd Service ──
+  echo
+  bold "── Systemd Service ──"
+  echo
+  if [ "$(id -u)" = "0" ] && command -v systemctl &>/dev/null; then
+    if ask_yn "Create systemd service (auto-start on boot)?" "y"; then
+      ENV_LOCAL="$(pwd)/.env.local"
+      MIGRATIONS_DIR="${GOCLAW_MIGRATIONS_DIR:-/usr/local/share/goclaw/migrations}"
+
+      cat > /etc/systemd/system/goclaw.service <<SYSTEMD
+[Unit]
+Description=GoClaw AI Gateway
+After=network.target postgresql.service
+Wants=network.target
+
+[Service]
+Type=simple
+EnvironmentFile=${ENV_LOCAL}
+Environment=GOCLAW_MIGRATIONS_DIR=${MIGRATIONS_DIR}
+ExecStart=/usr/local/bin/goclaw
+Restart=on-failure
+RestartSec=5
+LimitNOFILE=65535
+WorkingDirectory=$(pwd)
+
+[Install]
+WantedBy=multi-user.target
+SYSTEMD
+
+      systemctl daemon-reload
+      systemctl enable goclaw
+      systemctl start goclaw
+      success "Service created and started."
+      echo
+      echo "  Manage with:"
+      echo "    systemctl status goclaw"
+      echo "    systemctl restart goclaw"
+      echo "    journalctl -u goclaw -f"
+    fi
+  else
+    if ! command -v systemctl &>/dev/null; then
+      warn "systemd not available on this system."
+    else
+      warn "Not running as root — skipping systemd setup."
+      info "To create service manually, run setup.sh as root."
+    fi
+  fi
+
+  echo
+  bold "╔══════════════════════════════════════════════╗"
+  bold "║         Native Setup Complete!               ║"
+  bold "╚══════════════════════════════════════════════╝"
+  echo
+
   exit 0
 fi
