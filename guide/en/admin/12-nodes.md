@@ -106,6 +106,6 @@ In environments with multiple GoClaw instances running in parallel (horizontal s
 
 ## See Also
 
-- [Channel Configuration](../admin/03-channels.md)
+- [Channel Configuration](../admin/02-channels-setup.md)
 - [WebSocket RPC — Pairing methods](../reference/02-websocket-rpc.md)
-- [Security and Authorization](../admin/05-security.md)
+- [Security and Authorization](../admin/05-bao-mat.md)

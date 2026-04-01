@@ -110,6 +110,6 @@ Click **Refresh** to sync with the server.
 
 ## See Also
 
-- [Security and Authorization](../admin/05-security.md)
+- [Security and Authorization](../admin/05-bao-mat.md)
 - [API Reference — Multi-tenant Headers](../reference/01-api-reference.md)
-- [Configuration Reference](../reference/03-configuration.md)
+- [Configuration Reference](../reference/03-cau-hinh.md)

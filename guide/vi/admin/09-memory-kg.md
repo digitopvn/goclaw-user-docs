@@ -119,5 +119,5 @@ Agent dùng semantic search để lấy tài liệu liên quan trước khi tạ
 
 ## Xem Thêm
 
-- [Cấu hình providers](../admin/02-providers.md)
+- [Cấu hình providers](../admin/01-providers.md)
 - [Cấu hình tham chiếu — Section agents.defaults](../reference/03-cau-hinh.md)

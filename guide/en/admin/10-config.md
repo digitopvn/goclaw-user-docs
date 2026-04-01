@@ -175,6 +175,6 @@ The config page supports JSON5 — an extended JSON format:
 
 ## See Also
 
-- [Full Configuration Reference](../reference/03-configuration.md)
+- [Full Configuration Reference](../reference/03-cau-hinh.md)
 - [TTS Configuration](../admin/08-tts.md)
 - [WebSocket RPC — config methods](../reference/02-websocket-rpc.md)

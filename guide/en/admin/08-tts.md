@@ -115,5 +115,5 @@ Configure TTS using Edge TTS (free), auto-play for inbound messages:
 
 ## See Also
 
-- [Configuration Reference — TTS section](../reference/03-configuration.md#7-section-tts)
-- [Provider Configuration](../admin/02-providers.md)
+- [Configuration Reference — TTS section](../reference/03-cau-hinh.md#7-section-tts)
+- [Provider Configuration](../admin/01-providers.md)

@@ -310,7 +310,7 @@ if [ "$MODE" = "docker" ]; then
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-goclaw}
       POSTGRES_DB: ${POSTGRES_DB:-goclaw}
     volumes:
-      - postgres-data:/var/lib/postgresql/data
+      - postgres-data:/var/lib/postgresql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-goclaw} -d ${POSTGRES_DB:-goclaw}"]
       interval: 5s

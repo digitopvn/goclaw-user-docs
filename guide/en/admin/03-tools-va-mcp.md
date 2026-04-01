@@ -59,12 +59,12 @@ Create tools from shell commands without recompiling or restarting:
    - **Name**: tool name (used in LLM tool calls)
    - **Description**: description so the LLM knows when to use it
    - **Parameters**: JSON Schema for parameters
-   - **Command**: shell command, use `{{.param_name}}` for parameter placeholders
+   - **Command**: shell command, use <code v-pre>{{.param_name}}</code> for parameter placeholders
    - **Timeout**: default 60 seconds
    - **Scope**: Global (all agents) or per-agent
 3. **Environment Variables**: encrypted with AES-256-GCM, injected into the process at runtime
 
-Example: `dig +short {{.record_type}} {{.domain}}`
+Example: <code v-pre>dig +short {{.record_type}} {{.domain}}</code>
 
 Security: parameters are shell-escaped, deny patterns from the `exec` tool apply, env vars are never displayed in plain text.
 

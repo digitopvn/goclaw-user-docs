@@ -110,6 +110,6 @@ Nhấn **Làm mới** để đồng bộ với server.
 
 ## Xem Thêm
 
-- [Bảo mật và phân quyền](../admin/05-security.md)
+- [Bảo mật và phân quyền](../admin/05-bao-mat.md)
 - [API Reference — Headers multi-tenant](../reference/01-api-reference.md)
 - [Cấu hình tham chiếu](../reference/03-cau-hinh.md)

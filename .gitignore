@@ -1,3 +1,7 @@
 node_modules/
 .next/
 .source/
+guide/.vitepress/cache/
+guide/.vitepress/dist/
+package-lock.json
+bun.lock

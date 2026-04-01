@@ -59,12 +59,12 @@ Tạo tool từ shell command không cần recompile hay restart:
    - **Name**: tên tool (dùng trong LLM tool call)
    - **Description**: mô tả để LLM hiểu khi nào dùng
    - **Parameters**: JSON Schema cho tham số
-   - **Command**: lệnh shell, dùng `{{.param_name}}` cho tham số
+   - **Command**: lệnh shell, dùng <code v-pre>{{.param_name}}</code> cho tham số
    - **Timeout**: mặc định 60 giây
    - **Scope**: Global (tất cả agents) hoặc per-agent
 3. **Environment Variables**: lưu mã hóa AES-256-GCM, inject vào process khi chạy
 
-Ví dụ: `dig +short {{.record_type}} {{.domain}}`
+Ví dụ: <code v-pre>dig +short {{.record_type}} {{.domain}}</code>
 
 Bảo mật: tham số được shell-escape, áp dụng deny pattern như `exec` tool, env vars không bao giờ hiển thị plain text.
 

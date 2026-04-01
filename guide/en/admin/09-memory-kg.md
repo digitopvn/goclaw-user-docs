@@ -119,5 +119,5 @@ The agent uses semantic search to retrieve relevant documents before generating 
 
 ## See Also
 
-- [Provider Configuration](../admin/02-providers.md)
-- [Configuration Reference — agents.defaults section](../reference/03-configuration.md)
+- [Provider Configuration](../admin/01-providers.md)
+- [Configuration Reference — agents.defaults section](../reference/03-cau-hinh.md)
