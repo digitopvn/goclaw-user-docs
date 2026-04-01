@@ -15,6 +15,7 @@
 set -euo pipefail
 
 REPO="nextlevelbuilder/goclaw"
+SCRIPTS_BASE="https://raw.githubusercontent.com/${REPO}/main/scripts"
 MODE=""
 PG_SOURCE=""        # bundled | external
 WITH_UI=false
@@ -23,6 +24,18 @@ NONINTERACTIVE=false
 # ── Colors ──
 RED='\033[0;31m'; YELLOW='\033[1;33m'; GREEN='\033[0;32m'
 CYAN='\033[0;36m'; BOLD='\033[1m'; RESET='\033[0m'
+
+# ── Run a sibling script (local file first, fallback to remote) ──
+run_script() {
+  local name="$1"; shift
+  local local_path
+  local_path="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" 2>/dev/null && pwd)/${name}" 2>/dev/null || true
+  if [ -f "$local_path" ]; then
+    bash "$local_path" "$@"
+  else
+    bash <(curl -fsSL "${SCRIPTS_BASE}/${name}") "$@"
+  fi
+}
 
 info()    { echo -e "${CYAN}  $*${RESET}"; }
 success() { echo -e "${GREEN}  ✓ $*${RESET}"; }
@@ -135,8 +148,7 @@ if [ "$MODE" = "lite" ]; then
   if [ "$OS" = "darwin" ]; then
     info "Running macOS installer..."
     echo
-    SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-    bash "${SCRIPT_DIR}/install-lite.sh"
+    run_script "install-lite.sh"
   else
     warn "Lite desktop installer currently supports macOS only."
     echo "  Windows: download the .zip from https://github.com/${REPO}/releases"
@@ -448,8 +460,7 @@ if [ "$MODE" = "native" ]; then
   if ! $has_goclaw; then
     info "GoClaw binary not found. Installing..."
     echo
-    SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-    bash "${SCRIPT_DIR}/install.sh"
+    run_script "install.sh"
     echo
   else
     VER="$(goclaw version 2>/dev/null || echo unknown)"
