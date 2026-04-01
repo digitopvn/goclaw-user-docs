@@ -231,5 +231,5 @@ curl http://localhost:18790/health
 
 ## See Also
 
-- [03-login.md](./03-login.md) — Sign in and select tenant
-- [04-setup-wizard.md](./04-setup-wizard.md) — Detailed setup wizard guide
+- [Sign in and select tenant](./03-login.md)
+- [Detailed setup wizard guide](./04-setup-wizard.md)

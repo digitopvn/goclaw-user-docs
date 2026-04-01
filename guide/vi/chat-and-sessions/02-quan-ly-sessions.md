@@ -100,5 +100,5 @@ Cảnh báo: Xóa session không thể phục hồi.
 
 ## Xem thêm
 
-- [01-chat-co-ban.md](./01-chat-co-ban.md) — Giao diện chat chính
-- [03-kenh-ket-noi.md](./03-kenh-ket-noi.md) — Sessions qua các kênh ngoài
+- [Giao diện chat chính](./01-chat-co-ban.md)
+- [Sessions qua các kênh ngoài](./03-kenh-ket-noi.md)

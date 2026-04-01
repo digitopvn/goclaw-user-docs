@@ -86,5 +86,5 @@ Result: chat history from both channels is linked to the same profile.
 
 ## See Also
 
-- [guide/en/teams/01-teams.md](01-teams.md) — Managing agent teams
-- [guide/en/admin/02-channels-setup.md](../admin/02-channels-setup.md) — Channel configuration
+- [Managing agent teams](01-teams.md)
+- [Channel configuration](../admin/02-channels-setup.md)

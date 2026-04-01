@@ -170,5 +170,5 @@ Khi nhận voice/audio, Telegram channel:
 
 ## Xem Thêm
 
-- [guide/vi/teams/02-contacts.md](../teams/02-contacts.md) — Quản lý danh bạ liên hệ
-- [guide/vi/admin/05-bao-mat.md](05-bao-mat.md) — Chính sách DM và bảo mật
+- [Quản lý danh bạ liên hệ](../teams/02-contacts.md)
+- [Chính sách DM và bảo mật](05-bao-mat.md)

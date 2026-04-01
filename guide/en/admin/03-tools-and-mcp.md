@@ -198,5 +198,5 @@ Then deny lists are applied (global, agent), and finally alsoAllow is applied. T
 
 ## See Also
 
-- [guide/en/admin/05-security.md](05-security.md) — Exec approval and shell deny patterns
-- [guide/en/admin/01-providers.md](01-providers.md) — Configuring LLM providers
+- [Exec approval and shell deny patterns](05-security.md)
+- [Configuring LLM providers](01-providers.md)

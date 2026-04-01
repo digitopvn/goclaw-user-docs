@@ -145,6 +145,6 @@ Mỗi request có thể có danh sách tools được phép riêng (ví dụ: Te
 
 ## Xem thêm
 
-- [01-tong-quan-agents.md](./01-tong-quan-agents.md) — Khái niệm agent và skills
-- [02-cau-hinh-agent.md](./02-cau-hinh-agent.md) — Cấu hình agent nâng cao
-- [04-codex-pool.md](./04-codex-pool.md) — Codex Pool cho ChatGPT OAuth routing
+- [Khái niệm agent và skills](./01-tong-quan-agents.md)
+- [Cấu hình agent nâng cao](./02-cau-hinh-agent.md)
+- [Codex Pool cho ChatGPT OAuth routing](./04-codex-pool.md)

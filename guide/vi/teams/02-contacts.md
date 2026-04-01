@@ -86,5 +86,5 @@ Kết quả: lịch sử chat từ cả hai kênh được gắn vào cùng mộ
 
 ## Xem Thêm
 
-- [guide/vi/teams/01-doi-nhom.md](01-doi-nhom.md) — Quản lý đội nhóm
-- [guide/vi/admin/02-channels-setup.md](../admin/02-channels-setup.md) — Cấu hình kênh kết nối
+- [Quản lý đội nhóm](01-doi-nhom.md)
+- [Cấu hình kênh kết nối](../admin/02-channels-setup.md)

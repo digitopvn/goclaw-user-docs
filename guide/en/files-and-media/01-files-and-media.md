@@ -147,5 +147,5 @@ Token is short-lived, ensuring only authorized users can view files.
 
 ## See Also
 
-- [guide/en/teams/01-teams.md](../teams/01-teams.md) — Team workspace
-- [guide/en/admin/03-tools-and-mcp.md](../admin/03-tools-and-mcp.md) — Full tools system
+- [Team workspace](../teams/01-teams.md)
+- [Full tools system](../admin/03-tools-and-mcp.md)

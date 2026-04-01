@@ -113,6 +113,6 @@ Start a chat with the "Assistant" agent:
 
 ## See Also
 
-- [02-session-management.md](./02-session-management.md) — Managing and searching sessions
-- [03-channels.md](./03-channels.md) — Chat via Telegram, Discord, Slack
-- [../agents/01-agents-overview.md](../agents/01-agents-overview.md) — Understanding agents and skills
+- [Managing and searching sessions](./02-session-management.md)
+- [Chat via Telegram, Discord, Slack](./03-channels.md)
+- [Understanding agents and skills](../agents/01-agents-overview.md)

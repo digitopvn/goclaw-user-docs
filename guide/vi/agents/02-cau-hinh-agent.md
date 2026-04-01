@@ -162,6 +162,6 @@ Nhấn **Chạy thử** để kiểm tra ngay lập tức. Xem lịch sử heart
 
 ## Xem thêm
 
-- [01-tong-quan-agents.md](./01-tong-quan-agents.md) — Khái niệm cơ bản về agents
-- [03-skills.md](./03-skills.md) — Thêm skills cho agent
-- [04-codex-pool.md](./04-codex-pool.md) — Cấu hình Codex Pool routing
+- [Khái niệm cơ bản về agents](./01-tong-quan-agents.md)
+- [Thêm skills cho agent](./03-skills.md)
+- [Cấu hình Codex Pool routing](./04-codex-pool.md)

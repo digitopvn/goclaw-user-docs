@@ -156,6 +156,6 @@ Tất cả được mã hóa AES-256-GCM và không đưa vào file export.
 
 ## Xem Thêm
 
-- [guide/vi/admin/01-providers.md](01-providers.md) — Nhập lại LLM provider credentials
-- [guide/vi/admin/03-tools-va-mcp.md](03-tools-va-mcp.md) — Nhập lại MCP credentials
-- [guide/vi/admin/05-bao-mat.md](05-bao-mat.md) — Mã hóa AES-256-GCM
+- [Nhập lại LLM provider credentials](01-providers.md)
+- [Nhập lại MCP credentials](03-tools-va-mcp.md)
+- [Mã hóa AES-256-GCM](05-bao-mat.md)

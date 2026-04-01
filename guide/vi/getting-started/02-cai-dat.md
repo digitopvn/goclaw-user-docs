@@ -231,5 +231,5 @@ curl http://localhost:18790/health
 
 ## Xem thêm
 
-- [03-dang-nhap.md](./03-dang-nhap.md) — Đăng nhập và chọn tổ chức
-- [04-setup-wizard.md](./04-setup-wizard.md) — Hướng dẫn setup wizard chi tiết
+- [Đăng nhập và chọn tổ chức](./03-dang-nhap.md)
+- [Hướng dẫn setup wizard chi tiết](./04-setup-wizard.md)

@@ -100,5 +100,5 @@ Warning: Deleting a session cannot be undone.
 
 ## See Also
 
-- [01-basic-chat.md](./01-basic-chat.md) — Main chat interface
-- [03-channels.md](./03-channels.md) — Sessions via external channels
+- [Main chat interface](./01-basic-chat.md)
+- [Sessions via external channels](./03-channels.md)

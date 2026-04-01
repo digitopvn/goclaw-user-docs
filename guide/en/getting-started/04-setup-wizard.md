@@ -137,6 +137,6 @@ Sign in -> /login
 
 ## See Also
 
-- [../chat-and-sessions/01-basic-chat.md](../chat-and-sessions/01-basic-chat.md) — Getting started with agent chat
-- [../agents/01-agents-overview.md](../agents/01-agents-overview.md) — Understanding agents in depth
-- [../agents/02-agent-config.md](../agents/02-agent-config.md) — Advanced agent configuration
+- [Getting started with agent chat](../chat-and-sessions/01-basic-chat.md)
+- [Understanding agents in depth](../agents/01-agents-overview.md)
+- [Advanced agent configuration](../agents/02-agent-config.md)

@@ -94,5 +94,5 @@ Hiển thị sau khi đăng nhập nếu người dùng thuộc nhiều tổ ch�
 
 ## Xem thêm
 
-- [04-setup-wizard.md](./04-setup-wizard.md) — Setup wizard sau khi đăng nhập lần đầu
-- [02-cai-dat.md](./02-cai-dat.md) — Cấu hình Gateway token khi cài đặt
+- [Setup wizard sau khi đăng nhập lần đầu](./04-setup-wizard.md)
+- [Cấu hình Gateway token khi cài đặt](./02-cai-dat.md)

@@ -218,5 +218,5 @@ Khi OTel được cấu hình, span ghi cả vào PostgreSQL lẫn OTLP backend.
 
 ## Xem Thêm
 
-- [guide/vi/admin/05-bao-mat.md](05-bao-mat.md) — Security events và injection detection
-- [guide/vi/admin/04-cron.md](04-cron.md) — Run log của cron jobs
+- [Security events và injection detection](05-bao-mat.md)
+- [Run log của cron jobs](04-cron.md)

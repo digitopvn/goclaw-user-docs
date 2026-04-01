@@ -170,5 +170,5 @@ When receiving voice/audio, the Telegram channel:
 
 ## See Also
 
-- [guide/en/teams/02-contacts.md](../teams/02-contacts.md) — Contact management
-- [guide/en/admin/05-security.md](05-security.md) — DM policies and security
+- [Contact management](../teams/02-contacts.md)
+- [DM policies and security](05-security.md)

@@ -115,6 +115,6 @@ Nút **Kiểm tra & Tạo** kiểm tra kết nối model trước khi tạo. N�
 
 ## Xem thêm
 
-- [02-cau-hinh-agent.md](./02-cau-hinh-agent.md) — Cấu hình model, behavior, sandbox
-- [03-skills.md](./03-skills.md) — Skills và tools
-- [../chat-and-sessions/01-chat-co-ban.md](../chat-and-sessions/01-chat-co-ban.md) — Chat với agent
+- [Cấu hình model, behavior, sandbox](./02-cau-hinh-agent.md)
+- [Skills và tools](./03-skills.md)
+- [Chat với agent](../chat-and-sessions/01-chat-co-ban.md)

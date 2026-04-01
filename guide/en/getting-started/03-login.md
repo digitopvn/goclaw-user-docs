@@ -94,5 +94,5 @@ Displayed after sign-in if the user belongs to multiple tenants.
 
 ## See Also
 
-- [04-setup-wizard.md](./04-setup-wizard.md) — Setup wizard after first sign-in
-- [02-installation.md](./02-installation.md) — Configuring the Gateway token during installation
+- [Setup wizard after first sign-in](./04-setup-wizard.md)
+- [Configuring the Gateway token during installation](./02-installation.md)

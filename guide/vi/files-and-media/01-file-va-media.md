@@ -147,5 +147,5 @@ Token có thời hạn ngắn, đảm bảo chỉ người có quyền mới xem
 
 ## Xem Thêm
 
-- [guide/vi/teams/01-doi-nhom.md](../teams/01-doi-nhom.md) — Không gian làm việc nhóm
-- [guide/vi/admin/03-tools-va-mcp.md](../admin/03-tools-va-mcp.md) — Hệ thống tools đầy đủ
+- [Không gian làm việc nhóm](../teams/01-doi-nhom.md)
+- [Hệ thống tools đầy đủ](../admin/03-tools-va-mcp.md)
