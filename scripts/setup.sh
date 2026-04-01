@@ -81,6 +81,22 @@ bold "║          GoClaw Setup Wizard                 ║"
 bold "╚══════════════════════════════════════════════╝"
 echo
 
+# ── Detect piped/non-interactive stdin ──
+if [ ! -t 0 ] && [ -z "$MODE" ]; then
+  error "Interactive mode required — stdin is not a terminal."
+  echo
+  echo "  Usage: download first, then run:"
+  echo "    curl -sSL https://raw.githubusercontent.com/digitopvn/goclaw-user-docs/main/scripts/setup.sh -o setup.sh"
+  echo "    chmod +x setup.sh"
+  echo "    ./setup.sh"
+  echo
+  echo "  Or specify mode directly:"
+  echo "    curl -sSL ... | bash -s -- --mode docker"
+  echo "    curl -sSL ... | bash -s -- --mode native"
+  echo "    curl -sSL ... | bash -s -- --mode lite"
+  exit 1
+fi
+
 # ── Mode selection ──
 if [ -z "$MODE" ]; then
   bold "── Choose deployment mode ──"
