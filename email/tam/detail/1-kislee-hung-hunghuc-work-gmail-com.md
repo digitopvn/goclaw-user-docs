@@ -30,3 +30,23 @@ Dạ có phải anh Hùng cty KISLEE
 Anh có Zalo không cho em xin add nếu a có cần liên hệ nhắn em trực tiếp luôn ah
 
 Anh cần gì thì liên hệ em qua Zalo 0923908321 nha. Em chào anh!
+
+---
+
+**BUSY call:**
+**Sent sms:**
+
+## Tin nhắn gửi sau cuộc gọi (Zalo/SMS)
+
+> Anh Hùng ơi, em Tâm bên Digitop.AI. Em gọi anh không được nên nhắn tin ạ.
+>
+> Bên em vừa gửi email cho anh tại hunghuc.work@gmail.com về bảng khảo sát nhu cầu AI Agent. Anh check mail giúp em nha, chỉ mất 2 phút điền thôi ạ.
+>
+> Điền xong bên em sẽ chuẩn bị cấu hình GoClaw Enterprise cho KISLEE luôn ạ.
+>
+> Anh cần gì liên hệ em qua Zalo 0923908321 nha. Cảm ơn anh!
+
+
+Em gọi cho anh về dịch vụ GoClaw Enterprise mà anh pre-order không được nên nhắn tin. 
+
+Anh Hùng ơi, em là Tâm bên Digitop.AI. Bên em vừa gửi email cho anh tại hunghuc.work@gmail.com về bảng khảo sát nhu cầu AI Agent về dịch vụ GoClaw Enterprise mà anh pre-order. Em cần anh điền thông tin để bên em nắm rõ nhu cầu của cty, từ đó chuẩn bị và cấu hình AI Agent cho phù hợp nhất. Em cám ơn, chúc anh ngày làm việc hiệu quả.

@@ -466,7 +466,7 @@ if [ "$MODE" = "native" ]; then
   if [ -n "$PG_DSN" ]; then
     info "GOCLAW_POSTGRES_DSN is set in environment. Using it."
   else
-    read -rp "  Choice [1-3, default=1]: " pg_opt
+    read -rp "  Choice [1-3, default=1]: " pg_opt </dev/tty
     case "${pg_opt:-1}" in
       1)
         echo

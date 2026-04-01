@@ -36,3 +36,9 @@ Anh có Zalo không cho em xin add nếu a có cần liên hệ nhắn em trực
 
 
 Anh cần gì thì liên hệ em qua Zalo 0923908321 nha. Em chào anh!
+
+
+**BUSY call:**
+**Sent sms:**
+
+Anh Đạt ơi, em là Tâm bên Digitop.AI. Bên em có gửi email cho anh tại datpt@dmobin.com về bảng khảo sát nhu cầu AI Agent về dịch vụ GoClaw Enterprise mà anh pre-order. Em cần anh điền thông tin để bên em nắm rõ nhu cầu của cty, từ đó chuẩn bị và cấu hình AI Agent cho phù hợp nhất. Em cám ơn, chúc anh ngày làm việc hiệu quả.
