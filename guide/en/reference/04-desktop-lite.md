@@ -220,6 +220,6 @@ ui/desktop/
 
 ## See Also
 
-- [Configuration Reference](./03-cau-hinh.md)
-- [Standard vs Lite Feature Comparison](../getting-started/02-cai-dat.md)
+- [Configuration Reference](./03-configuration.md)
+- [Standard vs Lite Feature Comparison](../getting-started/02-installation.md)
 - GitHub Releases: `https://github.com/nextlevelbuilder/goclaw/releases`

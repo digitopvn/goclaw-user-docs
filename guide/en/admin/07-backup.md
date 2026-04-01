@@ -157,5 +157,5 @@ All are encrypted with AES-256-GCM and are not included in export files.
 ## See Also
 
 - [guide/en/admin/01-providers.md](01-providers.md) — Re-entering LLM provider credentials
-- [guide/en/admin/03-tools-va-mcp.md](03-tools-va-mcp.md) — Re-entering MCP credentials
-- [guide/en/admin/05-bao-mat.md](05-bao-mat.md) — AES-256-GCM encryption
+- [guide/en/admin/03-tools-and-mcp.md](03-tools-and-mcp.md) — Re-entering MCP credentials
+- [guide/en/admin/05-security.md](05-security.md) — AES-256-GCM encryption

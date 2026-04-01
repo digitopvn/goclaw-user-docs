@@ -165,5 +165,5 @@ Configuration in `config.json`: `gateway.rate_limit_rpm`. Requests exceeding the
 
 ## See Also
 
-- [guide/en/admin/03-tools-va-mcp.md](03-tools-va-mcp.md) — Exec approval details
-- [guide/en/admin/06-theo-doi.md](06-theo-doi.md) — Security event logs
+- [guide/en/admin/03-tools-and-mcp.md](03-tools-and-mcp.md) — Exec approval details
+- [guide/en/admin/06-monitoring.md](06-monitoring.md) — Security event logs

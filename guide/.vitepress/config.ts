@@ -11,7 +11,7 @@ export default defineConfig({
       link: "/en/",
       themeConfig: {
         nav: [
-          { text: "Guide", link: "/en/getting-started/01-gioi-thieu" },
+          { text: "Guide", link: "/en/getting-started/01-introduction" },
           { text: "API Reference", link: "/en/reference/01-api-reference" },
         ],
         sidebar: {
@@ -19,25 +19,25 @@ export default defineConfig({
             {
               text: "Getting Started",
               items: [
-                { text: "Introduction", link: "/en/getting-started/01-gioi-thieu" },
-                { text: "Installation", link: "/en/getting-started/02-cai-dat" },
-                { text: "Sign In & Select Tenant", link: "/en/getting-started/03-dang-nhap" },
+                { text: "Introduction", link: "/en/getting-started/01-introduction" },
+                { text: "Installation", link: "/en/getting-started/02-installation" },
+                { text: "Sign In & Select Tenant", link: "/en/getting-started/03-login" },
                 { text: "Setup Wizard & Dashboard", link: "/en/getting-started/04-setup-wizard" },
               ],
             },
             {
               text: "Chat & Sessions",
               items: [
-                { text: "Basic Chat", link: "/en/chat-and-sessions/01-chat-co-ban" },
-                { text: "Managing Sessions", link: "/en/chat-and-sessions/02-quan-ly-sessions" },
-                { text: "Channels", link: "/en/chat-and-sessions/03-kenh-ket-noi" },
+                { text: "Basic Chat", link: "/en/chat-and-sessions/01-basic-chat" },
+                { text: "Managing Sessions", link: "/en/chat-and-sessions/02-session-management" },
+                { text: "Channels", link: "/en/chat-and-sessions/03-channels" },
               ],
             },
             {
               text: "Agents",
               items: [
-                { text: "Agents Overview", link: "/en/agents/01-tong-quan-agents" },
-                { text: "Agent Configuration", link: "/en/agents/02-cau-hinh-agent" },
+                { text: "Agents Overview", link: "/en/agents/01-agents-overview" },
+                { text: "Agent Configuration", link: "/en/agents/02-agent-config" },
                 { text: "Skills", link: "/en/agents/03-skills" },
                 { text: "Codex Pool", link: "/en/agents/04-codex-pool" },
               ],
@@ -45,14 +45,14 @@ export default defineConfig({
             {
               text: "Teams",
               items: [
-                { text: "Agent Teams", link: "/en/teams/01-doi-nhom" },
+                { text: "Agent Teams", link: "/en/teams/01-teams" },
                 { text: "Contacts", link: "/en/teams/02-contacts" },
               ],
             },
             {
               text: "Files & Media",
               items: [
-                { text: "Files and Media", link: "/en/files-and-media/01-file-va-media" },
+                { text: "Files and Media", link: "/en/files-and-media/01-files-and-media" },
               ],
             },
             {
@@ -61,11 +61,11 @@ export default defineConfig({
               items: [
                 { text: "LLM Providers", link: "/en/admin/01-providers" },
                 { text: "Channels Setup", link: "/en/admin/02-channels-setup" },
-                { text: "Tools & MCP Servers", link: "/en/admin/03-tools-va-mcp" },
+                { text: "Tools & MCP Servers", link: "/en/admin/03-tools-and-mcp" },
                 { text: "Cron & Scheduling", link: "/en/admin/04-cron" },
-                { text: "Security & Access Control", link: "/en/admin/05-bao-mat" },
-                { text: "Monitoring & Logs", link: "/en/admin/06-theo-doi" },
-                { text: "Backup & Restore", link: "/en/admin/07-sao-luu" },
+                { text: "Security & Access Control", link: "/en/admin/05-security" },
+                { text: "Monitoring & Logs", link: "/en/admin/06-monitoring" },
+                { text: "Backup & Restore", link: "/en/admin/07-backup" },
                 { text: "Text-to-Speech", link: "/en/admin/08-tts" },
                 { text: "Memory & Knowledge Graph", link: "/en/admin/09-memory-kg" },
                 { text: "System Configuration", link: "/en/admin/10-config" },
@@ -80,7 +80,7 @@ export default defineConfig({
               items: [
                 { text: "HTTP REST API", link: "/en/reference/01-api-reference" },
                 { text: "WebSocket RPC", link: "/en/reference/02-websocket-rpc" },
-                { text: "Configuration Reference", link: "/en/reference/03-cau-hinh" },
+                { text: "Configuration Reference", link: "/en/reference/03-configuration" },
                 { text: "Desktop Edition (Lite)", link: "/en/reference/04-desktop-lite" },
               ],
             },

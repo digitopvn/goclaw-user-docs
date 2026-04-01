@@ -218,5 +218,5 @@ When OTel is configured, spans are written to both PostgreSQL and the OTLP backe
 
 ## See Also
 
-- [guide/en/admin/05-bao-mat.md](05-bao-mat.md) — Security events and injection detection
+- [guide/en/admin/05-security.md](05-security.md) — Security events and injection detection
 - [guide/en/admin/04-cron.md](04-cron.md) — Cron job run logs

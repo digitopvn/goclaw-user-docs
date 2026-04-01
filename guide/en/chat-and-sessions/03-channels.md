@@ -146,5 +146,5 @@ Admins can enable/disable channels via `channels.toggle` (requires admin permiss
 
 ## See Also
 
-- [01-chat-co-ban.md](./01-chat-co-ban.md) — Chat interface on Web
-- [02-quan-ly-sessions.md](./02-quan-ly-sessions.md) — Managing sessions
+- [01-basic-chat.md](./01-basic-chat.md) — Chat interface on Web
+- [02-session-management.md](./02-session-management.md) — Managing sessions

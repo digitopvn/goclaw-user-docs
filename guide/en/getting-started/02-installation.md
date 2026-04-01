@@ -81,9 +81,9 @@ The wizard will prompt for the following in order:
 Result: a `.env.local` file is created with the necessary environment variables:
 
 ```bash
-GOCLAW_GATEWAY_TOKEN=<token>
-GOCLAW_ENCRYPTION_KEY=<key>
-GOCLAW_POSTGRES_DSN=postgres://...
+GOCLAW_GATEWAY_TOKEN=
+GOCLAW_ENCRYPTION_KEY=
+GOCLAW_POSTGRES_DSN=
 ```
 
 Database migrations are also run automatically during this step.
@@ -231,5 +231,5 @@ curl http://localhost:18790/health
 
 ## See Also
 
-- [03-dang-nhap.md](./03-dang-nhap.md) — Sign in and select tenant
+- [03-login.md](./03-login.md) — Sign in and select tenant
 - [04-setup-wizard.md](./04-setup-wizard.md) — Detailed setup wizard guide

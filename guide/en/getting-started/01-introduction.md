@@ -111,5 +111,5 @@ No Go, PostgreSQL, or Docker required.
 
 ## See Also
 
-- [02-cai-dat.md](./02-cai-dat.md) — Installation and starting GoClaw (Standard + Lite)
-- [03-dang-nhap.md](./03-dang-nhap.md) — Sign in and select tenant
+- [02-installation.md](./02-installation.md) — Installation and starting GoClaw (Standard + Lite)
+- [03-login.md](./03-login.md) — Sign in and select tenant

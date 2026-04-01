@@ -135,4 +135,4 @@ Clearing a group is permanent — it cannot be undone. Only clear when you are c
 
 - [System Configuration — pending_compaction](../admin/10-config.md)
 - [Channel Configuration](../admin/02-channels-setup.md)
-- [Monitoring and Logs](../admin/06-theo-doi.md)
+- [Monitoring and Logs](../admin/06-monitoring.md)

@@ -137,6 +137,6 @@ Sign in -> /login
 
 ## See Also
 
-- [../chat-and-sessions/01-chat-co-ban.md](../chat-and-sessions/01-chat-co-ban.md) — Getting started with agent chat
-- [../agents/01-tong-quan-agents.md](../agents/01-tong-quan-agents.md) — Understanding agents in depth
-- [../agents/02-cau-hinh-agent.md](../agents/02-cau-hinh-agent.md) — Advanced agent configuration
+- [../chat-and-sessions/01-basic-chat.md](../chat-and-sessions/01-basic-chat.md) — Getting started with agent chat
+- [../agents/01-agents-overview.md](../agents/01-agents-overview.md) — Understanding agents in depth
+- [../agents/02-agent-config.md](../agents/02-agent-config.md) — Advanced agent configuration

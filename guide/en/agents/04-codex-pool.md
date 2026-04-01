@@ -109,5 +109,5 @@ Result:
 
 ## See Also
 
-- [02-cau-hinh-agent.md](./02-cau-hinh-agent.md) — General agent configuration, including the "ChatGPT OAuth Routing" section
-- [01-tong-quan-agents.md](./01-tong-quan-agents.md) — Agents overview
+- [02-agent-config.md](./02-agent-config.md) — General agent configuration, including the "ChatGPT OAuth Routing" section
+- [01-agents-overview.md](./01-agents-overview.md) — Agents overview

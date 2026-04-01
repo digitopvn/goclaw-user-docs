@@ -113,6 +113,6 @@ Start a chat with the "Assistant" agent:
 
 ## See Also
 
-- [02-quan-ly-sessions.md](./02-quan-ly-sessions.md) — Managing and searching sessions
-- [03-kenh-ket-noi.md](./03-kenh-ket-noi.md) — Chat via Telegram, Discord, Slack
-- [../agents/01-tong-quan-agents.md](../agents/01-tong-quan-agents.md) — Understanding agents and skills
+- [02-session-management.md](./02-session-management.md) — Managing and searching sessions
+- [03-channels.md](./03-channels.md) — Chat via Telegram, Discord, Slack
+- [../agents/01-agents-overview.md](../agents/01-agents-overview.md) — Understanding agents and skills

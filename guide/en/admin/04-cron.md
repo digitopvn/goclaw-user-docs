@@ -130,5 +130,5 @@ Formula: `delay = min(2 x 2^attempt, 30)` +/- 25% jitter.
 
 ## See Also
 
-- [guide/en/admin/06-theo-doi.md](06-theo-doi.md) — Viewing run history and traces
-- [guide/en/admin/03-tools-va-mcp.md](03-tools-va-mcp.md) — The `cron` tool for agents to self-manage jobs
+- [guide/en/admin/06-monitoring.md](06-monitoring.md) — Viewing run history and traces
+- [guide/en/admin/03-tools-and-mcp.md](03-tools-and-mcp.md) — The `cron` tool for agents to self-manage jobs

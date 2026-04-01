@@ -367,5 +367,5 @@ Error responses include `retryable` (boolean) and `retryAfterMs` (integer).
 ## See Also
 
 - [HTTP REST API](./01-api-reference.md)
-- [Configuration Reference](./03-cau-hinh.md)
+- [Configuration Reference](./03-configuration.md)
 - [Nodes — Device Pairing](../admin/12-nodes.md)

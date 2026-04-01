@@ -276,5 +276,5 @@ Error responses include a `retryable` (boolean) and `retryAfterMs` (integer) fie
 ## See Also
 
 - [WebSocket RPC](./02-websocket-rpc.md)
-- [Configuration Reference](./03-cau-hinh.md)
+- [Configuration Reference](./03-configuration.md)
 - Swagger UI live: `http://<host>:<port>/docs`

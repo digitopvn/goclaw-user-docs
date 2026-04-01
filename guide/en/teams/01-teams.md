@@ -141,4 +141,4 @@ Limits: max file size 10 MB, max 100 files/scope.
 
 ## See Also
 
-- [guide/vi/files-and-media/01-file-va-media.md](../files-and-media/01-file-va-media.md) — Team workspace and files
+- [guide/en/files-and-media/01-files-and-media.md](../files-and-media/01-files-and-media.md) — Team workspace and files

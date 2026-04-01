@@ -171,4 +171,4 @@ When receiving voice/audio, the Telegram channel:
 ## See Also
 
 - [guide/en/teams/02-contacts.md](../teams/02-contacts.md) — Contact management
-- [guide/en/admin/05-bao-mat.md](05-bao-mat.md) — DM policies and security
+- [guide/en/admin/05-security.md](05-security.md) — DM policies and security

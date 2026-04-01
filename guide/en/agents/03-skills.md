@@ -145,6 +145,6 @@ Each request can have its own list of allowed tools (e.g., a Telegram forum topi
 
 ## See Also
 
-- [01-tong-quan-agents.md](./01-tong-quan-agents.md) — Agent and skill concepts
-- [02-cau-hinh-agent.md](./02-cau-hinh-agent.md) — Advanced agent configuration
+- [01-agents-overview.md](./01-agents-overview.md) — Agent and skill concepts
+- [02-agent-config.md](./02-agent-config.md) — Advanced agent configuration
 - [04-codex-pool.md](./04-codex-pool.md) — Codex Pool for ChatGPT OAuth routing

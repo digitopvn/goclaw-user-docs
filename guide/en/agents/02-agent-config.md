@@ -162,6 +162,6 @@ Click **Run Now** to test immediately. View heartbeat history via **Heartbeat Lo
 
 ## See Also
 
-- [01-tong-quan-agents.md](./01-tong-quan-agents.md) — Basic agent concepts
+- [01-agents-overview.md](./01-agents-overview.md) — Basic agent concepts
 - [03-skills.md](./03-skills.md) — Adding skills to an agent
 - [04-codex-pool.md](./04-codex-pool.md) — Configuring Codex Pool routing

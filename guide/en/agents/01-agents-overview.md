@@ -115,6 +115,6 @@ The **Check & Create** button verifies the model connection before creating. If 
 
 ## See Also
 
-- [02-cau-hinh-agent.md](./02-cau-hinh-agent.md) — Configuring model, behavior, sandbox
+- [02-agent-config.md](./02-agent-config.md) — Configuring model, behavior, sandbox
 - [03-skills.md](./03-skills.md) — Skills and tools
-- [../chat-and-sessions/01-chat-co-ban.md](../chat-and-sessions/01-chat-co-ban.md) — Chatting with an agent
+- [../chat-and-sessions/01-basic-chat.md](../chat-and-sessions/01-basic-chat.md) — Chatting with an agent

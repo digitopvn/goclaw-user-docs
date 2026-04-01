@@ -7,9 +7,9 @@ hero:
   actions:
     - theme: brand
       text: Get Started
-      link: /en/getting-started/01-gioi-thieu
+      link: /en/getting-started/01-introduction
     - theme: alt
-      text: Tieng Viet
+      text: Tiếng Việt
       link: /vi/getting-started/01-gioi-thieu
 features:
   - title: Multi-Agent Orchestration
