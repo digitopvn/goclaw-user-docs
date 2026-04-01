@@ -20,6 +20,8 @@ MODE=""
 PG_SOURCE=""        # bundled | external
 WITH_UI=false
 NONINTERACTIVE=false
+DOMAIN=""
+SSL_EMAIL=""
 
 # ── Colors ──
 RED='\033[0;31m'; YELLOW='\033[1;33m'; GREEN='\033[0;32m'
@@ -49,6 +51,8 @@ while [[ $# -gt 0 ]]; do
     --mode)         MODE="$2"; shift 2 ;;
     --pg)           PG_SOURCE="$2"; shift 2 ;;
     --with-ui)      WITH_UI=true; shift ;;
+    --domain)       DOMAIN="$2"; shift 2 ;;
+    --email)        SSL_EMAIL="$2"; shift 2 ;;
     --yes|-y)       NONINTERACTIVE=true; shift ;;
     --help|-h)
       sed -n '2,12p' "$0" | sed 's/^# \?//'
@@ -87,6 +91,128 @@ command -v docker &>/dev/null && has_docker=true
 ( command -v docker &>/dev/null && docker compose version &>/dev/null ) && has_docker_compose=true
 command -v goclaw &>/dev/null && has_goclaw=true
 
+# ── Nginx reverse proxy + SSL setup ──
+setup_nginx_ssl() {
+  local port="$1"
+
+  # Skip if no domain was provided
+  [ -z "$DOMAIN" ] && return 0
+
+  echo
+  bold "── Setting up Nginx + SSL ──"
+  echo
+  info "Configuring ${DOMAIN} → 127.0.0.1:${port}..."
+
+  # Install nginx + certbot if needed
+  if ! command -v nginx &>/dev/null; then
+    info "Installing Nginx..."
+    apt-get update -qq && apt-get install -y -qq nginx || { error "Failed to install Nginx."; return 1; }
+  fi
+  if ! command -v certbot &>/dev/null; then
+    info "Installing Certbot..."
+    apt-get install -y -qq certbot python3-certbot-nginx || { error "Failed to install Certbot."; return 1; }
+  fi
+
+  # Create nginx site config
+  cat > "/etc/nginx/sites-available/${DOMAIN}" <<NGINX
+server {
+    listen 80;
+    server_name ${DOMAIN};
+
+    # Block sensitive files & directories
+    location ~ /\\.(?:env|git|docker|htpasswd|htaccess) {
+        deny all;
+        return 404;
+    }
+    location ~ /(?:docker-compose|Makefile|package\\.json|composer\\.json|Dockerfile) {
+        deny all;
+        return 404;
+    }
+
+    location / {
+        proxy_pass http://127.0.0.1:${port};
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade \$http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host \$host;
+        proxy_set_header X-Real-IP \$remote_addr;
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto \$scheme;
+        proxy_read_timeout 86400;
+    }
+}
+NGINX
+
+  # Enable site
+  ln -sf "/etc/nginx/sites-available/${DOMAIN}" "/etc/nginx/sites-enabled/${DOMAIN}"
+
+  # Remove default site if it conflicts
+  rm -f /etc/nginx/sites-enabled/default 2>/dev/null
+
+  # Test & reload nginx
+  nginx -t || { error "Nginx config test failed."; return 1; }
+  systemctl reload nginx
+  success "Nginx proxy configured: ${DOMAIN} → 127.0.0.1:${port}"
+
+  # SSL with certbot
+  echo
+  info "Obtaining SSL certificate..."
+  certbot certonly --agree-tos --email "${SSL_EMAIL}" -d "${DOMAIN}" --nginx --non-interactive \
+    || { warn "SSL certificate failed — is the domain pointing to this server?"; return 1; }
+
+  # Enable SSL in nginx
+  cat > "/etc/nginx/sites-available/${DOMAIN}" <<NGINX
+server {
+    listen 80;
+    server_name ${DOMAIN};
+    return 301 https://\$host\$request_uri;
+}
+
+server {
+    listen 443 ssl http2;
+    server_name ${DOMAIN};
+
+    ssl_certificate /etc/letsencrypt/live/${DOMAIN}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/${DOMAIN}/privkey.pem;
+
+    # ── Security headers ──
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header X-XSS-Protection "1; mode=block" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+
+    # ── Hide server info ──
+    server_tokens off;
+
+    # ── Block sensitive files & directories ──
+    location ~ /\\.(?:env|git|docker|htpasswd|htaccess) {
+        deny all;
+        return 404;
+    }
+    location ~ /(?:docker-compose|Makefile|package\\.json|composer\\.json|Dockerfile) {
+        deny all;
+        return 404;
+    }
+
+    location / {
+        proxy_pass http://127.0.0.1:${port};
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade \$http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host \$host;
+        proxy_set_header X-Real-IP \$remote_addr;
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto \$scheme;
+        proxy_read_timeout 86400;
+    }
+}
+NGINX
+
+  nginx -t && systemctl reload nginx
+  success "SSL enabled: https://${DOMAIN}"
+}
+
 # ── Banner ──
 echo
 bold "╔══════════════════════════════════════════════╗"
@@ -115,6 +241,55 @@ if [ -z "$MODE" ]; then
     3|lite)    MODE="lite" ;;
     *) error "Invalid choice"; exit 1 ;;
   esac
+fi
+
+# ── All questions upfront (skip for lite) ──
+if [ "$MODE" != "lite" ]; then
+
+  # ── PostgreSQL source (docker mode only) ──
+  if [ "$MODE" = "docker" ] && [ -z "$PG_SOURCE" ]; then
+    echo
+    bold "── PostgreSQL ──"
+    echo
+    echo "  1) Bundled   — spin up a postgres container automatically (easiest)"
+    echo "  2) External  — connect to your own PostgreSQL (managed service, existing server)"
+    echo
+    read -rp "  Choice [1-2, default=1]: " pg_choice </dev/tty
+    case "${pg_choice:-1}" in
+      1|bundled)  PG_SOURCE="bundled" ;;
+      2|external) PG_SOURCE="external" ;;
+      *) error "Invalid choice"; exit 1 ;;
+    esac
+
+    if [ "$PG_SOURCE" = "external" ]; then
+      GOCLAW_POSTGRES_DSN="${GOCLAW_POSTGRES_DSN:-}"
+      if [ -z "$GOCLAW_POSTGRES_DSN" ]; then
+        echo
+        info "Format: postgres://user:pass@host:5432/dbname?sslmode=disable"
+        GOCLAW_POSTGRES_DSN="$(ask "PostgreSQL DSN")"
+      fi
+    fi
+  fi
+
+  # ── Web dashboard ──
+  if ! $WITH_UI && ! $NONINTERACTIVE; then
+    echo
+    ask_yn "Include web dashboard UI?" "y" && WITH_UI=true
+  fi
+
+  # ── Domain & Email ──
+  if [ -z "$DOMAIN" ]; then
+    echo
+    bold "── Domain & SSL ──"
+    echo
+    if ask_yn "Set up custom domain with Nginx + SSL?" "y"; then
+      DOMAIN="$(ask "Domain (e.g. api.example.com)")"
+      if [ -z "$SSL_EMAIL" ]; then
+        SSL_EMAIL="$(ask "Email for SSL certificate")"
+      fi
+    fi
+  fi
+
 fi
 
 echo
@@ -183,29 +358,6 @@ if [ "$MODE" = "docker" ]; then
   bold "── Docker Setup ──"
   echo
 
-  # ── PostgreSQL source ──
-  if [ -z "$PG_SOURCE" ]; then
-    echo "  PostgreSQL:"
-    echo "  1) Bundled   — spin up a postgres container automatically (easiest)"
-    echo "  2) External  — connect to your own PostgreSQL (managed service, existing server)"
-    echo
-    read -rp "  Choice [1-2, default=1]: " pg_choice </dev/tty
-    case "${pg_choice:-1}" in
-      1|bundled)  PG_SOURCE="bundled" ;;
-      2|external) PG_SOURCE="external" ;;
-      *) error "Invalid choice"; exit 1 ;;
-    esac
-  fi
-
-  echo
-
-  # ── Dashboard ──
-  if ! $WITH_UI && ! $NONINTERACTIVE; then
-    ask_yn "Include web dashboard UI?" "y" && WITH_UI=true
-  fi
-
-  echo
-
   # ── Resolve data dir ──
   DATA_DIR="${GOCLAW_DATA_DIR:-./goclaw-data}"
   info "Creating data directory: ${DATA_DIR}"
@@ -220,7 +372,7 @@ if [ "$MODE" = "docker" ]; then
     GATEWAY_TOKEN="$(gen_secret 32)"
     ENCRYPTION_KEY="$(gen_secret 16)"
     GOCLAW_PORT="${GOCLAW_PORT:-18790}"
-    UI_PORT="${GOCLAW_UI_PORT:-3000}"
+    UI_PORT="${GOCLAW_UI_PORT:-18791}"
 
     {
       echo "# GoClaw environment — generated by setup.sh"
@@ -247,7 +399,7 @@ if [ "$MODE" = "docker" ]; then
     # Load existing env
     set -a; source "$ENV_FILE"; set +a
     GOCLAW_PORT="${GOCLAW_PORT:-18790}"
-    UI_PORT="${GOCLAW_UI_PORT:-3000}"
+    UI_PORT="${GOCLAW_UI_PORT:-18791}"
   fi
 
   # ── External PG: collect DSN ──
@@ -332,7 +484,7 @@ if [ "$MODE" = "docker" ]; then
   goclaw-ui:
     image: ghcr.io/nextlevelbuilder/goclaw-web:latest
     ports:
-      - "${GOCLAW_UI_PORT:-3000}:80"
+      - "${GOCLAW_UI_PORT:-18791}:80"
     depends_on:
       - goclaw
     restart: unless-stopped'
@@ -403,23 +555,26 @@ docker compose "$@"
 WRAPPER_EOF
   chmod +x "$WRAPPER"
 
+  # ── Auto start ──
+  echo
+  info "Starting GoClaw..."
+  cd "${DATA_DIR}"
+  docker compose up -d
+
+  # ── Auto migrate ──
+  echo
+  info "Waiting for GoClaw to be ready..."
+  sleep 5
+  info "Running migrations..."
+  docker compose exec goclaw goclaw migrate up || warn "Migration failed — you can retry later: ./start.sh exec goclaw goclaw migrate up"
+
   echo
   bold "╔══════════════════════════════════════════════╗"
-  bold "║         Docker Setup Ready!                  ║"
+  bold "║         Docker Setup Complete!               ║"
   bold "╚══════════════════════════════════════════════╝"
   echo
   echo "  Config:   ${COMPOSE_FILE}"
   echo "  Secrets:  ${ENV_FILE}"
-  echo "  Start:    ${WRAPPER}"
-  echo
-  bold "── Quick Start ──"
-  echo
-  echo "  cd ${DATA_DIR}"
-  echo "  ./start.sh up -d"
-  echo
-  bold "── First-time only: run migrations ──"
-  echo
-  echo "  ./start.sh exec goclaw goclaw migrate up"
   echo
   if $WITH_UI; then
     echo "  Gateway:    http://localhost:${GOCLAW_PORT:-18790}"
@@ -427,6 +582,21 @@ WRAPPER_EOF
   else
     echo "  Gateway:    http://localhost:${GOCLAW_PORT:-18790}"
     info "Re-run with --with-ui to add the web dashboard."
+  fi
+  echo
+  # ── Domain & SSL ──
+  setup_nginx_ssl "${GOCLAW_UI_PORT:-18791}"
+
+  echo
+  bold "── Manage ──"
+  echo
+  echo "  cd ${DATA_DIR}"
+  echo "  ./start.sh logs -f goclaw    # view logs"
+  echo "  ./start.sh restart           # restart"
+  echo "  ./start.sh down              # stop"
+  if [ -n "$DOMAIN" ]; then
+    echo
+    echo "  Gateway:    https://${DOMAIN}"
   fi
   echo
 
@@ -540,7 +710,7 @@ if [ "$MODE" = "native" ]; then
   if ask_yn "Install web dashboard UI?" "y"; then
     if command -v docker &>/dev/null; then
       GOCLAW_PORT="${GOCLAW_PORT:-18790}"
-      UI_PORT="${GOCLAW_UI_PORT:-3000}"
+      UI_PORT="${GOCLAW_UI_PORT:-18791}"
       info "Starting GoClaw Web UI on port ${UI_PORT}..."
       docker rm -f goclaw-ui 2>/dev/null || true
       docker run -d \
@@ -605,10 +775,17 @@ SYSTEMD
     fi
   fi
 
+  # ── Domain & SSL ──
+  setup_nginx_ssl "${GOCLAW_UI_PORT:-18791}"
+
   echo
   bold "╔══════════════════════════════════════════════╗"
   bold "║         Native Setup Complete!               ║"
   bold "╚══════════════════════════════════════════════╝"
+  echo
+  if [ -n "$DOMAIN" ]; then
+    echo "  Gateway:    https://${DOMAIN}"
+  fi
   echo
 
   exit 0
