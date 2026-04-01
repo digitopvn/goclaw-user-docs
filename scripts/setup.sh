@@ -58,14 +58,14 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-# ── Prompt helper ──
+# ── Prompt helper (reads from /dev/tty so curl|bash works) ──
 ask() {
   local prompt="$1" default="${2:-}" var
   if [ -n "$default" ]; then
-    read -rp "  ${prompt} [${default}]: " var
+    read -rp "  ${prompt} [${default}]: " var </dev/tty
     echo "${var:-$default}"
   else
-    read -rp "  ${prompt}: " var
+    read -rp "  ${prompt}: " var </dev/tty
     echo "$var"
   fi
 }
@@ -73,7 +73,7 @@ ask() {
 ask_yn() {
   local prompt="$1" default="${2:-y}"
   local yn
-  read -rp "  ${prompt} [$([ "$default" = y ] && echo 'Y/n' || echo 'y/N')]: " yn
+  read -rp "  ${prompt} [$([ "$default" = y ] && echo 'Y/n' || echo 'y/N')]: " yn </dev/tty
   yn="${yn:-$default}"
   [[ "$yn" =~ ^[Yy] ]]
 }
@@ -94,22 +94,6 @@ bold "║          GoClaw Setup Wizard                 ║"
 bold "╚══════════════════════════════════════════════╝"
 echo
 
-# ── Detect piped/non-interactive stdin ──
-if [ ! -t 0 ] && [ -z "$MODE" ]; then
-  error "Interactive mode required — stdin is not a terminal."
-  echo
-  echo "  Usage: download first, then run:"
-  echo "    curl -sSL https://raw.githubusercontent.com/digitopvn/goclaw-user-docs/main/scripts/setup.sh -o setup.sh"
-  echo "    chmod +x setup.sh"
-  echo "    ./setup.sh"
-  echo
-  echo "  Or specify mode directly:"
-  echo "    curl -sSL ... | bash -s -- --mode docker"
-  echo "    curl -sSL ... | bash -s -- --mode native"
-  echo "    curl -sSL ... | bash -s -- --mode lite"
-  exit 1
-fi
-
 # ── Mode selection ──
 if [ -z "$MODE" ]; then
   bold "── Choose deployment mode ──"
@@ -124,7 +108,7 @@ if [ -z "$MODE" ]; then
     echo
   fi
 
-  read -rp "  Choice [1-3, default=1]: " choice
+  read -rp "  Choice [1-3, default=1]: " choice </dev/tty
   case "${choice:-1}" in
     1|docker)  MODE="docker" ;;
     2|native)  MODE="native" ;;
@@ -205,7 +189,7 @@ if [ "$MODE" = "docker" ]; then
     echo "  1) Bundled   — spin up a postgres container automatically (easiest)"
     echo "  2) External  — connect to your own PostgreSQL (managed service, existing server)"
     echo
-    read -rp "  Choice [1-2, default=1]: " pg_choice
+    read -rp "  Choice [1-2, default=1]: " pg_choice </dev/tty
     case "${pg_choice:-1}" in
       1|bundled)  PG_SOURCE="bundled" ;;
       2|external) PG_SOURCE="external" ;;
