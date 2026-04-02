@@ -5,3 +5,5 @@ guide/.vitepress/cache/
 guide/.vitepress/dist/
 package-lock.json
 bun.lock
+
+.claude
