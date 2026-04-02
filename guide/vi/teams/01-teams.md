@@ -1,5 +1,7 @@
 # Đội Nhóm (Agent Teams)
 
+<YouTube id="0LX9gyBMS38" title="GoClaw Agent Config" />
+
 ## Tổng Quan
 
 Agent team là nhóm các AI agent hợp tác qua một **task board chung**. Lead agent điều phối công việc, member agents thực thi độc lập và song song.

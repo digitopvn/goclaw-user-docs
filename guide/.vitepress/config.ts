@@ -60,7 +60,6 @@ export default defineConfig({
               collapsed: true,
               items: [
                 { text: "LLM Providers", link: "/en/admin/01-providers" },
-                { text: "Channels Setup", link: "/en/admin/02-channels-setup" },
                 { text: "Tools & MCP Servers", link: "/en/admin/03-tools-and-mcp" },
                 { text: "Cron & Scheduling", link: "/en/admin/04-cron" },
                 { text: "Security & Access Control", link: "/en/admin/05-security" },
@@ -143,7 +142,6 @@ export default defineConfig({
               collapsed: true,
               items: [
                 { text: "Cấu hình LLM Providers", link: "/vi/admin/01-providers" },
-                { text: "Cấu hình Channels", link: "/vi/admin/02-channels-setup" },
                 { text: "Tools và MCP Servers", link: "/vi/admin/03-tools-and-mcp" },
                 { text: "Cron và lịch trình", link: "/vi/admin/04-cron" },
                 { text: "Bảo mật và phân quyền", link: "/vi/admin/05-security" },

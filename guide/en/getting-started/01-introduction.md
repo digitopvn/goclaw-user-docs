@@ -11,7 +11,7 @@ GoClaw is a Go port of [OpenClaw](https://github.com/openclaw/openclaw), complet
 
 The gateway receives messages from channels (Telegram, Discord, etc.), routes them through the Agent Loop, calls LLM providers, executes tools, and returns results to the user.
 
----
+![GoClaw Features](/images/goclaw-features.jpg)
 
 ## Key Features
 

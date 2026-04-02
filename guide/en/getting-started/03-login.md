@@ -4,6 +4,7 @@
 
 GoClaw supports two sign-in methods: Token authentication and Pairing authentication. After signing in, users who belong to multiple tenants will be redirected to the tenant selection page before entering the dashboard.
 
+![Login](/images/login.png)
 ---
 
 ## Sign-In Guide

@@ -11,8 +11,7 @@ GoClaw là Go port của [OpenClaw](https://github.com/openclaw/openclaw), đư�
 
 Gateway tiếp nhận tin nhắn từ các channel (Telegram, Discord, v.v.), định tuyến qua Agent Loop, gọi LLM provider, thực thi tool, rồi trả kết quả về người dùng.
 
----
-
+![Tính năng GoClaw](/images/goclaw-features.jpg)
 ## Tính năng chính
 
 - **7 channels** — Telegram, Discord, Slack, Feishu/Lark, Zalo OA, Zalo Personal, WhatsApp

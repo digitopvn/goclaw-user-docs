@@ -1,5 +1,7 @@
 # Cài Đặt và Khởi Động GoClaw
 
+<YouTube id="bZR3dv-aI0U" title="GoClaw Install" />
+
 ## Tổng quan
 
 Hướng dẫn này mô tả các bước cài đặt GoClaw từ source, cấu hình database, và khởi động server. Cũng bao gồm cài đặt Desktop (Lite) và Docker Compose.

@@ -1,5 +1,7 @@
 # Cấu Hình Agent
 
+<YouTube id="lHMY3rbElfs" title="GoClaw Agent Config" />
+
 ## Tổng quan
 
 Trang chi tiết agent (`/agents/:id`) cung cấp đầy đủ công cụ để cấu hình model, behavior, sandbox, rate limits, và context files. Đây là trang dành cho admin và operator cần tinh chỉnh agent cho môi trường sản xuất.

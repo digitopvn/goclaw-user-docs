@@ -1,5 +1,7 @@
 # Managing Sessions
 
+![Quản lý session](/images/session.png)
+
 ## Overview
 
 The Sessions page allows you to view, search, and manage the entire conversation history in the system. The session detail page displays the full message history, metadata, and editing actions.

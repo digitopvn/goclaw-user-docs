@@ -1,5 +1,7 @@
 # Basic Chat
 
+![Khung chat](/images/khung-chat.png)
+
 ## Overview
 
 The Chat interface is the main interaction hub with AI agents on the Web Dashboard. It supports sending text messages, attaching files, viewing streaming responses with tool call cards, and managing multiple sessions simultaneously.

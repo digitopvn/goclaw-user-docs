@@ -1,5 +1,7 @@
 # Agent Teams
 
+<YouTube id="0LX9gyBMS38" title="GoClaw Agent Config" />
+
 ## Overview
 
 An agent team is a group of AI agents collaborating through a **shared task board**. The lead agent coordinates work, while member agents execute independently and in parallel.

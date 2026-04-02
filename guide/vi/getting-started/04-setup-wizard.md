@@ -1,5 +1,7 @@
 # Setup Wizard và Dashboard Tổng Quan
 
+<YouTube id="_AYBSwXuoso" title="GoClaw Install" />
+
 ## Tổng quan
 
 Lần đầu truy cập Web Dashboard sau khi cài đặt, hệ thống hiển thị **Setup Wizard** 4 bước để cấu hình hệ thống từ đầu. Sau khi hoàn thành, chuyển sang trang **Tổng quan** — trung tâm giám sát hoạt động của gateway.

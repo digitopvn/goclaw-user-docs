@@ -1,5 +1,7 @@
 # Quản Lý Sessions
 
+![Quản lý session](/images/session.png)
+
 ## Tổng quan
 
 Trang Sessions cho phép xem, tìm kiếm, và quản lý toàn bộ lịch sử hội thoại trong hệ thống. Trang chi tiết session hiển thị đầy đủ lịch sử tin nhắn, metadata, và các thao tác chỉnh sửa.

@@ -1,5 +1,7 @@
 # Agent Configuration
 
+<YouTube id="lHMY3rbElfs" title="GoClaw Agent Config" />
+
 ## Overview
 
 The agent detail page (`/agents/:id`) provides a complete set of tools to configure model, behavior, sandbox, rate limits, and context files. This page is intended for admins and operators who need to fine-tune agents for production environments.

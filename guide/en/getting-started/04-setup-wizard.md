@@ -1,5 +1,7 @@
 # Setup Wizard and Dashboard Overview
 
+<YouTube id="_AYBSwXuoso" title="GoClaw Install" />
+
 ## Overview
 
 On first access to the Web Dashboard after installation, the system displays a **Setup Wizard** with 4 steps to configure the system from scratch. After completion, it transitions to the **Overview** page — the central hub for monitoring gateway activity.

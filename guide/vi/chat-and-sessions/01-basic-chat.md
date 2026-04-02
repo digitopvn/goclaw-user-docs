@@ -1,5 +1,7 @@
 # Chat Cơ Bản
 
+![Khung chat](/images/khung-chat.png)
+
 ## Tổng quan
 
 Giao diện Chat là trung tâm tương tác chính với AI agents trên Web Dashboard. Hỗ trợ gửi tin nhắn văn bản, đính kèm file, xem streaming response với tool call cards, và quản lý nhiều session song song.

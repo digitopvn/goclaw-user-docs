@@ -1,5 +1,7 @@
 # Channels
 
+<YouTube id="0MxSUL_zX6U" title="GoClaw Channels" />
+
 ## Overview
 
 GoClaw supports 7 messaging channels to connect AI agents with popular messaging platforms. Each channel operates independently. Each user on each channel has a separate session.

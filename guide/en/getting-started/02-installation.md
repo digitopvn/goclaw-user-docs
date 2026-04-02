@@ -1,5 +1,7 @@
 # Installation and Starting GoClaw
 
+<YouTube id="bZR3dv-aI0U" title="GoClaw Install" />
+
 ## Overview
 
 This guide describes the steps to install GoClaw from source, configure the database, and start the server. It also covers Desktop (Lite) installation and Docker Compose.

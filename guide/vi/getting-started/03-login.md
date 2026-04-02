@@ -4,6 +4,7 @@
 
 GoClaw hỗ trợ hai phương thức đăng nhập: xác thực bằng Token và xác thực bằng Ghép nối thiết bị. Sau khi đăng nhập, người dùng có nhiều tổ chức (tenant) sẽ được chuyển đến trang chọn tổ chức trước khi vào dashboard.
 
+![Login](/images/login.png)
 ---
 
 ## Hướng dẫn đăng nhập

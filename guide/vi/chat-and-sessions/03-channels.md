@@ -1,5 +1,7 @@
 # Kênh Kết Nối (Channels)
 
+<YouTube id="0MxSUL_zX6U" title="GoClaw Channels" />
+
 ## Tổng quan
 
 GoClaw hỗ trợ 7 kênh nhắn tin để kết nối AI agent với các nền tảng nhắn tin phổ biến. Mỗi kênh hoạt động độc lập. Mỗi user trên mỗi kênh có session riêng biệt.

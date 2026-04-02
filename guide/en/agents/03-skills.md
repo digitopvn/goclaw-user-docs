@@ -1,5 +1,7 @@
 # Skills
 
+<YouTube id="pn1VVk4O8wk" title="GoClaw Skills" />
+
 ## Overview
 
 Skills are knowledge modules or instructions embedded into the system prompt, helping the agent know how to use tools or handle specific domains. Unlike tools (which execute actions), skills are knowledge — the agent reads skills to learn how to work.

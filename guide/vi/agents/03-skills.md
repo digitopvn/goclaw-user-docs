@@ -1,5 +1,7 @@
 # Skills (Kỹ Năng)
 
+<YouTube id="pn1VVk4O8wk" title="GoClaw Skills" />
+
 ## Tổng quan
 
 Skills là các module kiến thức hoặc hướng dẫn được nhúng vào system prompt, giúp agent biết cách sử dụng công cụ hoặc xử lý lĩnh vực cụ thể. Khác với tools (thực thi hành động), skills là kiến thức — agent đọc skills để biết cách làm việc.
