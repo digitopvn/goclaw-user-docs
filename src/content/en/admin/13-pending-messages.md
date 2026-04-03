@@ -1,5 +1,7 @@
 # Pending Messages
 
+<YouTube id="cujahnV4S4U" title="GoClaw Pending Messages" />
+
 **Route:** `/pending-messages`
 **Sidebar Group:** Conversations
 **Access:** Operator+

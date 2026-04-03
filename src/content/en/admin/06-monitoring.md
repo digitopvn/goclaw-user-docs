@@ -1,5 +1,7 @@
 # Monitoring and Logs
 
+<YouTube id="6hcStzQMqOI" title="GoClaw Monitoring and Logs" />
+
 ## Overview
 
 GoClaw provides 5 monitoring tools: Traces (LLM calls), Events (real-time), Activity (audit log), Logs (system log), and Usage Stats. All tools are grouped under the **Monitoring** sidebar section.

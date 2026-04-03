@@ -1,5 +1,7 @@
 # Theo Dõi và Logs
 
+<YouTube id="6hcStzQMqOI" title="GoClaw Monitoring and Logs" />
+
 ## Tổng Quan
 
 GoClaw cung cấp 5 công cụ theo dõi: Traces (LLM calls), Events (real-time), Activity (audit log), Logs (system log), và Usage Stats. Tất cả công cụ tập trung trong nhóm sidebar **Giám Sát**.

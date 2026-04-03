@@ -1,5 +1,7 @@
 # Tin Nhắn Chờ Xử Lý
 
+<YouTube id="cujahnV4S4U" title="GoClaw Pending Messages" />
+
 **Route:** `/pending-messages`
 **Nhóm Sidebar:** Hội Thoại
 **Quyền truy cập:** Operator+
