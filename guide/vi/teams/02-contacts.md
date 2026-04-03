@@ -87,4 +87,4 @@ Kết quả: lịch sử chat từ cả hai kênh được gắn vào cùng mộ
 ## Xem Thêm
 
 - [Quản lý đội nhóm](01-teams.md)
-- [Cấu hình kênh kết nối](../admin/02-channels-setup.md)
+- [Cấu hình kênh kết nối](../chat-and-sessions/03-channels.md)

@@ -139,5 +139,5 @@ Dành cho `chatgpt_oauth`: gộp nhiều account vào một pool để load bala
 
 ## Xem Thêm
 
-- [Cấu hình kênh kết nối](02-channels-setup.md)
+- [Cấu hình kênh kết nối](../chat-and-sessions/03-channels.md)
 - [Mã hóa API keys](05-security.md)

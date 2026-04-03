@@ -106,6 +106,6 @@ Trong môi trường có nhiều instance GoClaw chạy song song (horizontal sc
 
 ## Xem Thêm
 
-- [Cấu hình kênh kết nối](../admin/02-channels-setup.md)
+- [Cấu hình kênh kết nối](../chat-and-sessions/03-channels.md)
 - [WebSocket RPC — Pairing methods](../reference/02-websocket-rpc.md)
 - [Bảo mật và phân quyền](../admin/05-security.md)

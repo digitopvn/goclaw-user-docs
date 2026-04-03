@@ -134,5 +134,5 @@ Clearing a group is permanent — it cannot be undone. Only clear when you are c
 ## See Also
 
 - [System Configuration — pending_compaction](../admin/10-config.md)
-- [Channel Configuration](../admin/02-channels-setup.md)
+- [Channel Configuration](../chat-and-sessions/03-channels.md)
 - [Monitoring and Logs](../admin/06-monitoring.md)

@@ -139,5 +139,5 @@ For `chatgpt_oauth`: combine multiple accounts into a pool for load balancing.
 
 ## See Also
 
-- [Channel configuration](02-channels-setup.md)
+- [Channel configuration](../chat-and-sessions/03-channels.md)
 - [API key encryption](05-security.md)
