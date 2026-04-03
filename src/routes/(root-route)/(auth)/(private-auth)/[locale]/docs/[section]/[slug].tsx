@@ -1,5 +1,5 @@
 /**
- * Doc page — VitePress-style layout with navbar, sidebar, content, and pager
+ * Doc page — VitePress-style layout with fixed navbar, fixed sidebar, scrollable content
  */
 import { createAsync, useParams } from "@solidjs/router";
 import { Show, Suspense, createSignal } from "solid-js";
@@ -19,14 +19,15 @@ export default function DocPage() {
 
 	return (
 		<div class="bg-background min-h-screen">
-			{/* Top navbar */}
+			{/* Fixed top navbar */}
 			<DocNavbar locale={params.locale} onToggleSidebar={() => setSidebarOpen(!sidebarOpen())} />
 
-			<div class="flex">
-				{/* Sidebar — desktop */}
-				<aside class="border-border hidden w-64 shrink-0 overflow-y-auto border-r lg:block" style="height: calc(100vh - 3.5rem); position: sticky; top: 3.5rem;">
+			{/* Fixed sidebar (desktop) + scrollable content */}
+			<div class="pt-14 lg:pl-64">
+				{/* Sidebar — fixed on desktop */}
+				<aside class="border-border bg-background fixed top-14 left-0 hidden h-[calc(100vh-3.5rem)] w-64 overflow-y-auto border-r lg:block">
 					<div class="p-4">
-						<Suspense fallback={<div class="text-muted-foreground text-sm p-2">Loading...</div>}>
+						<Suspense fallback={<div class="text-muted-foreground p-2 text-sm">Loading...</div>}>
 							<Show when={sidebar()}>
 								{(sections) => <DocSidebar sections={sections()} locale={params.locale} />}
 							</Show>
@@ -36,9 +37,10 @@ export default function DocPage() {
 
 				{/* Sidebar — mobile overlay */}
 				<Show when={sidebarOpen()}>
-					<div class="bg-background/80 fixed inset-0 z-30 backdrop-blur-sm lg:hidden" onClick={() => setSidebarOpen(false)}>
+					<div class="fixed inset-0 z-50 lg:hidden" onClick={() => setSidebarOpen(false)}>
+						<div class="bg-black/50 absolute inset-0" />
 						<aside
-							class="bg-background border-border h-full w-72 overflow-y-auto border-r p-4"
+							class="bg-background border-border relative h-full w-72 overflow-y-auto border-r p-4"
 							onClick={(e) => e.stopPropagation()}
 						>
 							<Suspense>
@@ -50,8 +52,8 @@ export default function DocPage() {
 					</div>
 				</Show>
 
-				{/* Main content */}
-				<main class="min-w-0 flex-1 px-6 py-8 lg:px-12 lg:py-10" style="max-width: 48rem; margin: 0 auto;">
+				{/* Main content — scrollable */}
+				<main class="mx-auto max-w-3xl px-6 py-8 lg:px-12 lg:py-10">
 					<Suspense fallback={<div class="text-muted-foreground">Loading document...</div>}>
 						<Show
 							when={doc()}
@@ -67,7 +69,6 @@ export default function DocPage() {
 							{(d) => <DocContent title={d().title} htmlContent={d().htmlContent} />}
 						</Show>
 
-						{/* Previous / Next navigation */}
 						<Show when={sidebar()}>
 							{(sections) => (
 								<DocPager

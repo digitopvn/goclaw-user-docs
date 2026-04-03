@@ -15,7 +15,7 @@ interface DocNavbarProps {
 
 const DocNavbar: Component<DocNavbarProps> = (props) => {
 	return (
-		<header class="border-border bg-background/80 sticky top-0 z-40 flex h-14 items-center border-b px-4 backdrop-blur-sm">
+		<header class="border-border bg-background/80 fixed top-0 right-0 left-0 z-40 flex h-14 items-center border-b px-4 backdrop-blur-sm">
 			{/* Mobile sidebar toggle */}
 			<button class="text-foreground mr-3 lg:hidden" onClick={props.onToggleSidebar}>
 				<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -28,7 +28,7 @@ const DocNavbar: Component<DocNavbarProps> = (props) => {
 				<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
 					<path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20" />
 				</svg>
-				GoClaw Docs
+				GoClaw User Manuals
 			</A>
 
 			{/* Right side actions */}

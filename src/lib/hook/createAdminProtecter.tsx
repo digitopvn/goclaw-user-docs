@@ -1,9 +1,8 @@
 /**
- * Admin route protection — redirects non-admin users
+ * Admin route protection — waits for session to load, then checks admin role
  */
 import { CALLBACK_URL_KEY } from "@/lib/auth/data";
 import { appState } from "@/store/appStore";
-import { isNotLogin } from "@/store/authAction";
 import { useLocation, useNavigate } from "@solidjs/router";
 import { createEffect } from "solid-js";
 
@@ -12,14 +11,20 @@ const createAdminProtecter = () => {
 	const location = useLocation();
 
 	createEffect(() => {
-		if (isNotLogin()) {
+		const status = appState.session.status;
+
+		// Wait until session is resolved (not "init")
+		if (status === "init") return;
+
+		// Not logged in → redirect to login
+		if (status === "unauthorized") {
 			return navigate(`/login?${CALLBACK_URL_KEY}=${location.pathname}`, { replace: true });
 		}
 
-		if (appState.user?.role === "admin") return;
-
-		// Non-admin user — redirect to docs
-		navigate("/en/docs", { replace: true });
+		// Logged in but not admin → redirect to docs
+		if (appState.user?.role !== "admin") {
+			navigate("/en/docs", { replace: true });
+		}
 	});
 
 	return true;
