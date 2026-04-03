@@ -500,6 +500,8 @@ if [ "$MODE" = "docker" ]; then
   WATCHTOWER_SERVICE='
   watchtower:
     image: containrrr/watchtower
+    environment:
+      - TZ=Asia/Bangkok
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     command: --cleanup --rolling-restart --schedule "0 0 3 * * *"
