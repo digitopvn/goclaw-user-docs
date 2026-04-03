@@ -1,0 +1,35 @@
+# Allow all crawlers by default
+User-agent: *
+Allow: /d/*
+
+# Facebook External Hit (for Open Graph scraping)
+User-agent: facebookexternalhit
+Allow: *
+Allow: /d/*
+
+# Facebook Catalog (for product catalogs)
+User-agent: Facebot
+Allow: *
+Allow: /d/*
+
+# Twitter bot
+User-agent: Twitterbot
+Allow: *
+Allow: /d/*
+
+# LinkedIn bot
+User-agent: LinkedInBot
+Allow: *
+Allow: /d/*
+
+# Pinterest bot
+User-agent: Pinterestbot
+Allow: *
+Allow: /d/*
+
+# Telegram bot
+User-agent: TelegramBot
+Allow: *
+Allow: /d/*
+
+Sitemap: https://domain.com

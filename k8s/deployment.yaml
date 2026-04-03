@@ -114,7 +114,15 @@ metadata:
         cert-manager.io/cluster-issuer: letsencrypt-prod
         nginx.ingress.kubernetes.io/limit-rps: "200"
         nginx.ingress.kubernetes.io/proxy-body-size: 100m
-        nginx.ingress.kubernetes.io/server-snippet: "location ~ /.git { deny all; return 403; }"
+        nginx.ingress.kubernetes.io/server-snippet: |
+            location ~ /\.git { deny all; return 403; }
+            location ~ /\.env { deny all; return 403; }
+            location ~ /\.claude { deny all; return 403; }
+            location ~ /\.opencode { deny all; return 403; }
+            location ~ /drizzle\.config { deny all; return 403; }
+            location ~ /tsconfig\.json { deny all; return 403; }
+            location ~ /plans/ { deny all; return 403; }
+            location ~ /scripts/ { deny all; return 403; }
 spec:
     ingressClassName: nginx
     tls:

@@ -1,0 +1,28 @@
+{
+	"compilerOptions": {
+		"strict": true,
+		"target": "ES2015",
+		"module": "ES2020",
+		"moduleResolution": "node",
+		"allowSyntheticDefaultImports": true,
+		"esModuleInterop": true,
+		"allowJs": true,
+		"jsx": "preserve",
+		"jsxImportSource": "solid-js",
+		"types": ["vite/client"],
+		"noEmit": true,
+		"isolatedModules": true,
+		"baseUrl": ".",
+		"lib": ["ES2015", "ES2020", "DOM", "DOM.Iterable"],
+		"downlevelIteration": true,
+		"skipLibCheck": true,
+		"paths": {
+			"@/*": ["./src/*"],
+			"@server/*": ["./server/*"],
+			"@tailwindcss/vite": ["./node_modules/@tailwindcss/vite/dist/index.d.mts"],
+			"tailwindcss": ["./node_modules/tailwindcss/dist/lib.d.mts"]
+		}
+	},
+	"include": ["src/**/*", "server/**/*"],
+	"exclude": ["node_modules", "eslint.config.cjs", "app.config.ts", "**/*.test.ts"]
+}

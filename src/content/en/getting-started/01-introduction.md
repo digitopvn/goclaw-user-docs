@@ -1,0 +1,115 @@
+# Introduction to GoClaw
+
+## Overview
+
+GoClaw is an **AI agent gateway** written in Go — a multi-tenant platform for deploying and orchestrating LLM-powered agents across multiple messaging channels and protocols.
+
+GoClaw is a Go port of [OpenClaw](https://github.com/openclaw/openclaw), completely rewritten with:
+- Enhanced security (5 defense layers, AES-256-GCM)
+- Multi-tenant PostgreSQL with per-user workspace isolation
+- Single binary ~25 MB, starts in under 1 second, runs on a $5 VPS
+
+The gateway receives messages from channels (Telegram, Discord, etc.), routes them through the Agent Loop, calls LLM providers, executes tools, and returns results to the user.
+
+![GoClaw Features](/images/goclaw-features.jpg)
+
+## Key Features
+
+- **7 channels** — Telegram, Discord, Slack, Feishu/Lark, Zalo OA, Zalo Personal, WhatsApp
+- **20+ LLM providers** — Anthropic (native HTTP+SSE), OpenAI, OpenRouter, Gemini, DeepSeek, Groq, Mistral, xAI, DashScope, Ollama, and more
+- **Agent teams & orchestration** — Shared task board, inter-agent delegation (sync/async), team mailbox
+- **Tools & skills** — Filesystem, exec/shell, web search, memory, browser automation, TTS, media (image/audio/video generation)
+- **MCP** — Model Context Protocol bridge (stdio / SSE / streamable-HTTP)
+- **Scheduling & cron** — `at`, `every`, cron expression with lane-based concurrency
+- **Security** — Rate limiting, prompt injection detection, SSRF protection, RBAC (admin/operator/viewer), path traversal prevention
+- **Tracing & observability** — LLM call tracing with spans, prompt cache metrics, optional OpenTelemetry OTLP export
+- **Extended thinking** — Anthropic budget tokens, OpenAI reasoning effort, DashScope thinking budget
+- **Knowledge graph** — LLM extraction + traversal
+- **Multi-tenant** — Per-user workspace, encrypted API keys, isolated sessions
+
+---
+
+## Architecture Overview
+
+```
++----------------------------------------------------------+
+|                        CHANNELS                           |
+|  Telegram  Discord  Slack  Feishu  Zalo OA  Zalo WhatsApp|
++------------------------+---------------------------------+
+                         |
++------------------------v---------------------------------+
+|                       GATEWAY                             |
+|         WebSocket RPC v3  +  HTTP API                     |
+|         Rate Limiter  ->  Permission Engine (RBAC)        |
++------------------------+---------------------------------+
+                         |
++------------------------v---------------------------------+
+|                    AGENT LOOP                             |
+|              Think  ->  Act  ->  Observe                  |
+|    Scheduler (4 lanes: main / subagent / team / cron)     |
++-------------+---------------------------+----------------+
+              |                           |
++-------------v-----------+  +-----------v---------------+
+|      LLM PROVIDERS      |  |         TOOL REGISTRY     |
+|  Anthropic  OpenAI ...  |  |  fs  exec  web  memory    |
+|  20+ providers          |  |  teams  browser  TTS      |
++-------------------------+  +---------------------------+
+                         |
++------------------------v---------------------------------+
+|                     STORE LAYER                           |
+|              PostgreSQL  (or SQLite for Lite)              |
+|    Sessions  Agents  Memory  Skills  Traces  Teams  MCP   |
++----------------------------------------------------------+
+```
+
+---
+
+## Two Editions
+
+| Feature | Lite (Desktop) | Standard (Server) |
+|---------|:--------------:|:-----------------:|
+| Database | SQLite (local) | PostgreSQL |
+| Agents | Up to 5 | Unlimited |
+| Teams | 1 team, 5 members | Unlimited |
+| Memory | FTS5 text search | pgvector semantic |
+| Channels | Not supported | Telegram, Discord, Slack, Zalo, Feishu, WhatsApp |
+| Knowledge Graph | Not supported | Full |
+| RBAC / Multi-tenant | Not supported | Full |
+| Installation | One-line script (macOS/Windows) | Docker or binary |
+| Auto-update | GitHub Releases | Docker / binary |
+
+**Lite** is suitable for personal use on a desktop computer, with no need for a separate server or database.
+
+**Standard** is designed for production deployments: serving multiple users, multiple tenants, and connecting to real messaging channels.
+
+---
+
+## System Requirements
+
+### Standard (Server)
+
+| Component | Requirement |
+|-----------|-------------|
+| Go | 1.26+ |
+| PostgreSQL | 18+ with pgvector extension |
+| Docker | Optional — used for sandbox and quick-start |
+| Node.js | Optional — required if using MCP server via stdio |
+
+Minimum RAM: ~35 MB (idle). Runs on a $5 VPS.
+
+### Lite (Desktop)
+
+| Component | Requirement |
+|-----------|-------------|
+| macOS | Apple Silicon or Intel |
+| Windows | 64-bit |
+| Disk space | ~30 MB |
+
+No Go, PostgreSQL, or Docker required.
+
+---
+
+## See Also
+
+- [Installation and starting GoClaw (Standard + Lite)](./02-installation.md)
+- [Sign in and select tenant](./03-login.md)
