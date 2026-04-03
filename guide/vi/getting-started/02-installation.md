@@ -68,7 +68,7 @@ Mở `http://localhost:18790` và đăng nhập:
 - **User ID:** `system`
 - **Gateway Token:** tìm trong `.env.local` (tìm `GOCLAW_GATEWAY_TOKEN`)
 
-Sau khi đăng nhập, làm theo hướng dẫn [Bắt Đầu Nhanh](/quick-start) để thêm LLM provider, tạo agent đầu tiên, và bắt đầu chat.
+Sau khi đăng nhập, làm theo hướng dẫn [Hướng Dẫn Setup Wizard](./04-setup-wizard.md) để thêm LLM provider, tạo agent đầu tiên, và bắt đầu chat.
 
 <details>
 <summary><strong>Thay thế: chạy dashboard UI riêng</strong></summary>
@@ -216,7 +216,7 @@ pnpm dev
 
 Mở `http://localhost:5173` và đăng nhập với cùng thông tin ở trên.
 
-Sau khi đăng nhập, làm theo hướng dẫn [Bắt Đầu Nhanh](/quick-start) để thêm LLM provider, tạo agent đầu tiên, và bắt đầu chat.
+Sau khi đăng nhập, làm theo hướng dẫn [Hướng Dẫn Setup Wizard](./04-setup-wizard.md) để thêm LLM provider, tạo agent đầu tiên, và bắt đầu chat.
 
 ---
 
@@ -290,7 +290,7 @@ Dashboard có tại `http://localhost:3000`.
 
 </details>
 
-Sau khi đăng nhập, làm theo hướng dẫn [Bắt Đầu Nhanh](/quick-start) để thêm LLM provider, tạo agent đầu tiên, và bắt đầu chat.
+Sau khi đăng nhập, làm theo hướng dẫn [Hướng Dẫn Setup Wizard](./04-setup-wizard.md) để thêm LLM provider, tạo agent đầu tiên, và bắt đầu chat.
 
 ### Tiện ích bổ sung
 
@@ -574,7 +574,7 @@ docker compose logs goclaw
 
 ## Tiếp theo
 
-- [Bắt Đầu Nhanh](/quick-start) — Chạy agent đầu tiên
-- [Cấu Hình](/configuration) — Tùy chỉnh cài đặt GoClaw
+- [Hướng Dẫn Setup Wizard](./04-setup-wizard.md) — Chạy agent đầu tiên
+- [Cấu Hình](../reference/03-configuration.md) — Tùy chỉnh cài đặt GoClaw
 
 <!-- goclaw-source: c388364d | updated: 2026-04-01 -->

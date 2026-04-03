@@ -1,0 +1,12 @@
+node_modules/
+guide/.vitepress/cache/
+guide/.vitepress/dist/
+.claude/
+.git/
+plans/
+docs/
+email/
+k8s/
+*.md
+!guide/**/*.md
+!guide/*.md
