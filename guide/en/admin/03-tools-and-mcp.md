@@ -1,5 +1,7 @@
 # Tools and MCP Servers
 
+<YouTube id="dQ35hzuEeVU" title="GoClaw Tools and MCP" />
+
 ## Overview
 
 GoClaw has a system of built-in tools grouped by category, and supports registering MCP servers to extend agent capabilities. Tool access is controlled through profiles and multi-layer policies.

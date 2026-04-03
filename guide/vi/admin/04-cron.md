@@ -1,5 +1,7 @@
 # Cron và Lịch Trình Tự Động
 
+<YouTube id="Ta8fBrQ4sEU" title="GoClaw Cron and Automated Scheduling" />
+
 ## Tổng Quan
 
 Cron cho phép agent tự động chạy theo thời gian đặt trước — không cần gửi tin nhắn thủ công. Mỗi cron job kích hoạt một agent turn với một prompt cụ thể, chạy trong lane `cron` riêng biệt (tối đa 30 luồng song song).

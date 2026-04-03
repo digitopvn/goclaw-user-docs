@@ -1,5 +1,7 @@
 # Tools và MCP Servers
 
+<YouTube id="dQ35hzuEeVU" title="GoClaw Tools and MCP" />
+
 ## Tổng Quan
 
 GoClaw có hệ thống built-in tools nhóm theo category, và hỗ trợ đăng ký MCP servers để mở rộng khả năng agent. Tool access được kiểm soát qua profiles và policies nhiều lớp.

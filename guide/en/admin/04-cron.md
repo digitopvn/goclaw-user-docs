@@ -1,5 +1,7 @@
 # Cron and Automated Scheduling
 
+<YouTube id="Ta8fBrQ4sEU" title="GoClaw Cron and Automated Scheduling" />
+
 ## Overview
 
 Cron allows agents to run automatically on a preset schedule — no manual message sending required. Each cron job triggers an agent turn with a specific prompt, running in a separate `cron` lane (up to 30 concurrent threads).

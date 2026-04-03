@@ -1,5 +1,7 @@
 # Files and Media
 
+<YouTube id="bZ0lxPnc25k" title="GoClaw File and Media" />
+
 ## Overview
 
 GoClaw supports uploading, analyzing, creating, and managing media files in chat. The agent processes files through specialized built-in tools for each format.

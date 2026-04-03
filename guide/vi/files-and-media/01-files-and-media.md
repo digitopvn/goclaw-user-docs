@@ -1,5 +1,7 @@
 # File và Media
 
+<YouTube id="bZ0lxPnc25k" title="GoClaw File and Media" />
+
 ## Tổng Quan
 
 GoClaw hỗ trợ upload, phân tích, tạo và quản lý file media trong chat. Agent xử lý file thông qua các built-in tools chuyên biệt theo từng định dạng.
