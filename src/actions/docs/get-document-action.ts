@@ -1,6 +1,6 @@
 /**
  * Server action: fetch a single document from filesystem
- * Reads from src/content/[locale]/[section]/[slug].md
+ * Uses in-memory cache — first read from fs, subsequent reads from cache
  */
 "use server";
 
@@ -15,6 +15,9 @@ export interface DocResult {
 	slug: string;
 	locale: string;
 }
+
+/** In-memory cache: "locale/section/slug" → DocResult */
+const docCache = new Map<string, DocResult | null>();
 
 /** Parse markdown: extract title from first # heading */
 function parseMarkdown(content: string): { title: string; body: string } {
@@ -36,7 +39,6 @@ function parseMarkdown(content: string): { title: string; body: string } {
 
 /** Resolve content directory — works in both dev and production */
 function getContentDir(): string {
-	// In dev: src/content/. In production: check common locations
 	const candidates = [
 		path.join(process.cwd(), "src", "content"),
 		path.join(process.cwd(), "content"),
@@ -52,19 +54,31 @@ export async function getDocumentAction(
 	section: string,
 	slug: string,
 ): Promise<DocResult | null> {
+	const cacheKey = `${locale}/${section}/${slug}`;
+
+	// Return from cache if available
+	if (docCache.has(cacheKey)) {
+		return docCache.get(cacheKey)!;
+	}
+
 	const contentDir = getContentDir();
 	const filePath = path.join(contentDir, locale, section, `${slug}.md`);
 
-	// Try with common filename patterns: slug.md, 01-slug.md, 02-slug.md, etc.
+	// Try exact path, then scan for numbered prefix (01-slug.md)
 	let resolvedPath = filePath;
 	if (!fs.existsSync(resolvedPath)) {
-		// Scan directory for file matching slug
 		const sectionDir = path.join(contentDir, locale, section);
-		if (!fs.existsSync(sectionDir)) return null;
+		if (!fs.existsSync(sectionDir)) {
+			docCache.set(cacheKey, null);
+			return null;
+		}
 
 		const files = fs.readdirSync(sectionDir);
 		const match = files.find((f) => f.replace(/^\d+-/, "").replace(/\.md$/, "") === slug);
-		if (!match) return null;
+		if (!match) {
+			docCache.set(cacheKey, null);
+			return null;
+		}
 		resolvedPath = path.join(sectionDir, match);
 	}
 
@@ -72,5 +86,7 @@ export async function getDocumentAction(
 	const { title, body } = parseMarkdown(raw);
 	const htmlContent = await renderMarkdown(body);
 
-	return { title, htmlContent, section, slug, locale };
+	const result: DocResult = { title, htmlContent, section, slug, locale };
+	docCache.set(cacheKey, result);
+	return result;
 }

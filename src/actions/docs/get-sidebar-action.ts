@@ -1,11 +1,14 @@
 /**
  * Server action: get sidebar navigation tree by scanning filesystem
- * Reads src/content/[locale]/ directory structure
+ * Cached in memory — scans once per locale, instant on subsequent calls
  */
 "use server";
 
 import * as fs from "fs";
 import * as path from "path";
+
+/** In-memory cache: locale → SidebarSection[] */
+const sidebarCache = new Map<string, SidebarSection[]>();
 
 export interface SidebarItem {
 	slug: string;
@@ -73,6 +76,11 @@ function parseFilename(filename: string): { order: number; slug: string } {
 }
 
 export async function getSidebarAction(locale: string): Promise<SidebarSection[]> {
+	// Return from cache if available
+	if (sidebarCache.has(locale)) {
+		return sidebarCache.get(locale)!;
+	}
+
 	const contentDir = getContentDir();
 	const localeDir = path.join(contentDir, locale);
 
@@ -111,5 +119,6 @@ export async function getSidebarAction(locale: string): Promise<SidebarSection[]
 		sections.push({ section: key, label: SECTION_LABELS[key] || key, items });
 	}
 
+	sidebarCache.set(locale, sections);
 	return sections;
 }

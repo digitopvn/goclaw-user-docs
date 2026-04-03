@@ -487,8 +487,23 @@ if [ "$MODE" = "docker" ]; then
       - "${GOCLAW_UI_PORT:-18791}:80"
     depends_on:
       - goclaw
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:80/ || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
     restart: unless-stopped'
   fi
+
+  # Watchtower — auto-pull, rolling restart (zero-downtime), cleanup old images
+  WATCHTOWER_SERVICE='
+  watchtower:
+    image: containrrr/watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: --cleanup --rolling-restart --schedule "0 0 3 * * *"
+    restart: unless-stopped'
 
   # Build volumes block
   VOLUMES_BLOCK="volumes:
@@ -538,8 +553,15 @@ ${PG_DEPENDS}
       - CHOWN
     tmpfs:
       - /tmp:rw,noexec,nosuid,size=256m
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:18790/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
     restart: unless-stopped
 ${UI_SERVICE}
+${WATCHTOWER_SERVICE}
 
 ${VOLUMES_BLOCK}
 COMPOSE
