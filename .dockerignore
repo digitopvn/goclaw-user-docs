@@ -11,3 +11,6 @@ docs
 .env.local
 drizzle
 scripts
+Dockerfile*
+noted
+k8s

@@ -1,1 +1,1 @@
-curl -sSL -H "Cache-Control: no-cache" https://f.ult.vn/test/setup.sh | bash -s -- --mode docker
+curl -sSL -H "Cache-Control: no-cache" https://raw.githubusercontent.com/digitopvn/goclaw-user-docs/refs/heads/main/scripts/setup.sh | bash -s -- --mode docker

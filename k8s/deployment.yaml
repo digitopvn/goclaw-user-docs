@@ -44,11 +44,14 @@ spec:
                 - name: digitopdockerhub-docker-registry-key
             containers:
                 - name: docs
-                  image: reg.ult.vn/digitop/goclaw-user-docs:dev
+                  image: reg.ult.vn/digitop/goclaw-user-manual-cms:dev
                   imagePullPolicy: Always
                   ports:
                       - containerPort: 80
                         protocol: TCP
+                  envFrom:
+                      - configMapRef:
+                          name: docs-config
                   env:
                       - name: PORT
                         value: "80"
