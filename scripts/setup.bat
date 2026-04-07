@@ -148,6 +148,7 @@ if /i "!MODE!"=="docker" (
       echo GOCLAW_ENCRYPTION_KEY=!ENCRYPTION_KEY!
       echo GOCLAW_PORT=!GOCLAW_PORT!
       echo GOCLAW_UI_PORT=!GOCLAW_UI_PORT!
+      echo GOCLAW_AUTO_UPGRADE=true
     ) > "!ENV_FILE!"
 
     if "!PG_SOURCE!"=="bundled" (
