@@ -380,6 +380,7 @@ if [ "$MODE" = "docker" ]; then
       echo "GOCLAW_ENCRYPTION_KEY=${ENCRYPTION_KEY}"
       echo "GOCLAW_PORT=${GOCLAW_PORT}"
       echo "GOCLAW_UI_PORT=${UI_PORT}"
+      echo "GOCLAW_AUTO_UPGRADE=true"
     } > "$ENV_FILE"
 
     if [ "$PG_SOURCE" = "bundled" ]; then
