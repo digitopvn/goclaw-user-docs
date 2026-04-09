@@ -386,7 +386,7 @@ if [ "$MODE" = "docker" ]; then
     if [ "$PG_SOURCE" = "bundled" ]; then
       PG_PASSWORD="$(gen_secret 12)"
       {
-        echo "POSTGRES_PORT=5432"
+        echo "POSTGRES_PORT=18792"
         echo "POSTGRES_USER=goclaw"
         echo "POSTGRES_PASSWORD=${PG_PASSWORD}"
         echo "POSTGRES_DB=goclaw"
@@ -457,7 +457,7 @@ if [ "$MODE" = "docker" ]; then
   postgres:
     image: pgvector/pgvector:pg18
     ports:
-      - "${POSTGRES_PORT:-5432}:5432"
+      - "${POSTGRES_PORT:-18792}:5432"
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-goclaw}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-goclaw}
