@@ -132,8 +132,21 @@ spec:
         - hosts:
               - docs.goclaw.diginext.site
           secretName: tls-docs-goclaw-diginext-site
+        - hosts:
+              - hdsd-goclaw.diginext.site
+          secretName: tls-hdsd-goclaw-diginext-site
     rules:
         - host: docs.goclaw.diginext.site
+          http:
+              paths:
+                  - path: /
+                    pathType: Prefix
+                    backend:
+                        service:
+                            name: docs
+                            port:
+                                number: 80
+        - host: hdsd-goclaw.diginext.site
           http:
               paths:
                   - path: /
