@@ -505,7 +505,7 @@ if [ "$MODE" = "docker" ]; then
       - TZ=Asia/Bangkok
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-    command: --cleanup --rolling-restart --schedule "0 0 3 * * *"
+    command: --cleanup --rolling-restart --schedule "0 3 * * *"
     restart: unless-stopped'
 
   # Build volumes block
