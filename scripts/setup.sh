@@ -510,8 +510,8 @@ if [ "$MODE" = "docker" ]; then
 
   # Build volumes block
   VOLUMES_BLOCK="volumes:
-  goclaw-data:
-  goclaw-workspace:"
+  ./data:
+  ./workspace:"
   if [ "$PG_SOURCE" = "bundled" ]; then
     VOLUMES_BLOCK="${VOLUMES_BLOCK}
   postgres-data:"
